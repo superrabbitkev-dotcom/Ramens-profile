@@ -64,27 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
-// Background Video Parallax Depth
-  const bgIframe = document.getElementById('background');
 
-  if (!isTouchDevice && bgIframe) {
-    window.addEventListener('mousemove', (e) => {
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-
-      // Inverse parallax offset (max 20px travel distance)
-      const moveX = ((e.clientX - centerX) / centerX) * -20;
-      const moveY = ((e.clientY - centerY) / centerY) * -20;
-
-      gsap.to(bgIframe, {
-        x: `calc(-50% + ${moveX}px)`,
-        y: `calc(-50% + ${moveY}px)`,
-        duration: 0.8,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
-    });
-  }
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
@@ -115,6 +95,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.addEventListener('mouseup', () => {
       cursor.style.transform = 'scale(1) translate(-50%, -50%)';
+    });
+  }
+
+  // Background Video Parallax Depth
+  const bgIframe = document.getElementById('background');
+  if (!isTouchDevice && bgIframe) {
+    window.addEventListener('mousemove', (e) => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      const moveX = ((e.clientX - centerX) / centerX) * -20;
+      const moveY = ((e.clientY - centerY) / centerY) * -20;
+
+      gsap.to(bgIframe, {
+        x: `calc(-50% + ${moveX}px)`,
+        y: `calc(-50% + ${moveY}px)`,
+        duration: 0.8,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
     });
   }
 
@@ -195,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
       let targetH = 2;
 
       if (isPlaying && currentVol > 0) {
-        // Multi-frequency wave algorithm simulating bass, mids, and treble
         const bass = Math.sin(audioTick * 3 + i * 0.2);
         const mids = Math.cos(audioTick * 5 + i * 0.4);
         const highs = Math.sin(audioTick * 7 + i * 0.7);
