@@ -14,7 +14,6 @@ function onYouTubeIframeAPIReady() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
   const startScreen = document.getElementById('start-screen');
   const startText = document.getElementById('start-text');
   const profileName = document.getElementById('profile-name');
@@ -64,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cursor = document.querySelector('.custom-cursor');
 
   let isMuted = false;
+  let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
 
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
@@ -98,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Neon Click Sparks Generator
+  const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
+
   function createSparks(x, y) {
     const sparkCount = 8;
 
@@ -113,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       document.body.appendChild(spark);
 
-      // Random angle and travel distance
       const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5);
       const distance = Math.floor(Math.random() * 45) + 30;
       const targetX = Math.cos(angle) * distance;
@@ -134,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('pointerdown', (e) => {
     createSparks(e.clientX, e.clientY);
   });
+
   // Typewriter Start Screen
   const startMessages = ["Click here to see the Website!"];
   const startMessage = startMessages[Math.floor(Math.random() * startMessages.length)];
@@ -234,18 +237,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileBio) profileBio.textContent = bioText + (bioCursorVisible ? '|' : ' ');
   }, 500);
 
-  // Volume Controls
-  volumeIcon.addEventListener('click', () => {
+  // Volume Controls with Memory Toggle
+  function toggleMuteState() {
     if (!isPlayerReady || !player) return;
-    isMuted = !isMuted;
-    if (isMuted) {
+
+    if (!isMuted) {
+      previousVolume = volumeSlider.value > 0 ? volumeSlider.value : 0.3;
+      isMuted = true;
       player.mute();
+      volumeSlider.value = 0;
       volumeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>`;
     } else {
+      isMuted = false;
+      volumeSlider.value = previousVolume;
       player.unMute();
+      player.setVolume(previousVolume * 100);
       volumeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>`;
     }
-  });
+  }
+
+  volumeIcon.addEventListener('click', toggleMuteState);
 
   volumeSlider.addEventListener('input', () => {
     if (!isPlayerReady || !player) return;
@@ -388,7 +399,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Discord Asset Resolver (Spotify / External CDN / App Assets)
+  // Keyboard Navigation & Mute
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    switch (e.key.toLowerCase()) {
+      case '1':
+        switchTab('profile');
+        break;
+      case '2':
+        switchTab('skills');
+        break;
+      case '3':
+        switchTab('discord');
+        fetchDiscordPresence();
+        break;
+      case '4':
+        switchTab('time');
+        updateChicagoTime();
+        break;
+      case 'm':
+        toggleMuteState();
+        break;
+    }
+  });
+
+  // Discord Asset Resolver
   function resolveDiscordAsset(appId, assetId) {
     if (!assetId) return null;
     if (assetId.startsWith('mp:external/')) {
@@ -409,19 +445,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const user = data.data;
 
-      // Username / Display Name
       lanyardUsername.textContent = user.discord_user.global_name || user.discord_user.username;
 
-      // Avatar
       if (user.discord_user.avatar) {
         const ext = user.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
         lanyardAvatar.src = `https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.${ext}`;
       }
 
-      // Online status dot
       lanyardStatusDot.className = `status-${user.discord_status}`;
 
-      // Custom Status Quote (Type 4)
       const customStatus = user.activities.find(a => a.type === 4);
       if (customStatus && customStatus.state) {
         lanyardCustomStatus.textContent = `"${customStatus.state}"`;
@@ -429,7 +461,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lanyardCustomStatus.textContent = "";
       }
 
-      // Spotify Active
       if (user.listening_to_spotify && user.spotify) {
         const albumImg = user.spotify.album_art_url 
           ? `<img src="${user.spotify.album_art_url}" class="activity-large-image" alt="Album Art">` 
@@ -449,7 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Rich Presence (Games, MusicDetector, Custom apps)
       const activity = user.activities.find(a => a.type !== 4);
       if (activity) {
         let artworkUrl = null;
@@ -520,7 +550,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Periodic updates
   setInterval(updateChicagoTime, 1000);
   setInterval(fetchDiscordPresence, 15000);
 
