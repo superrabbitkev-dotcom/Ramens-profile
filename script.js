@@ -14,6 +14,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
   const startScreen = document.getElementById('start-screen');
   const startText = document.getElementById('start-text');
   const profileName = document.getElementById('profile-name');
@@ -97,6 +98,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function createSparks(x, y) {
+    const sparkCount = 8;
+
+    for (let i = 0; i < sparkCount; i++) {
+      const spark = document.createElement('div');
+      spark.className = 'click-spark';
+
+      const color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+      spark.style.backgroundColor = color;
+      spark.style.color = color;
+      spark.style.left = `${x}px`;
+      spark.style.top = `${y}px`;
+
+      document.body.appendChild(spark);
+
+      // Random angle and travel distance
+      const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5);
+      const distance = Math.floor(Math.random() * 45) + 30;
+      const targetX = Math.cos(angle) * distance;
+      const targetY = Math.sin(angle) * distance;
+
+      gsap.to(spark, {
+        x: targetX,
+        y: targetY,
+        opacity: 0,
+        scale: Math.random() * 0.4 + 0.2,
+        duration: Math.random() * 0.4 + 0.35,
+        ease: 'power2.out',
+        onComplete: () => spark.remove()
+      });
+    }
+  }
+
+  document.addEventListener('pointerdown', (e) => {
+    createSparks(e.clientX, e.clientY);
+  });
   // Typewriter Start Screen
   const startMessages = ["Click here to see the Website!"];
   const startMessage = startMessages[Math.floor(Math.random() * startMessages.length)];
