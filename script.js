@@ -20,9 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const profileBio = document.getElementById('profile-bio');
   const visitorCount = document.getElementById('visitor-count');
   
+  // Navigation Buttons
   const homeThemeBtn = document.getElementById('home-theme');
   const hackerThemeBtn = document.getElementById('hacker-theme');
   const discordThemeBtn = document.getElementById('discord-theme');
+  const timeThemeBtn = document.getElementById('time-theme');
 
   const resultsButton = document.getElementById('results-theme');
   const resultsButtonContainer = document.getElementById('results-button-container');
@@ -32,9 +34,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeSlider = document.getElementById('volume-slider');
   const transparencySlider = document.getElementById('transparency-slider');
   
+  // Tab Containers
   const profileBlock = document.getElementById('profile-block');
   const skillsBlock = document.getElementById('skills-block');
   const discordBlock = document.getElementById('discord-block');
+  const timeBlock = document.getElementById('time-block');
+
+  // Lanyard Status Elements
+  const DISCORD_USER_ID = "1245196598368141424";
+  const lanyardAvatar = document.getElementById('lanyard-avatar');
+  const lanyardStatusDot = document.getElementById('lanyard-status-dot');
+  const lanyardUsername = document.getElementById('lanyard-username');
+  const lanyardCustomStatus = document.getElementById('lanyard-custom-status');
+  const lanyardActivity = document.getElementById('lanyard-activity');
+
+  // Clock Elements
+  const digitalClock = document.getElementById('digital-clock');
+  const clockDate = document.getElementById('clock-date');
+  const tzName = document.getElementById('tz-name');
+  const activityStatus = document.getElementById('activity-status');
 
   const pythonBar = document.getElementById('python-bar');
   const cppBar = document.getElementById('cpp-bar');
@@ -43,14 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const profilePicture = document.querySelector('.profile-picture');
   const profileContainer = document.querySelector('.profile-container');
   const cursor = document.querySelector('.custom-cursor');
-
-  // Lanyard Elements
-  const DISCORD_USER_ID = "1245196598368141424";
-  const lanyardAvatar = document.getElementById('lanyard-avatar');
-  const lanyardStatusDot = document.getElementById('lanyard-status-dot');
-  const lanyardUsername = document.getElementById('lanyard-username');
-  const lanyardCustomStatus = document.getElementById('lanyard-custom-status');
-  const lanyardActivity = document.getElementById('lanyard-activity');
 
   let isMuted = false;
 
@@ -138,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     typeWriterBio();
     fetchDiscordPresence();
+    updateChicagoTime();
   }
 
   startScreen.addEventListener('click', startExperience);
@@ -213,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
       profileBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
       skillsBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
       discordBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
+      timeBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
     });
   }
 
@@ -241,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(element, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'power2.out' });
   }
 
-  [profileBlock, skillsBlock, discordBlock].forEach(el => {
+  [profileBlock, skillsBlock, discordBlock, timeBlock].forEach(el => {
     el.addEventListener('mousemove', (e) => handleTilt(e, el));
     el.addEventListener('mouseleave', () => resetTilt(el));
     el.addEventListener('touchend', () => resetTilt(el));
@@ -259,11 +271,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // Tab Switching Logic
+  // 4-Tab Switcher Logic
   const allTabs = [
     { name: 'profile', el: profileBlock, theme: 'home-theme' },
     { name: 'skills', el: skillsBlock, theme: 'hacker-theme' },
-    { name: 'discord', el: discordBlock, theme: 'discord-theme' }
+    { name: 'discord', el: discordBlock, theme: 'discord-theme' },
+    { name: 'time', el: timeBlock, theme: 'time-theme' }
   ];
 
   function switchTab(targetName) {
@@ -305,6 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Button Listeners
   if (homeThemeBtn) {
     homeThemeBtn.addEventListener('click', () => switchTab('profile'));
   }
@@ -320,6 +334,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (timeThemeBtn) {
+    timeThemeBtn.addEventListener('click', () => {
+      switchTab('time');
+      updateChicagoTime();
+    });
+  }
+
   if (resultsButton) {
     resultsButton.addEventListener('click', () => {
       if (!skillsBlock.classList.contains('hidden')) {
@@ -330,7 +351,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Fetch Live Discord Activity from Lanyard
+  // Discord Asset Resolver (Spotify / External CDN / App Assets)
+  function resolveDiscordAsset(appId, assetId) {
+    if (!assetId) return null;
+    if (assetId.startsWith('mp:external/')) {
+      return `https://media.discordapp.net/external/${assetId.replace('mp:external/', '')}`;
+    }
+    if (assetId.startsWith('spotify:')) {
+      return `https://i.scdn.co/image/${assetId.replace('spotify:', '')}`;
+    }
+    return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
+  }
+
+  // Fetch Live Presence via Lanyard
   async function fetchDiscordPresence() {
     try {
       const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
@@ -339,10 +372,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const user = data.data;
 
-      // Global or username
+      // Username / Display Name
       lanyardUsername.textContent = user.discord_user.global_name || user.discord_user.username;
 
-      // User Avatar
+      // Avatar
       if (user.discord_user.avatar) {
         const ext = user.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
         lanyardAvatar.src = `https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.${ext}`;
@@ -351,29 +384,107 @@ document.addEventListener('DOMContentLoaded', () => {
       // Online status dot
       lanyardStatusDot.className = `status-${user.discord_status}`;
 
-      // Custom Status
-      const custom = user.activities.find(a => a.type === 4);
-      lanyardCustomStatus.textContent = (custom && custom.state) ? custom.state : "";
-
-      // Real-time activity (Spotify, Games, or Idle)
-      if (user.listening_to_spotify && user.spotify) {
-        lanyardActivity.innerHTML = `<strong>Listening to Spotify:</strong><br>${user.spotify.song} - ${user.spotify.artist}`;
+      // Custom Status Quote (Type 4)
+      const customStatus = user.activities.find(a => a.type === 4);
+      if (customStatus && customStatus.state) {
+        lanyardCustomStatus.textContent = `"${customStatus.state}"`;
       } else {
-        const game = user.activities.find(a => a.type !== 4);
-        if (game) {
-          const detail = game.details ? `<br><span style="opacity:0.8">${game.details}</span>` : '';
-          const state = game.state ? `<br><span style="opacity:0.6">${game.state}</span>` : '';
-          lanyardActivity.innerHTML = `<strong>Playing:</strong> ${game.name}${detail}${state}`;
-        } else {
-          lanyardActivity.textContent = "Currently inactive / chilling";
+        lanyardCustomStatus.textContent = "";
+      }
+
+      // Spotify Active
+      if (user.listening_to_spotify && user.spotify) {
+        const albumImg = user.spotify.album_art_url 
+          ? `<img src="${user.spotify.album_art_url}" class="activity-large-image" alt="Album Art">` 
+          : '';
+
+        lanyardActivity.innerHTML = `
+          <strong>Listening to Spotify:</strong>
+          <div class="activity-banner-wrap">
+            ${albumImg}
+            <div class="activity-text-details">
+              <span><strong>${user.spotify.song}</strong></span>
+              <span style="opacity:0.8">by ${user.spotify.artist}</span>
+              <span style="opacity:0.6">${user.spotify.album}</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Rich Presence (Games, MusicDetector, Custom apps)
+      const activity = user.activities.find(a => a.type !== 4);
+      if (activity) {
+        let artworkUrl = null;
+
+        if (activity.assets && activity.assets.large_image) {
+          artworkUrl = resolveDiscordAsset(activity.application_id, activity.assets.large_image);
         }
+
+        const imgTag = artworkUrl 
+          ? `<img src="${artworkUrl}" class="activity-large-image" alt="Activity Artwork">` 
+          : '';
+
+        const header = activity.type === 2 ? 'Listening to' : 'Playing';
+        const details = activity.details ? `<span>${activity.details}</span>` : '';
+        const state = activity.state ? `<span style="opacity:0.75">${activity.state}</span>` : '';
+
+        lanyardActivity.innerHTML = `
+          <strong>${header}: ${activity.name}</strong>
+          <div class="activity-banner-wrap">
+            ${imgTag}
+            <div class="activity-text-details">
+              ${details}
+              ${state}
+            </div>
+          </div>
+        `;
+      } else {
+        lanyardActivity.textContent = "Currently inactive / chilling";
       }
     } catch (err) {
       lanyardActivity.textContent = "Offline or Lanyard unreachable";
     }
   }
 
-  // Poll presence every 15 seconds
+  // Chicago Local Time Clock
+  function updateChicagoTime() {
+    const now = new Date();
+
+    const timeOptions = {
+      timeZone: 'America/Chicago',
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    };
+    digitalClock.textContent = now.toLocaleTimeString('en-US', timeOptions);
+
+    const dateOptions = {
+      timeZone: 'America/Chicago',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    };
+    clockDate.textContent = now.toLocaleDateString('en-US', dateOptions);
+
+    const tzString = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', timeZoneName: 'short' });
+    const code = tzString.split(' ').pop();
+    tzName.textContent = `Central Time (${code})`;
+
+    const hour = parseInt(now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }));
+    if (hour >= 1 && hour < 8) {
+      activityStatus.textContent = "Likely Sleeping / AFK 🌙";
+      activityStatus.style.color = "#ffbe76";
+    } else {
+      activityStatus.textContent = "Active / Available ⚡";
+      activityStatus.style.color = "#43e97b";
+    }
+  }
+
+  // Periodic updates
+  setInterval(updateChicagoTime, 1000);
   setInterval(fetchDiscordPresence, 15000);
 
   typeWriterStart();
