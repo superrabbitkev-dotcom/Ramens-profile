@@ -59,6 +59,18 @@
             will-change: transform;
         }
 
+        /* Cozy Window Rain Layer */
+        #rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.65;
+        }
+
         .glitch-overlay {
             position: fixed;
             top: 0;
@@ -66,7 +78,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
+            z-index: 3;
             opacity: 0;
             transition: opacity 0.5s;
         }
@@ -78,7 +90,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 3;
+            z-index: 4;
         }
 
         .hidden {
@@ -109,12 +121,41 @@
             filter: drop-shadow(0 0 10px rgba(0, 206, 209, 0.7));
         }
 
+        /* Track Progress / Duration Bar Under Visualizer */
+        #track-progress-container {
+            position: fixed;
+            top: calc(50% - 166px - 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 820px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            z-index: 25;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        #track-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(0, 206, 209, 0.4), #00ced1);
+            box-shadow: 0 0 6px #00ced1;
+            transition: width 0.3s linear;
+        }
+
         @media (max-width: 430px) {
             #line-visualizer {
                 width: 90vw;
                 max-width: 350px;
                 top: calc(50% - 140px - 50px);
                 height: 30px;
+            }
+
+            #track-progress-container {
+                width: 90vw;
+                max-width: 350px;
+                top: calc(50% - 140px - 14px);
             }
         }
 
@@ -337,11 +378,13 @@
             backdrop-filter: blur(5px);
         }
 
+        /* Profile Block with Bass Bounce Variable */
         #profile-block {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            --bass-scale: 1;
+            transform: translate(-50%, -50%) scale(var(--bass-scale));
             width: 820px;
             min-height: 332px;
             background: rgba(0, 0, 0, 0.7);
@@ -355,7 +398,7 @@
             backdrop-filter: blur(10px);
             opacity: 0;
             transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
+            transition: transform 0.08s ease-out;
             pointer-events: auto;
         }
 
@@ -636,7 +679,8 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            --bass-scale: 1;
+            transform: translate(-50%, -50%) scale(var(--bass-scale));
             width: 820px;
             min-height: 332px;
             background: rgba(0, 0, 0, 0.7);
@@ -649,7 +693,7 @@
             gap: 15px;
             backdrop-filter: blur(10px);
             transform-style: preserve-3d;
-            transition: transform 0.5s ease-out;
+            transition: transform 0.08s ease-out;
         }
 
         .skills-title {
@@ -981,14 +1025,6 @@
                 padding: 15px;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%);
-            }
-
-            #line-visualizer {
-                width: 90vw;
-                max-width: 350px;
-                top: calc(50% - 140px - 50px);
-                height: 30px;
             }
 
             .profile-header {
@@ -1168,57 +1204,6 @@
                 font-size: 18px;
                 padding: 0 20px;
             }
-
-            /* Card Light Refraction Spotlight */
-#profile-block, #skills-block, #discord-block, #time-block {
-    position: relative;
-    overflow: hidden;
-    --mouse-x: 50%;
-    --mouse-y: 50%;
-}
-
-#profile-block::before,
-#skills-block::before,
-#discord-block::before,
-#time-block::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-        400px circle at var(--mouse-x) var(--mouse-y),
-        rgba(0, 206, 209, 0.12),
-        transparent 70%
-    );
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 0.3s ease;
-    opacity: 0;
-}
-
-#profile-block:hover::before,
-#skills-block:hover::before,
-#discord-block:hover::before,
-#time-block:hover::before {
-    opacity: 1;
-}
-
-/* Theme-adaptive spotlight tints */
-.home-theme #profile-block::before {
-    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(0, 206, 209, 0.14), transparent 70%);
-}
-.hacker-theme #skills-block::before {
-    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(34, 197, 94, 0.14), transparent 70%);
-}
-.discord-theme #discord-block::before {
-    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(88, 101, 242, 0.18), transparent 70%);
-}
-.time-theme #time-block::before {
-    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(0, 255, 255, 0.14), transparent 70%);
-}
         }
     </style>
 </head>
@@ -1259,12 +1244,20 @@
             allowfullscreen>
         </iframe>
 
+        <!-- Cozy Rain Canvas over Background -->
+        <canvas id="rain-canvas"></canvas>
+
         <div class="glitch-overlay"></div>
         <div id="hacker-overlay" class="hidden"></div>
         <div id="snow-overlay" class="hidden"></div>
 
-        <!-- Line Visualizer Canvas Pinned Above Card Header -->
+        <!-- Line Visualizer Canvas -->
         <canvas id="line-visualizer"></canvas>
+
+        <!-- Track Duration / Progress Line -->
+        <div id="track-progress-container">
+            <div id="track-progress-fill"></div>
+        </div>
 
         <!-- Tab 1: Profile Block -->
         <div id="profile-block">
