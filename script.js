@@ -62,6 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const profileContainer = document.querySelector('.profile-container');
   const cursor = document.querySelector('.custom-cursor');
 
+  // Dropboard Elements
+  const dropboardDrawer = document.getElementById('dropboard-drawer');
+  const drawerTabHandle = document.getElementById('drawer-tab-handle');
+  const ytCustomInput = document.getElementById('yt-custom-input');
+  const ytLoadBtn = document.getElementById('yt-load-btn');
+  const drawerFeedback = document.getElementById('drawer-feedback');
+
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
 
@@ -101,26 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // Background Video Parallax Depth
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
-    const parallaxState = { x: 0, y: 0 };
-
     window.addEventListener('mousemove', (e) => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      // Distance factor (-35px max offset for noticeable depth)
-      const targetX = ((e.clientX - centerX) / centerX) * -35;
-      const targetY = ((e.clientY - centerY) / centerY) * -35;
+      const moveX = ((e.clientX - centerX) / centerX) * -20;
+      const moveY = ((e.clientY - centerY) / centerY) * -20;
 
-      gsap.to(parallaxState, {
-        x: targetX,
-        y: targetY,
-        duration: 0.6,
+      gsap.to(bgIframe, {
+        x: `calc(-50% + ${moveX}px)`,
+        y: `calc(-50% + ${moveY}px)`,
+        duration: 0.8,
         ease: 'power2.out',
-        overwrite: 'auto',
-        onUpdate: () => {
-          bgIframe.style.setProperty('--parallax-x', `${parallaxState.x}px`);
-          bgIframe.style.setProperty('--parallax-y', `${parallaxState.y}px`);
-        }
+        overwrite: 'auto'
       });
     });
   }
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Top Line Audio Visualizer Engine
+  // Top Line Audio Visualizer Engine (Your exact math & sizing)
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
@@ -226,6 +226,72 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   renderLineVisualizer();
+
+  // Dropboard Drawer Logic (TAB key & Handle)
+  function toggleDrawer() {
+    dropboardDrawer.classList.toggle('open');
+    if (dropboardDrawer.classList.contains('open')) {
+      setTimeout(() => ytCustomInput.focus(), 120);
+    } else {
+      ytCustomInput.blur();
+    }
+  }
+
+  if (drawerTabHandle) {
+    drawerTabHandle.addEventListener('click', toggleDrawer);
+  }
+
+  function extractYouTubeID(input) {
+    input = input.trim();
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = input.match(regex);
+    if (match && match[1]) return match[1];
+    if (input.length === 11 && !input.includes('/') && !input.includes('.')) return input;
+    return null;
+  }
+
+  function loadCustomSong() {
+    const rawVal = ytCustomInput.value;
+    const videoId = extractYouTubeID(rawVal);
+
+    if (!videoId) {
+      drawerFeedback.textContent = "Error: Invalid YouTube link or ID.";
+      drawerFeedback.style.color = "#ff6b6b";
+      return;
+    }
+
+    try {
+      if (isPlayerReady && player && typeof player.loadVideoById === 'function') {
+        player.loadVideoById({
+          videoId: videoId,
+          startSeconds: 0
+        });
+        if (typeof player.setLoop === 'function') player.setLoop(true);
+      } else {
+        // Fallback: update iframe src directly if player API is blocked
+        const vol = volumeSlider.value * 100;
+        bgIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&loop=1&playlist=${videoId}&playsinline=1`;
+      }
+
+      drawerFeedback.textContent = `Loaded track ID: [${videoId}]!`;
+      drawerFeedback.style.color = "#43e97b";
+      ytCustomInput.value = "";
+
+      setTimeout(() => {
+        if (dropboardDrawer.classList.contains('open')) toggleDrawer();
+      }, 1000);
+    } catch (err) {
+      drawerFeedback.textContent = "Error loading track.";
+      drawerFeedback.style.color = "#ff6b6b";
+    }
+  }
+
+  if (ytLoadBtn) ytLoadBtn.addEventListener('click', loadCustomSong);
+  if (ytCustomInput) {
+    ytCustomInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') loadCustomSong();
+    });
+  }
 
   // Typewriter Start Screen
   const startMessages = ["Click here to see the Website!"];
@@ -294,8 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     "I Love playing CRK (CookieRun: Kingdom)",
     "We do not lick the dog",
     "I am a person :)",
-    "Taken! Love them to the stars and back!",
-    "'shadow night' - wendy 😭🥀"
+    "Taken! Love them to the stars and back!"
   ];
   let bioText = '';
   let bioIndex = 0;
@@ -490,8 +555,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard Navigation & Mute
+  // Keyboard Navigation: TAB toggles drawer, 1-4 switches tabs, M mutes
   document.addEventListener('keydown', (e) => {
+    // TAB Key toggles the music drawer
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      toggleDrawer();
+      return;
+    }
+
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
     switch (e.key.toLowerCase()) {
@@ -643,82 +715,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(updateChicagoTime, 1000);
   setInterval(fetchDiscordPresence, 15000);
-// --- YOUTUBE DROPBOARD DRAWER (TOGGLE VIA ~ OR HANDLE) ---
-  const dropboardDrawer = document.getElementById('dropboard-drawer');
-  const drawerTabHandle = document.getElementById('drawer-tab-handle');
-  const ytCustomInput = document.getElementById('yt-custom-input');
-  const ytLoadBtn = document.getElementById('yt-load-btn');
-  const drawerFeedback = document.getElementById('drawer-feedback');
 
-  function toggleDrawer() {
-    dropboardDrawer.classList.toggle('open');
-    if (dropboardDrawer.classList.contains('open')) {
-      setTimeout(() => ytCustomInput.focus(), 100);
-    } else {
-      ytCustomInput.blur();
-    }
-  }
-
-  drawerTabHandle.addEventListener('click', toggleDrawer);
-
-  // Extract valid 11-character YouTube video ID from URL or bare string
-  function extractYouTubeID(input) {
-    input = input.trim();
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-    const match = input.match(regex);
-    if (match && match[1]) {
-      return match[1];
-    }
-    if (input.length === 11 && !input.includes('/') && !input.includes('.')) {
-      return input;
-    }
-    return null;
-  }
-
-  function loadCustomSong() {
-    const rawVal = ytCustomInput.value;
-    const videoId = extractYouTubeID(rawVal);
-
-    if (!videoId) {
-      drawerFeedback.textContent = "Error: Invalid YouTube link or ID.";
-      drawerFeedback.style.color = "#ff6b6b";
-      return;
-    }
-
-    if (isPlayerReady && player && player.loadVideoById) {
-      player.loadVideoById({
-        videoId: videoId,
-        startSeconds: 0
-      });
-
-      // Keep loop playlist aligned with the new song
-      if (player.setLoop) player.setLoop(true);
-
-      drawerFeedback.textContent = `Loaded track ID: [${videoId}]!`;
-      drawerFeedback.style.color = "#43e97b";
-      ytCustomInput.value = "";
-
-      // Close drawer smoothly after 1 second
-      setTimeout(() => {
-        if (dropboardDrawer.classList.contains('open')) toggleDrawer();
-      }, 1000);
-    } else {
-      drawerFeedback.textContent = "Player API not ready yet, try again in a second.";
-      drawerFeedback.style.color = "#ffbe76";
-    }
-  }
-
-  ytLoadBtn.addEventListener('click', loadCustomSong);
-  ytCustomInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') loadCustomSong();
-  });
-
-  // Toggle drawer using ~ or ` key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === '`' || e.key === '~') {
-      e.preventDefault();
-      toggleDrawer();
-    }
-  });
   typeWriterStart();
 });
