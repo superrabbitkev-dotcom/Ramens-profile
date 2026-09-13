@@ -43,19 +43,21 @@
         }
 
         #background {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 105vw;
-            height: 105vh;
-            min-width: 185vh;
-            min-height: 60vw;
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            pointer-events: none;
-            border: none;
-            will-change: transform;
-        }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 110vw;
+    height: 110vh;
+    min-width: 195vh;
+    min-height: 65vw;
+    --parallax-x: 0px;
+    --parallax-y: 0px;
+    transform: translate(calc(-50% + var(--parallax-x)), calc(-50% + var(--parallax-y)));
+    z-index: 1;
+    pointer-events: none;
+    border: none;
+    will-change: transform;
+}
 
         .glitch-overlay {
             position: fixed;
