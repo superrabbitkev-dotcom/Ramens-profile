@@ -643,6 +643,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setInterval(updateChicagoTime, 1000);
   setInterval(fetchDiscordPresence, 15000);
+// --- YOUTUBE DROPBOARD DRAWER (TOGGLE VIA ~ OR HANDLE) ---
+  const dropboardDrawer = document.getElementById('dropboard-drawer');
+  const drawerTabHandle = document.getElementById('drawer-tab-handle');
+  const ytCustomInput = document.getElementById('yt-custom-input');
+  const ytLoadBtn = document.getElementById('yt-load-btn');
+  const drawerFeedback = document.getElementById('drawer-feedback');
 
+  function toggleDrawer() {
+    dropboardDrawer.classList.toggle('open');
+    if (dropboardDrawer.classList.contains('open')) {
+      setTimeout(() => ytCustomInput.focus(), 100);
+    } else {
+      ytCustomInput.blur();
+    }
+  }
+
+  drawerTabHandle.addEventListener('click', toggleDrawer);
+
+  // Extract valid 11-character YouTube video ID from URL or bare string
+  function extractYouTubeID(input) {
+    input = input.trim();
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const match = input.match(regex);
+    if (match && match[1]) {
+      return match[1];
+    }
+    if (input.length === 11 && !input.includes('/') && !input.includes('.')) {
+      return input;
+    }
+    return null;
+  }
+
+  function loadCustomSong() {
+    const rawVal = ytCustomInput.value;
+    const videoId = extractYouTubeID(rawVal);
+
+    if (!videoId) {
+      drawerFeedback.textContent = "Error: Invalid YouTube link or ID.";
+      drawerFeedback.style.color = "#ff6b6b";
+      return;
+    }
+
+    if (isPlayerReady && player && player.loadVideoById) {
+      player.loadVideoById({
+        videoId: videoId,
+        startSeconds: 0
+      });
+
+      // Keep loop playlist aligned with the new song
+      if (player.setLoop) player.setLoop(true);
+
+      drawerFeedback.textContent = `Loaded track ID: [${videoId}]!`;
+      drawerFeedback.style.color = "#43e97b";
+      ytCustomInput.value = "";
+
+      // Close drawer smoothly after 1 second
+      setTimeout(() => {
+        if (dropboardDrawer.classList.contains('open')) toggleDrawer();
+      }, 1000);
+    } else {
+      drawerFeedback.textContent = "Player API not ready yet, try again in a second.";
+      drawerFeedback.style.color = "#ffbe76";
+    }
+  }
+
+  ytLoadBtn.addEventListener('click', loadCustomSong);
+  ytCustomInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loadCustomSong();
+  });
+
+  // Toggle drawer using ~ or ` key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '`' || e.key === '~') {
+      e.preventDefault();
+      toggleDrawer();
+    }
+  });
   typeWriterStart();
 });
