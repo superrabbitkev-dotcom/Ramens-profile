@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Profile Bio Typewriter
   const bioMessages = [
-    "Shadow Milk Cookie <3",
+    "MentalKatt <3",
     "I love developing in Python, CSS, and JavaScript",
     "I Love playing CRK (CookieRun: Kingdom)",
     "We do not lick the dog",
