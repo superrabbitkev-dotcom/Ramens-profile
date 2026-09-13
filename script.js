@@ -137,6 +137,77 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
+  // Circular Audio Visualizer Engine
+  const circCanvas = document.getElementById('circular-visualizer');
+  const circCtx = circCanvas.getContext('2d');
+
+  function resizeCircCanvas() {
+    const size = window.innerWidth <= 430 ? 170 : 220;
+    circCanvas.width = size * window.devicePixelRatio;
+    circCanvas.height = size * window.devicePixelRatio;
+    circCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+  resizeCircCanvas();
+  window.addEventListener('resize', resizeCircCanvas);
+
+  const numRays = 40;
+  const rayLengths = new Array(numRays).fill(2);
+  let audioTick = 0;
+
+  function renderCircularVisualizer() {
+    requestAnimationFrame(renderCircularVisualizer);
+
+    const size = window.innerWidth <= 430 ? 170 : 220;
+    const centerX = size / 2;
+    const centerY = size / 2;
+    const baseRadius = size * 0.28;
+
+    circCtx.clearRect(0, 0, size, size);
+
+    const isPlaying = isPlayerReady && player && player.getPlayerState && player.getPlayerState() === 1;
+    const currentVol = isMuted ? 0 : parseFloat(volumeSlider.value);
+
+    audioTick += 0.05;
+
+    // Glowing Central Core
+    const corePulse = isPlaying && currentVol > 0 ? Math.sin(audioTick * 4) * 3 * currentVol : 0;
+    circCtx.beginPath();
+    circCtx.arc(centerX, centerY, Math.max(4, baseRadius * 0.4 + corePulse), 0, Math.PI * 2);
+    circCtx.fillStyle = 'rgba(0, 206, 209, 0.2)';
+    circCtx.fill();
+
+    for (let i = 0; i < numRays; i++) {
+      let targetLen = 3;
+
+      if (isPlaying && currentVol > 0) {
+        const bass = Math.sin(audioTick * 3 + i * 0.25);
+        const mids = Math.cos(audioTick * 5 + i * 0.5);
+        const highs = Math.sin(audioTick * 8 + i * 0.85);
+
+        const mixedSignal = Math.abs(bass * 0.5 + mids * 0.35 + highs * 0.15);
+        targetLen = Math.max(3, mixedSignal * (size * 0.22) * currentVol);
+      }
+
+      rayLengths[i] += (targetLen - rayLengths[i]) * 0.18;
+
+      const angle = (Math.PI * 2 * i) / numRays;
+      const xStart = centerX + Math.cos(angle) * baseRadius;
+      const yStart = centerY + Math.sin(angle) * baseRadius;
+      const xEnd = centerX + Math.cos(angle) * (baseRadius + rayLengths[i]);
+      const yEnd = centerY + Math.sin(angle) * (baseRadius + rayLengths[i]);
+
+      circCtx.beginPath();
+      circCtx.moveTo(xStart, yStart);
+      circCtx.lineTo(xEnd, yEnd);
+      circCtx.lineWidth = 2.5;
+      circCtx.lineCap = 'round';
+      circCtx.strokeStyle = `hsla(${180 + Math.sin(audioTick + i * 0.1) * 25}, 100%, 65%, 0.85)`;
+      circCtx.stroke();
+    }
+  }
+
+  renderCircularVisualizer();
+
   // Typewriter Start Screen
   const startMessages = ["Click here to see the Website!"];
   const startMessage = startMessages[Math.floor(Math.random() * startMessages.length)];
