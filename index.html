@@ -1168,6 +1168,57 @@
                 font-size: 18px;
                 padding: 0 20px;
             }
+
+            /* Card Light Refraction Spotlight */
+#profile-block, #skills-block, #discord-block, #time-block {
+    position: relative;
+    overflow: hidden;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+}
+
+#profile-block::before,
+#skills-block::before,
+#discord-block::before,
+#time-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        400px circle at var(--mouse-x) var(--mouse-y),
+        rgba(0, 206, 209, 0.12),
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+#profile-block:hover::before,
+#skills-block:hover::before,
+#discord-block:hover::before,
+#time-block:hover::before {
+    opacity: 1;
+}
+
+/* Theme-adaptive spotlight tints */
+.home-theme #profile-block::before {
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(0, 206, 209, 0.14), transparent 70%);
+}
+.hacker-theme #skills-block::before {
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(34, 197, 94, 0.14), transparent 70%);
+}
+.discord-theme #discord-block::before {
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(88, 101, 242, 0.18), transparent 70%);
+}
+.time-theme #time-block::before {
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(0, 255, 255, 0.14), transparent 70%);
+}
         }
     </style>
 </head>
