@@ -15,6 +15,8 @@
             font-family: 'Courier New', monospace;
         }
 
+        
+
         .custom-cursor {
             position: fixed;
             width: 40px;
@@ -96,6 +98,22 @@
         /* Line Audio Visualizer Pinned Above Cards */
    /* Line Audio Visualizer Pinned Floating Above Cards */
 /* Tall & Reactive Line Visualizer */
+
+ #background {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 105vw;
+    height: 105vh;
+    min-width: 185vh;
+    min-height: 60vw;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+    border: none;
+    will-change: transform;
+}
+        
 #line-visualizer {
     position: fixed;
     top: calc(50% - 166px - 95px);
