@@ -62,9 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const profileContainer = document.querySelector('.profile-container');
   const cursor = document.querySelector('.custom-cursor');
 
-  // Dropboard Elements
+  // Dropboard & Music Elements
   const dropboardDrawer = document.getElementById('dropboard-drawer');
   const drawerTabHandle = document.getElementById('drawer-tab-handle');
+  const cardMusicBtn = document.getElementById('card-music-btn');
   const ytCustomInput = document.getElementById('yt-custom-input');
   const ytLoadBtn = document.getElementById('yt-load-btn');
   const drawerFeedback = document.getElementById('drawer-feedback');
@@ -105,22 +106,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Background Video Parallax Depth
+  // Background Video Parallax Depth (CSS Variable Engine)
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
+    const parallaxState = { x: 0, y: 0 };
+
     window.addEventListener('mousemove', (e) => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      const moveX = ((e.clientX - centerX) / centerX) * -20;
-      const moveY = ((e.clientY - centerY) / centerY) * -20;
+      const targetX = ((e.clientX - centerX) / centerX) * -35;
+      const targetY = ((e.clientY - centerY) / centerY) * -35;
 
-      gsap.to(bgIframe, {
-        x: `calc(-50% + ${moveX}px)`,
-        y: `calc(-50% + ${moveY}px)`,
-        duration: 0.8,
+      gsap.to(parallaxState, {
+        x: targetX,
+        y: targetY,
+        duration: 0.6,
         ease: 'power2.out',
-        overwrite: 'auto'
+        overwrite: 'auto',
+        onUpdate: () => {
+          bgIframe.style.setProperty('--parallax-x', `${parallaxState.x}px`);
+          bgIframe.style.setProperty('--parallax-y', `${parallaxState.y}px`);
+        }
       });
     });
   }
@@ -164,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Top Line Audio Visualizer Engine (Your exact math & sizing)
+  // Top Line Audio Visualizer Engine (Original Math & Smooth Wave)
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
@@ -227,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLineVisualizer();
 
-  // Dropboard Drawer Logic (TAB key & Handle)
+  // Dropboard Drawer Logic (TAB key, Handle, and Card Button)
   function toggleDrawer() {
     dropboardDrawer.classList.toggle('open');
     if (dropboardDrawer.classList.contains('open')) {
@@ -239,6 +246,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (drawerTabHandle) {
     drawerTabHandle.addEventListener('click', toggleDrawer);
+  }
+
+  if (cardMusicBtn) {
+    cardMusicBtn.addEventListener('click', toggleDrawer);
   }
 
   function extractYouTubeID(input) {
@@ -268,8 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         if (typeof player.setLoop === 'function') player.setLoop(true);
       } else {
-        // Fallback: update iframe src directly if player API is blocked
-        const vol = volumeSlider.value * 100;
         bgIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&loop=1&playlist=${videoId}&playsinline=1`;
       }
 
@@ -557,7 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Keyboard Navigation: TAB toggles drawer, 1-4 switches tabs, M mutes
   document.addEventListener('keydown', (e) => {
-    // TAB Key toggles the music drawer
     if (e.key === 'Tab') {
       e.preventDefault();
       toggleDrawer();
