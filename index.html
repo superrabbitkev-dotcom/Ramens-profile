@@ -1216,32 +1216,43 @@
 
             <div class="bio-separator"></div>
 
-            <div class="profile-footer">
-                <div class="social-links">
-                    <a href="https://discord.gg/9S7k85tuk9" target="_blank">
-                        <img src="assets/discord.png" alt="Discord" class="social-icon">
-                    </a>
-                    <a href="https://github.com/superrabbitkev-dotcom" target="_blank">
-                        <img src="assets/github.png" alt="GitHub" class="social-icon">
-                    </a>
-                    <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank">
-                        <img src="assets/youtube.png" alt="YouTube" class="social-icon">
-                    </a>
-                    <a href="#" target="_blank">
-                        <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
-                    </a>
-                </div>
-
-                <div class="visitor-counter">
-                    <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                    <span id="visitor-count">21234</span>
-                    <span class="tooltip">Profile Views</span>
-                </div>
-            </div>
+           <div class="profile-footer">
+    <div class="footer-row">
+        <!-- Visitor Counter (Left) -->
+        <div class="visitor-counter">
+            <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+            </svg>
+            <span id="visitor-count">263,115</span>
+            <span class="tooltip">Profile Views</span>
         </div>
+
+        <!-- Social Icons (Center) -->
+        <div class="social-links">
+            <a href="https://discord.gg/9S7k85tuk9" target="_blank">
+                <img src="assets/discord.png" alt="Discord" class="social-icon">
+            </a>
+            <a href="https://github.com/superrabbitkev-dotcom" target="_blank">
+                <img src="assets/github.png" alt="GitHub" class="social-icon">
+            </a>
+            <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank">
+                <img src="assets/youtube.png" alt="YouTube" class="social-icon">
+            </a>
+            <a href="#" target="_blank">
+                <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
+            </a>
+        </div>
+
+        <!-- Music Loader Trigger Button (Right) -->
+        <button id="card-music-btn" class="footer-btn">
+            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+            </svg>
+            <span>Music [Tab]</span>
+        </button>
+    </div>
+</div>
 
         <!-- Tab 2: Skills Block -->
         <div id="skills-block" class="hidden">
