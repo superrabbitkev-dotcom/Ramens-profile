@@ -93,19 +93,30 @@
             box-shadow: 0 0 8px currentColor;
         }
 
-        /* Circular Visualizer */
-        #circular-visualizer {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 220px;
-            height: 220px;
-            z-index: 15;
-            pointer-events: none;
-            opacity: 0.85;
-            filter: drop-shadow(0 0 10px rgba(0, 206, 209, 0.45));
-        }
+        /* Line Audio Visualizer Pinned Above Cards */
+   /* Line Audio Visualizer Pinned Floating Above Cards */
+#line-visualizer {
+    position: fixed;
+    /* Changed from -45px to -70px to lift it further up */
+    top: calc(50% - 166px - 70px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 820px;
+    height: 40px;
+    z-index: 25;
+    pointer-events: none;
+    filter: drop-shadow(0 0 8px rgba(0, 206, 209, 0.6));
+}
+
+@media (max-width: 430px) {
+    #line-visualizer {
+        width: 90vw;
+        max-width: 350px;
+        /* Lifted slightly higher on mobile screens too */
+        top: calc(50% - 140px - 55px);
+        height: 30px;
+    }
+}
 
         .controls {
             position: fixed;
@@ -806,6 +817,13 @@
                 transform: translate(-50%, -50%);
             }
 
+            #line-visualizer {
+                width: 90vw;
+                max-width: 350px;
+                top: calc(50% - 140px - 35px);
+                height: 30px;
+            }
+
             .profile-header {
                 flex-direction: column;
                 align-items: center;
@@ -915,12 +933,6 @@
                 gap: 8px;
             }
 
-            #circular-visualizer {
-                width: 170px;
-                height: 170px;
-                bottom: 15px;
-            }
-
             .controls {
                 bottom: 20px;
                 gap: 8px;
@@ -1001,6 +1013,9 @@
         <div class="glitch-overlay"></div>
         <div id="hacker-overlay" class="hidden"></div>
         <div id="snow-overlay" class="hidden"></div>
+
+        <!-- Line Visualizer Canvas Pinned Above Card Header -->
+        <canvas id="line-visualizer"></canvas>
 
         <!-- Tab 1: Profile Block -->
         <div id="profile-block">
@@ -1170,9 +1185,6 @@
             <button id="results-theme">View Results</button>
             <div id="results-hint" class="hidden">Click again to return to profile</div>
         </div>
-
-        <!-- Circular Visualizer Canvas -->
-        <canvas id="circular-visualizer"></canvas>
 
         <!-- Tab Switch Controls 1, 2, 3, 4 -->
         <div class="controls">
