@@ -137,76 +137,69 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Circular Audio Visualizer Engine
-  const circCanvas = document.getElementById('circular-visualizer');
-  const circCtx = circCanvas.getContext('2d');
+  // Top Line Audio Visualizer Engine
+  const lineCanvas = document.getElementById('line-visualizer');
+  const lineCtx = lineCanvas.getContext('2d');
 
-  function resizeCircCanvas() {
-    const size = window.innerWidth <= 430 ? 170 : 220;
-    circCanvas.width = size * window.devicePixelRatio;
-    circCanvas.height = size * window.devicePixelRatio;
-    circCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  function resizeLineCanvas() {
+    const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
+    const height = window.innerWidth <= 430 ? 30 : 40;
+    lineCanvas.width = width * window.devicePixelRatio;
+    lineCanvas.height = height * window.devicePixelRatio;
+    lineCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
   }
-  resizeCircCanvas();
-  window.addEventListener('resize', resizeCircCanvas);
+  resizeLineCanvas();
+  window.addEventListener('resize', resizeLineCanvas);
 
-  const numRays = 40;
-  const rayLengths = new Array(numRays).fill(2);
+  const numBars = 54;
+  const barHeights = new Array(numBars).fill(2);
   let audioTick = 0;
 
-  function renderCircularVisualizer() {
-    requestAnimationFrame(renderCircularVisualizer);
+  function renderLineVisualizer() {
+    requestAnimationFrame(renderLineVisualizer);
 
-    const size = window.innerWidth <= 430 ? 170 : 220;
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const baseRadius = size * 0.28;
+    const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
+    const height = window.innerWidth <= 430 ? 30 : 40;
 
-    circCtx.clearRect(0, 0, size, size);
+    lineCtx.clearRect(0, 0, width, height);
 
     const isPlaying = isPlayerReady && player && player.getPlayerState && player.getPlayerState() === 1;
     const currentVol = isMuted ? 0 : parseFloat(volumeSlider.value);
 
     audioTick += 0.05;
 
-    // Glowing Central Core
-    const corePulse = isPlaying && currentVol > 0 ? Math.sin(audioTick * 4) * 3 * currentVol : 0;
-    circCtx.beginPath();
-    circCtx.arc(centerX, centerY, Math.max(4, baseRadius * 0.4 + corePulse), 0, Math.PI * 2);
-    circCtx.fillStyle = 'rgba(0, 206, 209, 0.2)';
-    circCtx.fill();
+    const barWidth = width / numBars;
+    const spacing = 3;
 
-    for (let i = 0; i < numRays; i++) {
-      let targetLen = 3;
+    for (let i = 0; i < numBars; i++) {
+      let targetH = 2;
 
       if (isPlaying && currentVol > 0) {
-        const bass = Math.sin(audioTick * 3 + i * 0.25);
-        const mids = Math.cos(audioTick * 5 + i * 0.5);
-        const highs = Math.sin(audioTick * 8 + i * 0.85);
+        // Multi-frequency wave algorithm simulating bass, mids, and treble
+        const bass = Math.sin(audioTick * 3 + i * 0.2);
+        const mids = Math.cos(audioTick * 5 + i * 0.4);
+        const highs = Math.sin(audioTick * 7 + i * 0.7);
 
-        const mixedSignal = Math.abs(bass * 0.5 + mids * 0.35 + highs * 0.15);
-        targetLen = Math.max(3, mixedSignal * (size * 0.22) * currentVol);
+        const mixed = Math.abs(bass * 0.55 + mids * 0.3 + highs * 0.15);
+        targetH = Math.max(2, mixed * (height - 4) * currentVol);
       }
 
-      rayLengths[i] += (targetLen - rayLengths[i]) * 0.18;
+      barHeights[i] += (targetH - barHeights[i]) * 0.2;
 
-      const angle = (Math.PI * 2 * i) / numRays;
-      const xStart = centerX + Math.cos(angle) * baseRadius;
-      const yStart = centerY + Math.sin(angle) * baseRadius;
-      const xEnd = centerX + Math.cos(angle) * (baseRadius + rayLengths[i]);
-      const yEnd = centerY + Math.sin(angle) * (baseRadius + rayLengths[i]);
+      const x = i * barWidth + spacing / 2;
+      const bH = barHeights[i];
+      const y = height - bH;
 
-      circCtx.beginPath();
-      circCtx.moveTo(xStart, yStart);
-      circCtx.lineTo(xEnd, yEnd);
-      circCtx.lineWidth = 2.5;
-      circCtx.lineCap = 'round';
-      circCtx.strokeStyle = `hsla(${180 + Math.sin(audioTick + i * 0.1) * 25}, 100%, 65%, 0.85)`;
-      circCtx.stroke();
+      const grad = lineCtx.createLinearGradient(0, height, 0, y);
+      grad.addColorStop(0, 'rgba(0, 206, 209, 0.2)');
+      grad.addColorStop(1, 'rgba(0, 255, 255, 0.95)');
+
+      lineCtx.fillStyle = grad;
+      lineCtx.fillRect(x, y, barWidth - spacing, bH);
     }
   }
 
-  renderCircularVisualizer();
+  renderLineVisualizer();
 
   // Typewriter Start Screen
   const startMessages = ["Click here to see the Website!"];
