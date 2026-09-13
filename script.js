@@ -73,6 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
 
+  // Card Spotlight Tracker
+  [profileBlock, skillsBlock, discordBlock, timeBlock].forEach(card => {
+    if (!card) return;
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
