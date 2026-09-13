@@ -137,13 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Top Line Audio Visualizer Engine
+// --- HIGH-ENERGY REACTIVE LINE VISUALIZER ---
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
   function resizeLineCanvas() {
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 30 : 40;
+    const height = window.innerWidth <= 430 ? 60 : 80;
     lineCanvas.width = width * window.devicePixelRatio;
     lineCanvas.height = height * window.devicePixelRatio;
     lineCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeLineCanvas();
   window.addEventListener('resize', resizeLineCanvas);
 
-  const numBars = 54;
+  const numBars = 48;
   const barHeights = new Array(numBars).fill(2);
   let audioTick = 0;
 
@@ -159,43 +159,64 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(renderLineVisualizer);
 
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 30 : 40;
+    const height = window.innerWidth <= 430 ? 60 : 80;
 
     lineCtx.clearRect(0, 0, width, height);
 
     const isPlaying = isPlayerReady && player && player.getPlayerState && player.getPlayerState() === 1;
     const currentVol = isMuted ? 0 : parseFloat(volumeSlider.value);
 
-    audioTick += 0.05;
+    // Speed up tempo tick for fast rhythm
+    audioTick += 0.08;
 
     const barWidth = width / numBars;
     const spacing = 3;
+
+    // Simulated 4-on-the-floor beat drop pulse
+    const beatPulse = Math.pow(Math.sin(audioTick * 4), 6); 
 
     for (let i = 0; i < numBars; i++) {
       let targetH = 2;
 
       if (isPlaying && currentVol > 0) {
-        // Multi-frequency wave algorithm simulating bass, mids, and treble
-        const bass = Math.sin(audioTick * 3 + i * 0.2);
-        const mids = Math.cos(audioTick * 5 + i * 0.4);
-        const highs = Math.sin(audioTick * 7 + i * 0.7);
+        // Multi-layered harmonic frequencies
+        const subBass = Math.sin(audioTick * 2.5 + (i * 0.12));
+        const midRhythm = Math.cos(audioTick * 6.2 + (i * 0.35));
+        const highSpikes = Math.sin(audioTick * 11.4 + (i * 0.7));
 
-        const mixed = Math.abs(bass * 0.55 + mids * 0.3 + highs * 0.15);
-        targetH = Math.max(2, mixed * (height - 4) * currentVol);
+        // Center-weighted EQ curve (mids/bass kick harder in the center)
+        const centerWeight = 1 - Math.pow(Math.abs((i - numBars / 2) / (numBars / 2)), 2) * 0.4;
+
+        // Exponential power curve makes big beats surge high
+        let rawWave = Math.abs(subBass * 0.5 + midRhythm * 0.35 + highSpikes * 0.15);
+        rawWave = Math.pow(rawWave, 2.2) * (1 + beatPulse * 0.8);
+
+        targetH = Math.max(3, rawWave * (height - 6) * centerWeight * currentVol);
       }
 
-      barHeights[i] += (targetH - barHeights[i]) * 0.2;
+      // Fast-attack, smooth-decay spring interpolation
+      if (targetH > barHeights[i]) {
+        barHeights[i] += (targetH - barHeights[i]) * 0.45; // Jump up fast
+      } else {
+        barHeights[i] += (targetH - barHeights[i]) * 0.18; // Float down smoothly
+      }
 
       const x = i * barWidth + spacing / 2;
       const bH = barHeights[i];
       const y = height - bH;
 
+      // Vibrant 3-stop cyber gradient with high contrast tips
       const grad = lineCtx.createLinearGradient(0, height, 0, y);
-      grad.addColorStop(0, 'rgba(0, 206, 209, 0.2)');
-      grad.addColorStop(1, 'rgba(0, 255, 255, 0.95)');
+      grad.addColorStop(0, 'rgba(0, 206, 209, 0.25)');
+      grad.addColorStop(0.6, 'rgba(0, 255, 255, 0.85)');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 1)');
 
       lineCtx.fillStyle = grad;
-      lineCtx.fillRect(x, y, barWidth - spacing, bH);
+      
+      // Rounded bar tops
+      lineCtx.beginPath();
+      lineCtx.roundRect(x, y, barWidth - spacing, bH, [3, 3, 0, 0]);
+      lineCtx.fill();
     }
   }
 
