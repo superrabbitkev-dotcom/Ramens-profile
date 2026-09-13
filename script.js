@@ -69,21 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const ytCustomInput = document.getElementById('yt-custom-input');
   const ytLoadBtn = document.getElementById('yt-load-btn');
   const drawerFeedback = document.getElementById('drawer-feedback');
+  const trackProgressFill = document.getElementById('track-progress-fill');
 
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
 
-  // Card Spotlight Tracker
-  [profileBlock, skillsBlock, discordBlock, timeBlock].forEach(card => {
-    if (!card) return;
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-    });
-  });
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
@@ -117,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Background Video Parallax Depth (CSS Variable Engine)
+  // Background Video Parallax Depth
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
     const parallaxState = { x: 0, y: 0 };
@@ -142,6 +132,54 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // Cozy Window Rain Particles Engine
+  const rainCanvas = document.getElementById('rain-canvas');
+  const rainCtx = rainCanvas.getContext('2d');
+
+  function resizeRainCanvas() {
+    rainCanvas.width = window.innerWidth;
+    rainCanvas.height = window.innerHeight;
+  }
+  resizeRainCanvas();
+  window.addEventListener('resize', resizeRainCanvas);
+
+  const rainDropCount = 75;
+  const rainDrops = [];
+  for (let i = 0; i < rainDropCount; i++) {
+    rainDrops.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      len: Math.random() * 20 + 10,
+      speed: Math.random() * 4 + 3,
+      opacity: Math.random() * 0.4 + 0.15
+    });
+  }
+
+  function renderRain() {
+    rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
+    rainCtx.lineWidth = 1.2;
+    rainCtx.lineCap = 'round';
+
+    for (let i = 0; i < rainDropCount; i++) {
+      const d = rainDrops[i];
+      rainCtx.strokeStyle = `rgba(174, 214, 241, ${d.opacity})`;
+      rainCtx.beginPath();
+      rainCtx.moveTo(d.x, d.y);
+      rainCtx.lineTo(d.x - 2, d.y + d.len);
+      rainCtx.stroke();
+
+      d.y += d.speed;
+      d.x -= 0.5;
+
+      if (d.y > rainCanvas.height) {
+        d.y = -d.len;
+        d.x = Math.random() * rainCanvas.width;
+      }
+    }
+    requestAnimationFrame(renderRain);
+  }
+  renderRain();
 
   // Neon Click Sparks Generator
   const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
@@ -182,7 +220,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Top Line Audio Visualizer Engine (Original Math & Smooth Wave)
+  // Top Line Audio Visualizer & Bass Bounce Engine
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
@@ -199,6 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const numBars = 54;
   const barHeights = new Array(numBars).fill(2);
   let audioTick = 0;
+  const activeCards = [profileBlock, skillsBlock, discordBlock, timeBlock];
 
   function renderLineVisualizer() {
     requestAnimationFrame(renderLineVisualizer);
@@ -216,6 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const barWidth = width / numBars;
     const spacing = 3;
 
+    // Bass calculation for card bounce
+    let bassMagnitude = 0;
+
     for (let i = 0; i < numBars; i++) {
       let targetH = 2;
 
@@ -226,6 +268,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mixed = Math.abs(bass * 0.55 + mids * 0.3 + highs * 0.15);
         targetH = Math.max(2, mixed * (height - 4) * currentVol);
+
+        if (i < 8) {
+          bassMagnitude += Math.abs(bass);
+        }
       }
 
       barHeights[i] += (targetH - barHeights[i]) * 0.2;
@@ -241,11 +287,38 @@ document.addEventListener('DOMContentLoaded', () => {
       lineCtx.fillStyle = grad;
       lineCtx.fillRect(x, y, barWidth - spacing, bH);
     }
+
+    // Card Bass Bounce: subtly expands by 1.5–3.5% during bass kicks
+    let scaleVal = 1;
+    if (isPlaying && currentVol > 0) {
+      const avgBass = bassMagnitude / 8;
+      const bassPulse = Math.pow(avgBass, 3);
+      scaleVal = 1 + bassPulse * 0.035 * currentVol;
+    }
+
+    activeCards.forEach(card => {
+      if (card && !card.classList.contains('hidden')) {
+        card.style.setProperty('--bass-scale', scaleVal.toFixed(4));
+      }
+    });
   }
 
   renderLineVisualizer();
 
-  // Dropboard Drawer Logic (TAB key, Handle, and Card Button)
+  // Track Duration / Progress Scrubber Loop
+  function updateTrackProgress() {
+    if (isPlayerReady && player && player.getCurrentTime && player.getDuration) {
+      const cur = player.getCurrentTime() || 0;
+      const dur = player.getDuration() || 0;
+      if (dur > 0 && trackProgressFill) {
+        const pct = (cur / dur) * 100;
+        trackProgressFill.style.width = `${pct}%`;
+      }
+    }
+  }
+  setInterval(updateTrackProgress, 400);
+
+  // Dropboard Drawer Logic
   function toggleDrawer() {
     dropboardDrawer.classList.toggle('open');
     if (dropboardDrawer.classList.contains('open')) {
@@ -477,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(element, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'power2.out' });
   }
 
-  [profileBlock, skillsBlock, discordBlock, timeBlock].forEach(el => {
+  activeCards.forEach(el => {
     el.addEventListener('mousemove', (e) => handleTilt(e, el));
     el.addEventListener('mouseleave', () => resetTilt(el));
     el.addEventListener('touchend', () => resetTilt(el));
