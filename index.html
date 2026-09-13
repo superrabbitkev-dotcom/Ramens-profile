@@ -46,11 +46,13 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 105vw;
-            height: 105vh;
-            min-width: 185vh;
-            min-height: 60vw;
-            transform: translate(-50%, -50%);
+            width: 110vw;
+            height: 110vh;
+            min-width: 195vh;
+            min-height: 65vw;
+            --parallax-x: 0px;
+            --parallax-y: 0px;
+            transform: translate(calc(-50% + var(--parallax-x)), calc(-50% + var(--parallax-y)));
             z-index: 1;
             pointer-events: none;
             border: none;
@@ -94,7 +96,7 @@
             box-shadow: 0 0 8px currentColor;
         }
 
-        /* Line Audio Visualizer Pinned Floating Above Cards */
+        /* Line Audio Visualizer Floating Above Cards */
         #line-visualizer {
             position: fixed;
             top: calc(50% - 166px - 60px);
@@ -511,11 +513,54 @@
         }
 
         .profile-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
             width: 100%;
             margin-top: auto;
+        }
+
+        .footer-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .footer-row .visitor-counter {
+            justify-self: start;
+            margin: 0;
+        }
+
+        .footer-row .social-links {
+            justify-self: center;
+        }
+
+        .footer-btn {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #00ced1;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.25s ease;
+        }
+
+        .footer-btn:hover {
+            background: rgba(0, 206, 209, 0.2);
+            border-color: #00ced1;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .footer-btn-icon {
+            width: 16px;
+            height: 16px;
         }
 
         .visitor-counter {
@@ -999,6 +1044,18 @@
                 margin: 15px 0;
             }
 
+            .footer-row {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .footer-row .visitor-counter,
+            .footer-btn {
+                justify-self: center;
+                align-self: center;
+            }
+
             .social-links {
                 gap: 10px;
                 justify-content: center;
@@ -1122,7 +1179,7 @@
         <div id="start-text"></div>
     </div>
 
-    <!-- Dropboard Drawer for Custom YouTube Music (Toggle via TAB or Top Handle) -->
+    <!-- Dropboard Drawer for Custom YouTube Music (Toggle via TAB, Handle, or Card Button) -->
     <div id="dropboard-drawer">
         <div class="drawer-content">
             <div class="drawer-header">
@@ -1216,43 +1273,44 @@
 
             <div class="bio-separator"></div>
 
-           <div class="profile-footer">
-    <div class="footer-row">
-        <!-- Visitor Counter (Left) -->
-        <div class="visitor-counter">
-            <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-            </svg>
-            <span id="visitor-count">263,115</span>
-            <span class="tooltip">Profile Views</span>
-        </div>
+            <div class="profile-footer">
+                <div class="footer-row">
+                    <!-- Visitor Counter (Left) -->
+                    <div class="visitor-counter">
+                        <svg class="visitor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        <span id="visitor-count">263,115</span>
+                        <span class="tooltip">Profile Views</span>
+                    </div>
 
-        <!-- Social Icons (Center) -->
-        <div class="social-links">
-            <a href="https://discord.gg/9S7k85tuk9" target="_blank">
-                <img src="assets/discord.png" alt="Discord" class="social-icon">
-            </a>
-            <a href="https://github.com/superrabbitkev-dotcom" target="_blank">
-                <img src="assets/github.png" alt="GitHub" class="social-icon">
-            </a>
-            <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank">
-                <img src="assets/youtube.png" alt="YouTube" class="social-icon">
-            </a>
-            <a href="#" target="_blank">
-                <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
-            </a>
-        </div>
+                    <!-- Social Icons (Center) -->
+                    <div class="social-links">
+                        <a href="https://discord.gg/9S7k85tuk9" target="_blank">
+                            <img src="assets/discord.png" alt="Discord" class="social-icon">
+                        </a>
+                        <a href="https://github.com/superrabbitkev-dotcom" target="_blank">
+                            <img src="assets/github.png" alt="GitHub" class="social-icon">
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank">
+                            <img src="assets/youtube.png" alt="YouTube" class="social-icon">
+                        </a>
+                        <a href="#" target="_blank">
+                            <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
+                        </a>
+                    </div>
 
-        <!-- Music Loader Trigger Button (Right) -->
-        <button id="card-music-btn" class="footer-btn">
-            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-            </svg>
-            <span>Music [Tab]</span>
-        </button>
-    </div>
-</div>
+                    <!-- Music Loader Trigger Button (Right) -->
+                    <button id="card-music-btn" class="footer-btn">
+                        <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                        </svg>
+                        <span>Music [Tab]</span>
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Tab 2: Skills Block -->
         <div id="skills-block" class="hidden">
