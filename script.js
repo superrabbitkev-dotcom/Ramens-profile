@@ -294,7 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
     "I Love playing CRK (CookieRun: Kingdom)",
     "We do not lick the dog",
     "I am a person :)",
-    "Taken! Love them to the stars and back!"
+    "Taken! Love them to the stars and back!",
+    "'shadow night' - wendy 😭🥀"
   ];
   let bioText = '';
   let bioIndex = 0;
