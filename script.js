@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const homeThemeBtn = document.getElementById('home-theme');
   const hackerThemeBtn = document.getElementById('hacker-theme');
+  const discordThemeBtn = document.getElementById('discord-theme');
+
   const resultsButton = document.getElementById('results-theme');
   const resultsButtonContainer = document.getElementById('results-button-container');
   const resultsHint = document.getElementById('results-hint');
@@ -29,8 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeIcon = document.getElementById('volume-icon');
   const volumeSlider = document.getElementById('volume-slider');
   const transparencySlider = document.getElementById('transparency-slider');
+  
   const profileBlock = document.getElementById('profile-block');
   const skillsBlock = document.getElementById('skills-block');
+  const discordBlock = document.getElementById('discord-block');
 
   const pythonBar = document.getElementById('python-bar');
   const cppBar = document.getElementById('cpp-bar');
@@ -39,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const profilePicture = document.querySelector('.profile-picture');
   const profileContainer = document.querySelector('.profile-container');
   const cursor = document.querySelector('.custom-cursor');
+
+  // Lanyard Elements
+  const DISCORD_USER_ID = "1245196598368141424";
+  const lanyardAvatar = document.getElementById('lanyard-avatar');
+  const lanyardStatusDot = document.getElementById('lanyard-status-dot');
+  const lanyardUsername = document.getElementById('lanyard-username');
+  const lanyardCustomStatus = document.getElementById('lanyard-custom-status');
+  const lanyardActivity = document.getElementById('lanyard-activity');
 
   let isMuted = false;
 
@@ -120,12 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }}
     );
 
-    // Kept static: No typing loop for name
     if (profileName) {
       profileName.textContent = "RAMEN";
     }
 
     typeWriterBio();
+    fetchDiscordPresence();
   }
 
   startScreen.addEventListener('click', startExperience);
@@ -200,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const alpha = transparencySlider.value;
       profileBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
       skillsBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
+      discordBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
     });
   }
 
@@ -228,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     gsap.to(element, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'power2.out' });
   }
 
-  [profileBlock, skillsBlock].forEach(el => {
+  [profileBlock, skillsBlock, discordBlock].forEach(el => {
     el.addEventListener('mousemove', (e) => handleTilt(e, el));
     el.addEventListener('mouseleave', () => resetTilt(el));
     el.addEventListener('touchend', () => resetTilt(el));
@@ -246,69 +259,122 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // Skills Toggle (Page 2)
-  let isShowingSkills = false;
-  function toggleSkills() {
-    if (!isShowingSkills) {
-      gsap.to(profileBlock, {
-        x: -100,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-        onComplete: () => {
-          profileBlock.classList.add('hidden');
-          skillsBlock.classList.remove('hidden');
-          gsap.fromTo(skillsBlock,
-            { x: 100, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
-          );
-          if (pythonBar) gsap.to(pythonBar, { width: '87%', duration: 1.5, ease: 'power2.out' });
-          if (cppBar) gsap.to(cppBar, { width: '15%', duration: 1.5, ease: 'power2.out' });
-          if (csharpBar) gsap.to(csharpBar, { width: '35%', duration: 1.5, ease: 'power2.out' });
-        }
-      });
-      if (resultsHint) resultsHint.classList.remove('hidden');
-      isShowingSkills = true;
-    } else {
-      gsap.to(skillsBlock, {
-        x: 100,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-        onComplete: () => {
-          skillsBlock.classList.add('hidden');
-          profileBlock.classList.remove('hidden');
-          gsap.fromTo(profileBlock,
-            { x: -100, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+  // Tab Switching Logic
+  const allTabs = [
+    { name: 'profile', el: profileBlock, theme: 'home-theme' },
+    { name: 'skills', el: skillsBlock, theme: 'hacker-theme' },
+    { name: 'discord', el: discordBlock, theme: 'discord-theme' }
+  ];
+
+  function switchTab(targetName) {
+    allTabs.forEach(tab => {
+      if (tab.name === targetName) {
+        if (tab.el.classList.contains('hidden')) {
+          tab.el.classList.remove('hidden');
+          gsap.fromTo(tab.el,
+            { x: 60, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.4, ease: 'power2.out' }
           );
         }
-      });
-      if (resultsHint) resultsHint.classList.add('hidden');
-      isShowingSkills = false;
+        document.body.className = tab.theme;
+
+        if (tab.name === 'skills') {
+          if (pythonBar) gsap.to(pythonBar, { width: '87%', duration: 1.2, ease: 'power2.out' });
+          if (cppBar) gsap.to(cppBar, { width: '15%', duration: 1.2, ease: 'power2.out' });
+          if (csharpBar) gsap.to(csharpBar, { width: '35%', duration: 1.2, ease: 'power2.out' });
+        }
+      } else {
+        if (!tab.el.classList.contains('hidden')) {
+          gsap.to(tab.el, {
+            x: -60,
+            opacity: 0,
+            duration: 0.3,
+            ease: 'power2.in',
+            onComplete: () => tab.el.classList.add('hidden')
+          });
+        }
+      }
+    });
+
+    if (resultsButtonContainer) {
+      if (targetName === 'skills') {
+        resultsButtonContainer.classList.remove('hidden');
+      } else {
+        resultsButtonContainer.classList.add('hidden');
+      }
     }
   }
 
-  if (resultsButton) {
-    resultsButton.addEventListener('click', toggleSkills);
-  }
-
-  // Page 1 & Page 2 theme buttons
   if (homeThemeBtn) {
-    homeThemeBtn.addEventListener('click', () => {
-      document.body.className = 'home-theme';
-      if (resultsButtonContainer) resultsButtonContainer.classList.add('hidden');
-      if (isShowingSkills) toggleSkills();
-    });
+    homeThemeBtn.addEventListener('click', () => switchTab('profile'));
   }
 
   if (hackerThemeBtn) {
-    hackerThemeBtn.addEventListener('click', () => {
-      document.body.className = 'hacker-theme';
-      if (resultsButtonContainer) resultsButtonContainer.classList.remove('hidden');
-      if (!isShowingSkills) toggleSkills();
+    hackerThemeBtn.addEventListener('click', () => switchTab('skills'));
+  }
+
+  if (discordThemeBtn) {
+    discordThemeBtn.addEventListener('click', () => {
+      switchTab('discord');
+      fetchDiscordPresence();
     });
   }
+
+  if (resultsButton) {
+    resultsButton.addEventListener('click', () => {
+      if (!skillsBlock.classList.contains('hidden')) {
+        switchTab('profile');
+      } else {
+        switchTab('skills');
+      }
+    });
+  }
+
+  // Fetch Live Discord Activity from Lanyard
+  async function fetchDiscordPresence() {
+    try {
+      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+      const data = await res.json();
+      if (!data.success) return;
+
+      const user = data.data;
+
+      // Global or username
+      lanyardUsername.textContent = user.discord_user.global_name || user.discord_user.username;
+
+      // User Avatar
+      if (user.discord_user.avatar) {
+        const ext = user.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
+        lanyardAvatar.src = `https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.${ext}`;
+      }
+
+      // Online status dot
+      lanyardStatusDot.className = `status-${user.discord_status}`;
+
+      // Custom Status
+      const custom = user.activities.find(a => a.type === 4);
+      lanyardCustomStatus.textContent = (custom && custom.state) ? custom.state : "";
+
+      // Real-time activity (Spotify, Games, or Idle)
+      if (user.listening_to_spotify && user.spotify) {
+        lanyardActivity.innerHTML = `<strong>Listening to Spotify:</strong><br>${user.spotify.song} - ${user.spotify.artist}`;
+      } else {
+        const game = user.activities.find(a => a.type !== 4);
+        if (game) {
+          const detail = game.details ? `<br><span style="opacity:0.8">${game.details}</span>` : '';
+          const state = game.state ? `<br><span style="opacity:0.6">${game.state}</span>` : '';
+          lanyardActivity.innerHTML = `<strong>Playing:</strong> ${game.name}${detail}${state}`;
+        } else {
+          lanyardActivity.textContent = "Currently inactive / chilling";
+        }
+      }
+    } catch (err) {
+      lanyardActivity.textContent = "Offline or Lanyard unreachable";
+    }
+  }
+
+  // Poll presence every 15 seconds
+  setInterval(fetchDiscordPresence, 15000);
 
   typeWriterStart();
 });
