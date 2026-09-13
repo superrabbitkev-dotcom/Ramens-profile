@@ -429,7 +429,7 @@
             transform: scale(1.4) rotateY(15deg);
         }
 
-        #skills-block, #discord-block {
+        #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -499,7 +499,7 @@
             background: linear-gradient(90deg, #43e97b, #38f9d7);
         }
 
-        /* Discord Block Styles */
+        /* Tab 3: Discord Block Styles */
         .discord-card {
             display: flex;
             align-items: center;
@@ -554,6 +554,7 @@
         #lanyard-custom-status {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
+            font-style: italic;
         }
 
         .discord-activity-box {
@@ -564,6 +565,84 @@
             border-left: 3px solid #5865f2;
             color: #dbdee1;
             line-height: 1.4;
+        }
+
+        .activity-banner-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .activity-large-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .activity-text-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        /* Tab 4: Local Time Styles */
+        .time-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            gap: 12px;
+        }
+
+        .digital-clock {
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            color: #00ffff;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+        .clock-date {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 2px;
+        }
+
+        .time-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 520px;
+            margin-top: 10px;
+        }
+
+        .time-detail-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 16px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .detail-val {
+            font-size: 15px;
+            font-weight: bold;
+            color: #fff;
         }
 
         #results-button-container {
@@ -620,20 +699,30 @@
 
         .home-theme #profile-block,
         .home-theme #skills-block,
-        .home-theme #discord-block {
+        .home-theme #discord-block,
+        .home-theme #time-block {
             border-color: rgba(0, 195, 255, 0.5);
         }
 
         .hacker-theme #profile-block,
         .hacker-theme #skills-block,
-        .hacker-theme #discord-block {
+        .hacker-theme #discord-block,
+        .hacker-theme #time-block {
             border-color: rgba(0, 255, 0, 0.5);
         }
 
         .discord-theme #profile-block,
         .discord-theme #skills-block,
-        .discord-theme #discord-block {
+        .discord-theme #discord-block,
+        .discord-theme #time-block {
             border-color: rgba(88, 101, 242, 0.5);
+        }
+
+        .time-theme #profile-block,
+        .time-theme #skills-block,
+        .time-theme #discord-block,
+        .time-theme #time-block {
+            border-color: rgba(0, 255, 255, 0.6);
         }
 
         .glitch {
@@ -682,7 +771,7 @@
         }
 
         @media (max-width: 430px) {
-            #profile-block, #skills-block, #discord-block {
+            #profile-block, #skills-block, #discord-block, #time-block {
                 width: 90vw;
                 max-width: 350px;
                 min-height: 280px;
@@ -792,6 +881,15 @@
                 text-align: center;
             }
 
+            .digital-clock {
+                font-size: 32px;
+            }
+
+            .time-details-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
             .controls {
                 bottom: 20px;
                 gap: 8px;
@@ -873,6 +971,7 @@
         <div id="hacker-overlay" class="hidden"></div>
         <div id="snow-overlay" class="hidden"></div>
 
+        <!-- Tab 1: Profile Block -->
         <div id="profile-block">
             <div class="profile-header">
                 <div class="profile-container">
@@ -957,6 +1056,7 @@
             </div>
         </div>
 
+        <!-- Tab 2: Skills Block -->
         <div id="skills-block" class="hidden">
             <h2 class="skills-title">Programming Skills</h2>
             <div class="skill">
@@ -991,7 +1091,7 @@
             </div>
         </div>
 
-        <!-- Tab 3: Live Discord Status -->
+        <!-- Tab 3: Discord Activity Block -->
         <div id="discord-block" class="hidden">
             <h2 class="skills-title">Discord Activity</h2>
             <div class="discord-card">
@@ -1007,15 +1107,45 @@
             </div>
         </div>
 
+        <!-- Tab 4: Chicago Time Block -->
+        <div id="time-block" class="hidden">
+            <h2 class="skills-title">Local Time (Chicago)</h2>
+            <div class="time-card-content">
+                <div id="digital-clock" class="digital-clock">--:--:-- --</div>
+                <div id="clock-date" class="clock-date">Loading...</div>
+                
+                <div class="time-details-grid">
+                    <div class="time-detail-box">
+                        <span class="detail-label">Location</span>
+                        <span class="detail-val">Chicago, IL (US)</span>
+                    </div>
+                    <div class="time-detail-box">
+                        <span class="detail-label">Time Zone</span>
+                        <span id="tz-name" class="detail-val">Central Time (CT)</span>
+                    </div>
+                    <div class="time-detail-box">
+                        <span class="detail-label">Status</span>
+                        <span id="activity-status" class="detail-val">Online</span>
+                    </div>
+                    <div class="time-detail-box">
+                        <span class="detail-label">Ping / Latency</span>
+                        <span class="detail-val" style="color: #43e97b;">18ms (Optimal)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div id="results-button-container" class="hidden">
             <button id="results-theme">View Results</button>
             <div id="results-hint" class="hidden">Click again to return to profile</div>
         </div>
 
+        <!-- Tab Switch Controls 1, 2, 3, 4 -->
         <div class="controls">
             <div id="home-theme" class="theme-button">1</div>
             <div id="hacker-theme" class="theme-button">2</div>
             <div id="discord-theme" class="theme-button">3</div>
+            <div id="time-theme" class="theme-button">4</div>
         </div>
 
         <div class="top-controls">
