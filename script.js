@@ -101,19 +101,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Background Video Parallax Depth
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
+    const parallaxState = { x: 0, y: 0 };
+
     window.addEventListener('mousemove', (e) => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      const moveX = ((e.clientX - centerX) / centerX) * -20;
-      const moveY = ((e.clientY - centerY) / centerY) * -20;
+      // Distance factor (-35px max offset for noticeable depth)
+      const targetX = ((e.clientX - centerX) / centerX) * -35;
+      const targetY = ((e.clientY - centerY) / centerY) * -35;
 
-      gsap.to(bgIframe, {
-        x: `calc(-50% + ${moveX}px)`,
-        y: `calc(-50% + ${moveY}px)`,
-        duration: 0.8,
+      gsap.to(parallaxState, {
+        x: targetX,
+        y: targetY,
+        duration: 0.6,
         ease: 'power2.out',
-        overwrite: 'auto'
+        overwrite: 'auto',
+        onUpdate: () => {
+          bgIframe.style.setProperty('--parallax-x', `${parallaxState.x}px`);
+          bgIframe.style.setProperty('--parallax-y', `${parallaxState.y}px`);
+        }
       });
     });
   }
