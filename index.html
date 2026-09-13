@@ -429,7 +429,7 @@
             transform: scale(1.4) rotateY(15deg);
         }
 
-        #skills-block {
+        #skills-block, #discord-block {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -499,6 +499,73 @@
             background: linear-gradient(90deg, #43e97b, #38f9d7);
         }
 
+        /* Discord Block Styles */
+        .discord-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .discord-avatar-wrap {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        #lanyard-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        #lanyard-status-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid rgba(0, 0, 0, 0.8);
+        }
+
+        .status-online { background-color: #23a55a; }
+        .status-idle { background-color: #f0b232; }
+        .status-dnd { background-color: #f23f43; }
+        .status-offline { background-color: #80848e; }
+
+        .discord-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+
+        #lanyard-username {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #lanyard-custom-status {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .discord-activity-box {
+            font-size: 13px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 14px;
+            border-radius: 8px;
+            border-left: 3px solid #5865f2;
+            color: #dbdee1;
+            line-height: 1.4;
+        }
+
         #results-button-container {
             position: fixed;
             top: 20px;
@@ -552,13 +619,21 @@
         }
 
         .home-theme #profile-block,
-        .home-theme #skills-block {
+        .home-theme #skills-block,
+        .home-theme #discord-block {
             border-color: rgba(0, 195, 255, 0.5);
         }
 
         .hacker-theme #profile-block,
-        .hacker-theme #skills-block {
+        .hacker-theme #skills-block,
+        .hacker-theme #discord-block {
             border-color: rgba(0, 255, 0, 0.5);
+        }
+
+        .discord-theme #profile-block,
+        .discord-theme #skills-block,
+        .discord-theme #discord-block {
+            border-color: rgba(88, 101, 242, 0.5);
         }
 
         .glitch {
@@ -607,7 +682,7 @@
         }
 
         @media (max-width: 430px) {
-            #profile-block, #skills-block {
+            #profile-block, #skills-block, #discord-block {
                 width: 90vw;
                 max-width: 350px;
                 min-height: 280px;
@@ -710,6 +785,11 @@
 
             .skill-name span {
                 font-size: 14px;
+            }
+
+            .discord-card {
+                flex-direction: column;
+                text-align: center;
             }
 
             .controls {
@@ -911,6 +991,22 @@
             </div>
         </div>
 
+        <!-- Tab 3: Live Discord Status -->
+        <div id="discord-block" class="hidden">
+            <h2 class="skills-title">Discord Activity</h2>
+            <div class="discord-card">
+                <div class="discord-avatar-wrap">
+                    <img id="lanyard-avatar" src="assets/profile.gif" alt="Discord Avatar">
+                    <span id="lanyard-status-dot" class="status-offline"></span>
+                </div>
+                <div class="discord-details">
+                    <div id="lanyard-username">Loading...</div>
+                    <div id="lanyard-custom-status"></div>
+                    <div id="lanyard-activity" class="discord-activity-box">Connecting to Discord...</div>
+                </div>
+            </div>
+        </div>
+
         <div id="results-button-container" class="hidden">
             <button id="results-theme">View Results</button>
             <div id="results-hint" class="hidden">Click again to return to profile</div>
@@ -919,6 +1015,7 @@
         <div class="controls">
             <div id="home-theme" class="theme-button">1</div>
             <div id="hacker-theme" class="theme-button">2</div>
+            <div id="discord-theme" class="theme-button">3</div>
         </div>
 
         <div class="top-controls">
