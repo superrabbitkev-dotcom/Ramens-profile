@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Kept static: No typing loop for name
     if (profileName) {
-      profileName.textContent = "SIRRAMENBOI";
+      profileName.textContent = "RAMEN";
     }
 
     typeWriterBio();
