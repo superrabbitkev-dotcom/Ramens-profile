@@ -14,15 +14,7 @@
             box-sizing: border-box;
             font-family: 'Courier New', monospace;
         }
-        .click-spark {
-            position: fixed;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
-            box-shadow: 0 0 8px currentColor;
-        }
+
         .custom-cursor {
             position: fixed;
             width: 40px;
@@ -88,6 +80,31 @@
 
         .hidden {
             display: none !important;
+        }
+
+        /* Spark Effect */
+        .click-spark {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 8px currentColor;
+        }
+
+        /* Circular Visualizer */
+        #circular-visualizer {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 220px;
+            height: 220px;
+            z-index: 15;
+            pointer-events: none;
+            opacity: 0.85;
+            filter: drop-shadow(0 0 10px rgba(0, 206, 209, 0.45));
         }
 
         .controls {
@@ -898,6 +915,12 @@
                 gap: 8px;
             }
 
+            #circular-visualizer {
+                width: 170px;
+                height: 170px;
+                bottom: 15px;
+            }
+
             .controls {
                 bottom: 20px;
                 gap: 8px;
@@ -1147,6 +1170,9 @@
             <button id="results-theme">View Results</button>
             <div id="results-hint" class="hidden">Click again to return to profile</div>
         </div>
+
+        <!-- Circular Visualizer Canvas -->
+        <canvas id="circular-visualizer"></canvas>
 
         <!-- Tab Switch Controls 1, 2, 3, 4 -->
         <div class="controls">
