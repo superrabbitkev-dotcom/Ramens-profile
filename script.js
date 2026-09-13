@@ -119,7 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
         profileContainer.classList.add('orbit');
       }}
     );
-    typeWriterName();
+
+    // Kept static: No typing loop for name
+    if (profileName) {
+      profileName.textContent = "SIRRAMENBOI";
+    }
+
     typeWriterBio();
   }
 
@@ -128,37 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     startExperience();
   });
-
-  // Profile Name Typewriter
-  const names = ["SIRRAMENBOI"];
-  let name = names[0];
-  let nameText = '';
-  let nameIndex = 0;
-  let isNameDeleting = false;
-  let nameCursorVisible = true;
-
-  function typeWriterName() {
-    if (!isNameDeleting && nameIndex < name.length) {
-      nameText = name.slice(0, nameIndex + 1);
-      nameIndex++;
-    } else if (isNameDeleting && nameIndex > 0) {
-      nameText = name.slice(0, nameIndex - 1);
-      nameIndex--;
-    } else if (nameIndex === name.length) {
-      isNameDeleting = true;
-      setTimeout(typeWriterName, 2000);
-      return;
-    } else if (nameIndex === 0) {
-      isNameDeleting = false;
-    }
-    profileName.textContent = nameText + (nameCursorVisible ? '|' : ' ');
-    setTimeout(typeWriterName, isNameDeleting ? 50 : Math.floor(Math.random() * 101) + 30);
-  }
-
-  setInterval(() => {
-    nameCursorVisible = !nameCursorVisible;
-    if (profileName) profileName.textContent = nameText + (nameCursorVisible ? '|' : ' ');
-  }, 500);
 
   // Profile Bio Typewriter
   const bioMessages = [
@@ -199,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileBio) profileBio.textContent = bioText + (bioCursorVisible ? '|' : ' ');
   }, 500);
 
-  // Volume Controls (YouTube API)
+  // Volume Controls
   volumeIcon.addEventListener('click', () => {
     if (!isPlayerReady || !player) return;
     isMuted = !isMuted;
