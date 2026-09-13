@@ -140,7 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
     "I love developing in Python, CSS, and JavaScript",
     "I Love playing CRK (CookieRun: Kingdom)",
     "We do not lick the dog",
-    "I am a person :)"
+    "I am a person :)",
+    "Taken! Love them to the stars and back!"
   ];
   let bioText = '';
   let bioIndex = 0;
