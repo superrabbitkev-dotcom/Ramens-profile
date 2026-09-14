@@ -255,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const barWidth = width / numBars;
     const spacing = 3;
 
-    // Bass calculation for card bounce
     let bassMagnitude = 0;
 
     for (let i = 0; i < numBars; i++) {
@@ -288,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lineCtx.fillRect(x, y, barWidth - spacing, bH);
     }
 
-    // Card Bass Bounce: subtly expands by 1.5–3.5% during bass kicks
+    // Card Bass Bounce
     let scaleVal = 1;
     if (isPlaying && currentVol > 0) {
       const avgBass = bassMagnitude / 8;
