@@ -73,7 +73,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
+// --- CINEMA MODE & SHORTCUT HUD ---
+  const shortcutHud = document.getElementById('shortcut-hud');
+  const cinemaExitHint = document.getElementById('cinema-exit-hint');
+  let isCinemaMode = false;
 
+  // Select all interface elements that should disappear during Cinema Mode
+  const uiElementsToFade = [
+    profileBlock,
+    skillsBlock,
+    discordBlock,
+    timeBlock,
+    document.getElementById('line-visualizer'),
+    document.getElementById('track-progress-container'),
+    document.querySelector('.controls'),
+    document.querySelector('.top-controls'),
+    document.getElementById('dropboard-drawer'),
+    resultsButtonContainer
+  ];
+
+  function toggleCinemaMode() {
+    isCinemaMode = !isCinemaMode;
+
+    uiElementsToFade.forEach(el => {
+      if (el) el.classList.toggle('cinema-hidden', isCinemaMode);
+    });
+
+    if (isCinemaMode) {
+      cinemaExitHint.classList.remove('hidden');
+      if (!shortcutHud.classList.contains('hidden')) {
+        shortcutHud.classList.add('hidden');
+      }
+    } else {
+      cinemaExitHint.classList.add('hidden');
+    }
+  }
+
+  function toggleShortcutHud() {
+    shortcutHud.classList.toggle('hidden');
+  }
+
+  // Hook into keydown
+  document.addEventListener('keydown', (e) => {
+    // Prevent hotkeys from triggering when typing in the song input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+      e.preventDefault();
+      toggleShortcutHud();
+      return;
+    }
+
+    if (e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      toggleCinemaMode();
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      if (!shortcutHud.classList.contains('hidden')) {
+        shortcutHud.classList.add('hidden');
+      } else if (isCinemaMode) {
+        toggleCinemaMode();
+      } else if (dropboardDrawer.classList.contains('open')) {
+        toggleDrawer();
+      }
+    }
+  });
+
+  // Clicking outside HUD box closes it
+  if (shortcutHud) {
+    shortcutHud.addEventListener('click', (e) => {
+      if (e.target === shortcutHud) {
+        shortcutHud.classList.add('hidden');
+      }
+    });
+  }
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
