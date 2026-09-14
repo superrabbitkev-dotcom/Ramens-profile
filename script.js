@@ -798,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+    if (e.key === '/') {
       e.preventDefault();
       toggleShortcutHud();
       return;
