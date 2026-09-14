@@ -1204,6 +1204,106 @@
                 font-size: 18px;
                 padding: 0 20px;
             }
+            /* Shortcut HUD Modal */
+#shortcut-hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.25s ease;
+}
+
+.hud-content {
+    background: rgba(12, 14, 24, 0.95);
+    border: 1px solid rgba(0, 206, 209, 0.5);
+    border-radius: 16px;
+    padding: 24px 28px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 206, 209, 0.25);
+    width: 420px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hud-title {
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: #00ced1;
+    font-weight: bold;
+}
+
+.hud-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hud-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.hud-key {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 206, 209, 0.4);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #00ced1;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.hud-footnote {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    margin-top: 4px;
+}
+
+/* Cinema Mode UI Fade Class */
+.cinema-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.4s ease-out !important;
+}
+
+#cinema-exit-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 150;
+    pointer-events: none;
+    animation: cinemaPulse 3s infinite ease-in-out;
+}
+
+#cinema-exit-hint strong {
+    color: #00ced1;
+}
+
+@keyframes cinemaPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+}
         }
     </style>
 </head>
