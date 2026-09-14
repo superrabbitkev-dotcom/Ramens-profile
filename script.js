@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
           chicagoWeatherVal.textContent = `${temp}°F • ${condition}`;
         }
 
-        // Auto-switch to snowfall if Chicago weather code indicates snow (codes 71, 73, 75, 77, 85, 86)
+        // Auto-switch to snowfall if Chicago weather indicates snow
         if ([71, 73, 75, 77, 85, 86].includes(code) && !isSnowMode) {
           toggleSnowMode();
         }
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   fetchChicagoWeather();
-  setInterval(fetchChicagoWeather, 600000); // Check every 10 mins
+  setInterval(fetchChicagoWeather, 600000);
 
   // Neon Click Sparks Generator
   const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard Navigation: Tab, 1-4, F, S, M, ?, Escape
+  // Keyboard Navigation: Tab, 1-4, F, S, M, /, Escape
   document.addEventListener('keydown', (e) => {
     // TAB Key toggles the music drawer
     if (e.key === 'Tab') {
