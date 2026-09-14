@@ -33,12 +33,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const volumeIcon = document.getElementById('volume-icon');
   const volumeSlider = document.getElementById('volume-slider');
   const transparencySlider = document.getElementById('transparency-slider');
+  const snowToggleBtn = document.getElementById('snow-toggle-btn');
   
   // Tab Containers
   const profileBlock = document.getElementById('profile-block');
   const skillsBlock = document.getElementById('skills-block');
   const discordBlock = document.getElementById('discord-block');
   const timeBlock = document.getElementById('time-block');
+
+  // HUD & Cinema Elements
+  const shortcutHud = document.getElementById('shortcut-hud');
+  const cinemaExitHint = document.getElementById('cinema-exit-hint');
+  let isCinemaMode = false;
 
   // Lanyard Status Elements
   const DISCORD_USER_ID = "1245196598368141424";
@@ -48,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const lanyardCustomStatus = document.getElementById('lanyard-custom-status');
   const lanyardActivity = document.getElementById('lanyard-activity');
 
-  // Clock Elements
+  // Clock & Weather Elements
   const digitalClock = document.getElementById('digital-clock');
   const clockDate = document.getElementById('clock-date');
   const tzName = document.getElementById('tz-name');
-  const activityStatus = document.getElementById('activity-status');
+  const chicagoWeatherVal = document.getElementById('chicago-weather-val');
 
   const pythonBar = document.getElementById('python-bar');
   const cppBar = document.getElementById('cpp-bar');
@@ -73,82 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
-// --- CINEMA MODE & SHORTCUT HUD ---
-  const shortcutHud = document.getElementById('shortcut-hud');
-  const cinemaExitHint = document.getElementById('cinema-exit-hint');
-  let isCinemaMode = false;
 
-  // Select all interface elements that should disappear during Cinema Mode
-  const uiElementsToFade = [
-    profileBlock,
-    skillsBlock,
-    discordBlock,
-    timeBlock,
-    document.getElementById('line-visualizer'),
-    document.getElementById('track-progress-container'),
-    document.querySelector('.controls'),
-    document.querySelector('.top-controls'),
-    document.getElementById('dropboard-drawer'),
-    resultsButtonContainer
-  ];
-
-  function toggleCinemaMode() {
-    isCinemaMode = !isCinemaMode;
-
-    uiElementsToFade.forEach(el => {
-      if (el) el.classList.toggle('cinema-hidden', isCinemaMode);
-    });
-
-    if (isCinemaMode) {
-      cinemaExitHint.classList.remove('hidden');
-      if (!shortcutHud.classList.contains('hidden')) {
-        shortcutHud.classList.add('hidden');
-      }
-    } else {
-      cinemaExitHint.classList.add('hidden');
-    }
-  }
-
-  function toggleShortcutHud() {
-    shortcutHud.classList.toggle('hidden');
-  }
-
-  // Hook into keydown
-  document.addEventListener('keydown', (e) => {
-    // Prevent hotkeys from triggering when typing in the song input
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
-    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
-      e.preventDefault();
-      toggleShortcutHud();
-      return;
-    }
-
-    if (e.key.toLowerCase() === 'f') {
-      e.preventDefault();
-      toggleCinemaMode();
-      return;
-    }
-
-    if (e.key === 'Escape') {
-      if (!shortcutHud.classList.contains('hidden')) {
-        shortcutHud.classList.add('hidden');
-      } else if (isCinemaMode) {
-        toggleCinemaMode();
-      } else if (dropboardDrawer.classList.contains('open')) {
-        toggleDrawer();
-      }
-    }
-  });
-
-  // Clicking outside HUD box closes it
-  if (shortcutHud) {
-    shortcutHud.addEventListener('click', (e) => {
-      if (e.target === shortcutHud) {
-        shortcutHud.classList.add('hidden');
-      }
-    });
-  }
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
@@ -208,53 +139,125 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cozy Window Rain Particles Engine
-  const rainCanvas = document.getElementById('rain-canvas');
-  const rainCtx = rainCanvas.getContext('2d');
+  // --- COZY WEATHER PARTICLES ENGINE (RAIN / SNOWFALL TOGGLE) ---
+  const weatherCanvas = document.getElementById('weather-canvas');
+  const weatherCtx = weatherCanvas.getContext('2d');
+  let isSnowMode = false;
 
-  function resizeRainCanvas() {
-    rainCanvas.width = window.innerWidth;
-    rainCanvas.height = window.innerHeight;
+  function resizeWeatherCanvas() {
+    weatherCanvas.width = window.innerWidth;
+    weatherCanvas.height = window.innerHeight;
   }
-  resizeRainCanvas();
-  window.addEventListener('resize', resizeRainCanvas);
+  resizeWeatherCanvas();
+  window.addEventListener('resize', resizeWeatherCanvas);
 
-  const rainDropCount = 75;
-  const rainDrops = [];
-  for (let i = 0; i < rainDropCount; i++) {
-    rainDrops.push({
+  const particleCount = 85;
+  const particles = [];
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
       len: Math.random() * 20 + 10,
+      radius: Math.random() * 2.2 + 1.2,
       speed: Math.random() * 4 + 3,
-      opacity: Math.random() * 0.4 + 0.15
+      snowSpeed: Math.random() * 1.5 + 0.8,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleSpeed: Math.random() * 0.03 + 0.01,
+      opacity: Math.random() * 0.45 + 0.2
     });
   }
 
-  function renderRain() {
-    rainCtx.clearRect(0, 0, rainCanvas.width, rainCanvas.height);
-    rainCtx.lineWidth = 1.2;
-    rainCtx.lineCap = 'round';
+  function renderWeather() {
+    weatherCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
 
-    for (let i = 0; i < rainDropCount; i++) {
-      const d = rainDrops[i];
-      rainCtx.strokeStyle = `rgba(174, 214, 241, ${d.opacity})`;
-      rainCtx.beginPath();
-      rainCtx.moveTo(d.x, d.y);
-      rainCtx.lineTo(d.x - 2, d.y + d.len);
-      rainCtx.stroke();
+    for (let i = 0; i < particleCount; i++) {
+      const p = particles[i];
 
-      d.y += d.speed;
-      d.x -= 0.5;
+      if (isSnowMode) {
+        // Soft floating winter snow flakes
+        p.wobble += p.wobbleSpeed;
+        p.y += p.snowSpeed;
+        p.x += Math.sin(p.wobble) * 0.75;
 
-      if (d.y > rainCanvas.height) {
-        d.y = -d.len;
-        d.x = Math.random() * rainCanvas.width;
+        weatherCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+        weatherCtx.beginPath();
+        weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        weatherCtx.fill();
+      } else {
+        // Cozy diagonal rain streaks
+        p.y += p.speed;
+        p.x -= 0.6;
+
+        weatherCtx.strokeStyle = `rgba(174, 214, 241, ${p.opacity})`;
+        weatherCtx.lineWidth = 1.2;
+        weatherCtx.lineCap = 'round';
+        weatherCtx.beginPath();
+        weatherCtx.moveTo(p.x, p.y);
+        weatherCtx.lineTo(p.x - 2, p.y + p.len);
+        weatherCtx.stroke();
+      }
+
+      if (p.y > weatherCanvas.height) {
+        p.y = -20;
+        p.x = Math.random() * weatherCanvas.width;
       }
     }
-    requestAnimationFrame(renderRain);
+    requestAnimationFrame(renderWeather);
   }
-  renderRain();
+  renderWeather();
+
+  function toggleSnowMode() {
+    isSnowMode = !isSnowMode;
+    if (snowToggleBtn) {
+      snowToggleBtn.classList.toggle('active', isSnowMode);
+    }
+  }
+
+  if (snowToggleBtn) {
+    snowToggleBtn.addEventListener('click', toggleSnowMode);
+  }
+
+  // --- CHICAGO LIVE WEATHER SYNC (OPEN-METEO PUBLIC API) ---
+  const weatherCodeMap = {
+    0: "Clear Sky ☀️",
+    1: "Mainly Clear 🌤️",
+    2: "Partly Cloudy ⛅",
+    3: "Overcast ☁️",
+    45: "Foggy 🌫️",
+    51: "Light Drizzle 🌧️",
+    61: "Rainy 🌧️",
+    63: "Moderate Rain 🌧️",
+    65: "Heavy Rain ⛈️",
+    71: "Slight Snow ❄️",
+    73: "Moderate Snow ❄️",
+    75: "Heavy Snow ❄️",
+    95: "Thunderstorm ⚡"
+  };
+
+  async function fetchChicagoWeather() {
+    try {
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=41.85&longitude=-87.65&current=temperature_2m,weather_code&temperature_unit=fahrenheit');
+      const data = await res.json();
+      if (data && data.current) {
+        const temp = Math.round(data.current.temperature_2m);
+        const code = data.current.weather_code;
+        const condition = weatherCodeMap[code] || "Overcast ☁️";
+        
+        if (chicagoWeatherVal) {
+          chicagoWeatherVal.textContent = `${temp}°F • ${condition}`;
+        }
+
+        // Auto-switch to snowfall if Chicago weather code indicates snow (codes 71, 73, 75, 77, 85, 86)
+        if ([71, 73, 75, 77, 85, 86].includes(code) && !isSnowMode) {
+          toggleSnowMode();
+        }
+      }
+    } catch (err) {
+      if (chicagoWeatherVal) chicagoWeatherVal.textContent = "68°F • Clear 🌙";
+    }
+  }
+  fetchChicagoWeather();
+  setInterval(fetchChicagoWeather, 600000); // Check every 10 mins
 
   // Neon Click Sparks Generator
   const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
@@ -498,8 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     profileBlock.classList.remove('hidden');
     gsap.fromTo(profileBlock,
-      { opacity: 0, y: -50 },
-      { opacity: 1, y: 0, duration: 1, ease: 'power2.out', onComplete: () => {
+      { opacity: 0, y: -50, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out', onComplete: () => {
         profileBlock.classList.add('profile-appear');
         profileContainer.classList.add('orbit');
       }}
@@ -642,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // 4-Tab Switcher Logic
+  // --- 4-TAB VERTICAL WIPE TRANSITION ENGINE ---
   const allTabs = [
     { name: 'profile', el: profileBlock, theme: 'home-theme' },
     { name: 'skills', el: skillsBlock, theme: 'hacker-theme' },
@@ -650,35 +653,62 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'time', el: timeBlock, theme: 'time-theme' }
   ];
 
-  function switchTab(targetName) {
-    allTabs.forEach(tab => {
-      if (tab.name === targetName) {
-        if (tab.el.classList.contains('hidden')) {
-          tab.el.classList.remove('hidden');
-          gsap.fromTo(tab.el,
-            { x: 60, opacity: 0 },
-            { x: 0, opacity: 1, duration: 0.4, ease: 'power2.out' }
-          );
-        }
-        document.body.className = tab.theme;
+  let currentActiveTab = 'profile';
 
-        if (tab.name === 'skills') {
-          if (pythonBar) gsap.to(pythonBar, { width: '87%', duration: 1.2, ease: 'power2.out' });
-          if (cppBar) gsap.to(cppBar, { width: '15%', duration: 1.2, ease: 'power2.out' });
-          if (csharpBar) gsap.to(csharpBar, { width: '35%', duration: 1.2, ease: 'power2.out' });
+  function switchTab(targetName) {
+    if (targetName === currentActiveTab) return;
+
+    const currentIndex = allTabs.findIndex(t => t.name === currentActiveTab);
+    const targetIndex = allTabs.findIndex(t => t.name === targetName);
+    const movingDown = targetIndex > currentIndex;
+
+    const outgoing = allTabs[currentIndex];
+    const incoming = allTabs[targetIndex];
+
+    // Outgoing Vertical Wipe (slides up/down with lens defocus)
+    if (outgoing && outgoing.el) {
+      gsap.to(outgoing.el, {
+        y: movingDown ? -60 : 60,
+        opacity: 0,
+        filter: 'blur(8px)',
+        duration: 0.32,
+        ease: 'power2.in',
+        onComplete: () => {
+          outgoing.el.classList.add('hidden');
+          gsap.set(outgoing.el, { y: 0, filter: 'blur(0px)' });
         }
-      } else {
-        if (!tab.el.classList.contains('hidden')) {
-          gsap.to(tab.el, {
-            x: -60,
-            opacity: 0,
-            duration: 0.3,
-            ease: 'power2.in',
-            onComplete: () => tab.el.classList.add('hidden')
-          });
+      });
+    }
+
+    // Incoming Vertical Wipe (enters from opposite side, clearing blur)
+    if (incoming && incoming.el) {
+      incoming.el.classList.remove('hidden');
+      document.body.className = incoming.theme;
+
+      gsap.fromTo(incoming.el,
+        {
+          y: movingDown ? 60 : -60,
+          opacity: 0,
+          filter: 'blur(8px)'
+        },
+        {
+          y: 0,
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 0.4,
+          ease: 'power2.out',
+          delay: 0.08
         }
+      );
+
+      if (incoming.name === 'skills') {
+        if (pythonBar) gsap.to(pythonBar, { width: '87%', duration: 1.2, ease: 'power2.out' });
+        if (cppBar) gsap.to(cppBar, { width: '15%', duration: 1.2, ease: 'power2.out' });
+        if (csharpBar) gsap.to(csharpBar, { width: '35%', duration: 1.2, ease: 'power2.out' });
       }
-    });
+    }
+
+    currentActiveTab = targetName;
 
     if (resultsButtonContainer) {
       if (targetName === 'skills') {
@@ -690,25 +720,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Button Listeners
-  if (homeThemeBtn) {
-    homeThemeBtn.addEventListener('click', () => switchTab('profile'));
-  }
-
-  if (hackerThemeBtn) {
-    hackerThemeBtn.addEventListener('click', () => switchTab('skills'));
-  }
-
+  if (homeThemeBtn) homeThemeBtn.addEventListener('click', () => switchTab('profile'));
+  if (hackerThemeBtn) hackerThemeBtn.addEventListener('click', () => switchTab('skills'));
   if (discordThemeBtn) {
     discordThemeBtn.addEventListener('click', () => {
       switchTab('discord');
       fetchDiscordPresence();
     });
   }
-
   if (timeThemeBtn) {
     timeThemeBtn.addEventListener('click', () => {
       switchTab('time');
       updateChicagoTime();
+      fetchChicagoWeather();
     });
   }
 
@@ -722,8 +746,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard Navigation: TAB toggles drawer, 1-4 switches tabs, M mutes
+  // --- CINEMA MODE & SHORTCUT HUD LOGIC ---
+  const uiElementsToFade = [
+    profileBlock,
+    skillsBlock,
+    discordBlock,
+    timeBlock,
+    document.getElementById('line-visualizer'),
+    document.getElementById('track-progress-container'),
+    document.querySelector('.controls'),
+    document.querySelector('.top-controls'),
+    document.getElementById('dropboard-drawer'),
+    resultsButtonContainer
+  ];
+
+  function toggleCinemaMode() {
+    isCinemaMode = !isCinemaMode;
+
+    uiElementsToFade.forEach(el => {
+      if (el) el.classList.toggle('cinema-hidden', isCinemaMode);
+    });
+
+    if (isCinemaMode) {
+      cinemaExitHint.classList.remove('hidden');
+      if (!shortcutHud.classList.contains('hidden')) {
+        shortcutHud.classList.add('hidden');
+      }
+    } else {
+      cinemaExitHint.classList.add('hidden');
+    }
+  }
+
+  function toggleShortcutHud() {
+    shortcutHud.classList.toggle('hidden');
+  }
+
+  if (shortcutHud) {
+    shortcutHud.addEventListener('click', (e) => {
+      if (e.target === shortcutHud) shortcutHud.classList.add('hidden');
+    });
+  }
+
+  // Keyboard Navigation: Tab, 1-4, F, S, M, ?, Escape
   document.addEventListener('keydown', (e) => {
+    // TAB Key toggles the music drawer
     if (e.key === 'Tab') {
       e.preventDefault();
       toggleDrawer();
@@ -731,6 +797,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+      e.preventDefault();
+      toggleShortcutHud();
+      return;
+    }
+
+    if (e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      toggleCinemaMode();
+      return;
+    }
+
+    if (e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      toggleSnowMode();
+      return;
+    }
+
+    if (e.key === 'Escape') {
+      if (!shortcutHud.classList.contains('hidden')) {
+        shortcutHud.classList.add('hidden');
+      } else if (isCinemaMode) {
+        toggleCinemaMode();
+      } else if (dropboardDrawer.classList.contains('open')) {
+        toggleDrawer();
+      }
+      return;
+    }
 
     switch (e.key.toLowerCase()) {
       case '1':
@@ -746,6 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
       case '4':
         switchTab('time');
         updateChicagoTime();
+        fetchChicagoWeather();
         break;
       case 'm':
         toggleMuteState();
@@ -868,15 +964,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tzString = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', timeZoneName: 'short' });
     const code = tzString.split(' ').pop();
     tzName.textContent = `Central Time (${code})`;
-
-    const hour = parseInt(now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }));
-    if (hour >= 1 && hour < 8) {
-      activityStatus.textContent = "Likely Sleeping / AFK 🌙";
-      activityStatus.style.color = "#ffbe76";
-    } else {
-      activityStatus.textContent = "Active / Available ⚡";
-      activityStatus.style.color = "#43e97b";
-    }
   }
 
   setInterval(updateChicagoTime, 1000);
