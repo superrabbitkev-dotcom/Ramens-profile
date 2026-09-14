@@ -59,8 +59,8 @@
             will-change: transform;
         }
 
-        /* Cozy Window Rain Layer */
-        #rain-canvas {
+        /* Weather Precipitation Canvas Layer */
+        #weather-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -68,7 +68,7 @@
             height: 100vh;
             z-index: 2;
             pointer-events: none;
-            opacity: 0.65;
+            opacity: 0.7;
         }
 
         .glitch-overlay {
@@ -283,6 +283,107 @@
             transform: rotate(180deg);
         }
 
+        /* Keyboard Shortcut HUD Overlay */
+        #shortcut-hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.25s ease;
+        }
+
+        .hud-content {
+            background: rgba(12, 14, 24, 0.95);
+            border: 1px solid rgba(0, 206, 209, 0.5);
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 206, 209, 0.25);
+            width: 420px;
+            max-width: 90vw;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .hud-title {
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: #00ced1;
+            font-weight: bold;
+        }
+
+        .hud-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hud-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hud-key {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 206, 209, 0.4);
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #00ced1;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .hud-footnote {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* Cinema Mode Classes */
+        .cinema-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: opacity 0.4s ease-out !important;
+        }
+
+        #cinema-exit-hint {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 150;
+            pointer-events: none;
+            animation: cinemaPulse 3s infinite ease-in-out;
+        }
+
+        #cinema-exit-hint strong {
+            color: #00ced1;
+        }
+
+        @keyframes cinemaPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.9; }
+        }
+
         .controls {
             position: fixed;
             bottom: calc(50% - 240px - 10px);
@@ -363,6 +464,34 @@
             color: white;
         }
 
+        /* Snowfall Toggle Icon */
+        #snow-toggle-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s, transform 0.2s;
+            padding: 2px;
+        }
+
+        #snow-toggle-btn:hover {
+            color: #00ced1;
+            transform: scale(1.1);
+        }
+
+        #snow-toggle-btn.active {
+            color: #4facfe;
+            filter: drop-shadow(0 0 6px #00ced1);
+        }
+
+        .snow-icon {
+            width: 18px;
+            height: 18px;
+        }
+
         .top-controls {
             position: fixed;
             bottom: calc(50% - 240px - 60px);
@@ -373,13 +502,13 @@
             gap: 15px;
             z-index: 20;
             background: rgba(0, 0, 0, 0.7);
-            padding: 8px 12px;
+            padding: 8px 14px;
             border-radius: 20px;
             backdrop-filter: blur(5px);
         }
 
-        /* Profile Block with Bass Bounce Variable */
-        #profile-block {
+        /* Shared Card Structure with Vertical Wipe Anchor */
+        #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -396,9 +525,13 @@
             flex-direction: column;
             gap: 15px;
             backdrop-filter: blur(10px);
-            opacity: 0;
             transform-style: preserve-3d;
+            will-change: transform, filter, opacity;
             transition: transform 0.08s ease-out;
+        }
+
+        #profile-block {
+            opacity: 0;
             pointer-events: auto;
         }
 
@@ -675,27 +808,6 @@
             transform: scale(1.4) rotateY(15deg);
         }
 
-        #skills-block, #discord-block, #time-block {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            --bass-scale: 1;
-            transform: translate(-50%, -50%) scale(var(--bass-scale));
-            width: 820px;
-            min-height: 332px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            backdrop-filter: blur(10px);
-            transform-style: preserve-3d;
-            transition: transform 0.08s ease-out;
-        }
-
         .skills-title {
             text-align: center;
             font-size: 24px;
@@ -836,7 +948,7 @@
             gap: 2px;
         }
 
-        /* Tab 4: Local Time Styles */
+        /* Tab 4: Local Time & Chicago Live Weather */
         .time-card-content {
             display: flex;
             flex-direction: column;
@@ -1204,106 +1316,6 @@
                 font-size: 18px;
                 padding: 0 20px;
             }
-            /* Shortcut HUD Modal */
-#shortcut-hud {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(12px);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.25s ease;
-}
-
-.hud-content {
-    background: rgba(12, 14, 24, 0.95);
-    border: 1px solid rgba(0, 206, 209, 0.5);
-    border-radius: 16px;
-    padding: 24px 28px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 206, 209, 0.25);
-    width: 420px;
-    max-width: 90vw;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.hud-title {
-    font-size: 13px;
-    letter-spacing: 2px;
-    color: #00ced1;
-    font-weight: bold;
-}
-
-.hud-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.hud-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.hud-key {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(0, 206, 209, 0.4);
-    padding: 4px 10px;
-    border-radius: 6px;
-    color: #00ced1;
-    font-weight: bold;
-    font-size: 12px;
-}
-
-.hud-footnote {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.4);
-    text-align: center;
-    margin-top: 4px;
-}
-
-/* Cinema Mode UI Fade Class */
-.cinema-hidden {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 0.4s ease-out !important;
-}
-
-#cinema-exit-hint {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.7);
-    z-index: 150;
-    pointer-events: none;
-    animation: cinemaPulse 3s infinite ease-in-out;
-}
-
-#cinema-exit-hint strong {
-    color: #00ced1;
-}
-
-@keyframes cinemaPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.9; }
-}
         }
     </style>
 </head>
@@ -1336,25 +1348,27 @@
 
     <div class="container">
         <!-- Keyboard Shortcut HUD Overlay (? Key) -->
-<div id="shortcut-hud" class="hidden">
-    <div class="hud-content">
-        <div class="hud-title">// KEYBOARD SHORTCUTS</div>
-        <div class="hud-grid">
-            <div class="hud-item"><span class="hud-key">TAB</span><span>Music Drawer</span></div>
-            <div class="hud-item"><span class="hud-key">F</span><span>Cinema / Focus Mode</span></div>
-            <div class="hud-item"><span class="hud-key">1 - 4</span><span>Switch Tabs</span></div>
-            <div class="hud-item"><span class="hud-key">M</span><span>Mute / Unmute</span></div>
-            <div class="hud-item"><span class="hud-key">?</span><span>Toggle this HUD</span></div>
-            <div class="hud-item"><span class="hud-key">ESC</span><span>Close Menus</span></div>
+        <div id="shortcut-hud" class="hidden">
+            <div class="hud-content">
+                <div class="hud-title">// KEYBOARD SHORTCUTS</div>
+                <div class="hud-grid">
+                    <div class="hud-item"><span class="hud-key">TAB</span><span>Music Drawer</span></div>
+                    <div class="hud-item"><span class="hud-key">F</span><span>Cinema / Focus Mode</span></div>
+                    <div class="hud-item"><span class="hud-key">1 - 4</span><span>Switch Tabs (Vertical Wipe)</span></div>
+                    <div class="hud-item"><span class="hud-key">S</span><span>Toggle Rain / Snow</span></div>
+                    <div class="hud-item"><span class="hud-key">M</span><span>Mute / Unmute</span></div>
+                    <div class="hud-item"><span class="hud-key">?</span><span>Toggle Shortcut HUD</span></div>
+                    <div class="hud-item"><span class="hud-key">ESC</span><span>Dismiss Windows</span></div>
+                </div>
+                <div class="hud-footnote">[Press ? or ESC to close]</div>
+            </div>
         </div>
-        <div class="hud-footnote">[Press ? or ESC to dismiss]</div>
-    </div>
-</div>
 
-<!-- Cinema Mode Return Pill (Shows when UI is hidden) -->
-<div id="cinema-exit-hint" class="hidden">
-    <span>PRESS <strong>F</strong> OR <strong>ESC</strong> TO EXIT CINEMA MODE</span>
-</div>
+        <!-- Cinema Mode Exit Pill -->
+        <div id="cinema-exit-hint" class="hidden">
+            <span>PRESS <strong>F</strong> OR <strong>ESC</strong> TO EXIT CINEMA MODE</span>
+        </div>
+
         <!-- Live YouTube Stream Background -->
         <iframe 
             id="background" 
@@ -1365,8 +1379,8 @@
             allowfullscreen>
         </iframe>
 
-        <!-- Cozy Rain Canvas over Background -->
-        <canvas id="rain-canvas"></canvas>
+        <!-- Weather Canvas (Rain / Snow Particles) -->
+        <canvas id="weather-canvas"></canvas>
 
         <div class="glitch-overlay"></div>
         <div id="hacker-overlay" class="hidden"></div>
@@ -1528,9 +1542,9 @@
             </div>
         </div>
 
-        <!-- Tab 4: Chicago Time Block -->
+        <!-- Tab 4: Chicago Time & Weather Sync Block -->
         <div id="time-block" class="hidden">
-            <h2 class="skills-title">Local Time (Chicago)</h2>
+            <h2 class="skills-title">Local Time & Weather (Chicago)</h2>
             <div class="time-card-content">
                 <div id="digital-clock" class="digital-clock">--:--:-- --</div>
                 <div id="clock-date" class="clock-date">Loading...</div>
@@ -1545,8 +1559,8 @@
                         <span id="tz-name" class="detail-val">Central Time (CT)</span>
                     </div>
                     <div class="time-detail-box">
-                        <span class="detail-label">Status</span>
-                        <span id="activity-status" class="detail-val">Online</span>
+                        <span class="detail-label">Live Weather</span>
+                        <span id="chicago-weather-val" class="detail-val" style="color: #00ced1;">Fetching...</span>
                     </div>
                     <div class="time-detail-box">
                         <span class="detail-label">Ping / Latency</span>
@@ -1570,6 +1584,13 @@
         </div>
 
         <div class="top-controls">
+            <!-- Snowfall / Rain Weather Toggle Button -->
+            <button id="snow-toggle-btn" title="Toggle Rain / Snowfall (Hotkey: S)">
+                <svg class="snow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14M19.07 19.07L4.93 4.93M8 4l4 4 4-4M8 20l4-4 4 4M4 8l4 4-4 4m16-8l-4 4 4 4"></path>
+                </svg>
+            </button>
+
             <div class="volume-control">
                 <svg id="volume-icon" class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
