@@ -27,6 +27,13 @@
             --mocha-overlay: #6c7086;
         }
 
+        @font-face {
+            font-family: 'Angel Wish';
+            src: url('assets/Angel_wish.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -572,12 +579,18 @@
             font-weight: 600;
         }
 
-        .theme-button:hover,
-        .theme-button.active {
-            transform: scale(1.08);
-            background-color: var(--mocha-blue);
-            color: var(--mocha-crust);
+        .theme-button:hover {
             border-color: var(--mocha-blue);
+            color: var(--mocha-text);
+            transform: scale(1.08);
+        }
+
+        .theme-button.active {
+            background-color: var(--mocha-blue) !important;
+            color: var(--mocha-crust) !important;
+            border-color: var(--mocha-blue) !important;
+            box-shadow: 0 0 12px rgba(137, 180, 250, 0.45);
+            transform: scale(1.08);
         }
 
         .volume-control {
@@ -790,11 +803,14 @@
             margin-bottom: 8px;
         }
 
+        /* Restored Repository Font for Name */
         #profile-name {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: var(--mocha-text);
+            font-family: 'Angel Wish', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(137, 180, 250, 0.45);
         }
 
         .badge-group {
@@ -1485,7 +1501,7 @@
                 </div>
                 <div class="profile-info">
                     <div class="name-and-badges">
-                        <div id="profile-name">SIRRAMENBOI</div>
+                        <div id="profile-name">RAMEN</div>
                         <div class="badge-box">
                             <div class="badge-box-inner">
                                 <div class="badge-group">
@@ -1636,7 +1652,7 @@
                     </div>
                     <div class="time-detail-box">
                         <span class="detail-label">Time Zone</span>
-                        <span id="tz-name" class="detail-val">Central Time (CT)</span>
+                        <span id="tz-name" class="detail-val">Central Time (CDT)</span>
                     </div>
                     <div class="time-detail-box">
                         <span class="detail-label">Live Weather</span>
