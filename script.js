@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hackerThemeBtn = document.getElementById('hacker-theme');
   const discordThemeBtn = document.getElementById('discord-theme');
   const timeThemeBtn = document.getElementById('time-theme');
-  const navButtons = [homeThemeBtn, hackerThemeBtn, discordThemeBtn, timeThemeBtn];
 
   const resultsButton = document.getElementById('results-theme');
   const resultsButtonContainer = document.getElementById('results-button-container');
@@ -620,13 +619,15 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>`;
   });
 
+  // Slider changes opacity with Catppuccin Mocha tone
   if (transparencySlider) {
     transparencySlider.addEventListener('input', () => {
       const alpha = transparencySlider.value;
-      profileBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
-      skillsBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
-      discordBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
-      timeBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
+      const mochaBg = `rgba(30, 30, 46, ${alpha})`;
+      profileBlock.style.background = mochaBg;
+      skillsBlock.style.background = mochaBg;
+      discordBlock.style.background = mochaBg;
+      timeBlock.style.background = mochaBg;
     });
   }
 
@@ -675,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // Tab Switcher
+  // Tab Switcher with Button Highlighting
   const allTabs = [
     { name: 'profile', el: profileBlock, theme: 'home-theme', btn: homeThemeBtn },
     { name: 'skills', el: skillsBlock, theme: 'hacker-theme', btn: hackerThemeBtn },
@@ -695,8 +696,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const outgoing = allTabs[currentIndex];
     const incoming = allTabs[targetIndex];
 
-    navButtons.forEach(btn => btn?.classList.remove('active'));
-    incoming.btn?.classList.add('active');
+    // Highlight the active button
+    allTabs.forEach(tab => {
+      if (tab.btn) tab.btn.classList.remove('active');
+    });
+    if (incoming.btn) {
+      incoming.btn.classList.add('active');
+    }
 
     // Outgoing Vertical Wipe
     if (outgoing && outgoing.el) {
@@ -717,6 +723,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (incoming && incoming.el) {
       incoming.el.classList.remove('hidden');
       document.body.className = incoming.theme;
+
+      if (transparencySlider) {
+        incoming.el.style.background = `rgba(30, 30, 46, ${transparencySlider.value})`;
+      }
 
       gsap.fromTo(incoming.el,
         {
