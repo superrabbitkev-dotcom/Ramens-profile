@@ -8,6 +8,78 @@
     <link href="https://fonts.googleapis.com/css2?family=Retro+Gaming&display=swap" rel="stylesheet">
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
+/* Custom Right-Click Context Menu */
+#custom-context-menu {
+    position: fixed;
+    z-index: 10000;
+    width: 220px;
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid rgba(0, 206, 209, 0.4);
+    border-radius: 10px;
+    padding: 6px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 206, 209, 0.15);
+    user-select: none;
+    transform-origin: top left;
+}
+
+.context-header {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: rgba(0, 206, 209, 0.8);
+    padding: 6px 10px 4px 10px;
+    font-weight: bold;
+}
+
+.context-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.context-item:hover {
+    background: rgba(0, 206, 209, 0.2);
+    color: #fff;
+    padding-left: 14px;
+}
+
+.ctx-shortcut {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: bold;
+}
+
+.context-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+/* Floating Toast Notification */
+#action-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(10, 14, 24, 0.9);
+    border: 1px solid #00ced1;
+    color: #00ced1;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    backdrop-filter: blur(8px);
+    z-index: 10001;
+    box-shadow: 0 0 12px rgba(0, 206, 209, 0.3);
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+        
         * {
             margin: 0;
             padding: 0;
