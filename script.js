@@ -47,6 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightningFlash = document.getElementById('lightning-flash');
   let isCinemaMode = false;
 
+  // Context Menu & Toast Elements
+  const contextMenu = document.getElementById('custom-context-menu');
+  const actionToast = document.getElementById('action-toast');
+
   // Lanyard Status Elements
   const DISCORD_USER_ID = "1245196598368141424";
   const lanyardAvatar = document.getElementById('lanyard-avatar');
@@ -81,104 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let isMuted = false;
   let previousVolume = volumeSlider ? volumeSlider.value : 0.3;
 
-// --- CUSTOM RIGHT-CLICK CONTEXT MENU ---
-  const contextMenu = document.getElementById('custom-context-menu');
-  const actionToast = document.getElementById('action-toast');
-
-  function showToast(msg) {
-    if (!actionToast) return;
-    actionToast.textContent = msg;
-    actionToast.classList.remove('hidden');
-    gsap.fromTo(actionToast, 
-      { opacity: 0, y: 15 }, 
-      { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
-    );
-    setTimeout(() => {
-      gsap.to(actionToast, {
-        opacity: 0,
-        y: 15,
-        duration: 0.25,
-        ease: 'power2.in',
-        onComplete: () => actionToast.classList.add('hidden')
-      });
-    }, 2000);
-  }
-
-  function hideContextMenu() {
-    if (contextMenu && !contextMenu.classList.contains('hidden')) {
-      gsap.to(contextMenu, {
-        opacity: 0,
-        scale: 0.92,
-        duration: 0.12,
-        ease: 'power2.in',
-        onComplete: () => contextMenu.classList.add('hidden')
-      });
-    }
-  }
-
-  // Intercept native right click
-  document.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-
-    // Prevent default context menu, position our custom element
-    const menuWidth = 220;
-    const menuHeight = 200;
-
-    let posX = e.clientX;
-    let posY = e.clientY;
-
-    // Prevent overflowing off-screen
-    if (posX + menuWidth > window.innerWidth) {
-      posX = window.innerWidth - menuWidth - 10;
-    }
-    if (posY + menuHeight > window.innerHeight) {
-      posY = window.innerHeight - menuHeight - 10;
-    }
-
-    contextMenu.style.left = `${posX}px`;
-    contextMenu.style.top = `${posY}px`;
-
-    contextMenu.classList.remove('hidden');
-    gsap.fromTo(contextMenu,
-      { opacity: 0, scale: 0.92 },
-      { opacity: 1, scale: 1, duration: 0.18, ease: 'power2.out' }
-    );
-  });
-
-  // Close context menu when clicking elsewhere
-  document.addEventListener('pointerdown', (e) => {
-    if (contextMenu && !contextMenu.contains(e.target)) {
-      hideContextMenu();
-    }
-  });
-
-  // Context Menu Actions
-  document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href);
-    showToast('[COPIED PROFILE URL]');
-    hideContextMenu();
-  });
-
-  document.getElementById('ctx-toggle-cinema')?.addEventListener('click', () => {
-    toggleCinemaMode();
-    hideContextMenu();
-  });
-
-  document.getElementById('ctx-toggle-weather')?.addEventListener('click', () => {
-    toggleSnowMode();
-    showToast(isSnowMode ? '[WEATHER: SNOWFALL]' : '[WEATHER: RAIN]');
-    hideContextMenu();
-  });
-
-  document.getElementById('ctx-toggle-music')?.addEventListener('click', () => {
-    toggleDrawer();
-    hideContextMenu();
-  });
-
-  document.getElementById('ctx-close')?.addEventListener('click', () => {
-    hideContextMenu();
-  });
-  
   // Custom Cursor
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (isTouchDevice) {
@@ -257,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function triggerLightningFlash() {
     if (!lightningFlash) return;
 
-    // Fast multi-strike lightning effect
     gsap.timeline()
       .to(lightningFlash, { opacity: 0.85, duration: 0.04, ease: 'power1.out' })
       .to(lightningFlash, { opacity: 0.15, duration: 0.06 })
@@ -265,11 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
       .to(lightningFlash, { opacity: 0.3, duration: 0.08 })
       .to(lightningFlash, { opacity: 0, duration: 0.45, ease: 'power2.out' });
 
-    // Schedule next random flash between 10 and 20 seconds
     const nextInterval = Math.floor(Math.random() * 10001) + 10000;
     setTimeout(triggerLightningFlash, nextInterval);
   }
-  // Initial kickoff
   setTimeout(triggerLightningFlash, Math.floor(Math.random() * 6000) + 7000);
 
   // --- COZY WEATHER PARTICLES ENGINE (RAIN / SNOWFALL TOGGLE) ---
@@ -307,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const p = particles[i];
 
       if (isSnowMode) {
-        // Soft floating winter snow flakes
         p.wobble += p.wobbleSpeed;
         p.y += p.snowSpeed;
         p.x += Math.sin(p.wobble) * 0.75;
@@ -317,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         weatherCtx.fill();
       } else {
-        // Cozy diagonal rain streaks
         p.y += p.speed;
         p.x -= 0.6;
 
@@ -380,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
           chicagoWeatherVal.textContent = `${temp}°F • ${condition}`;
         }
 
-        // Auto-switch to snowfall if Chicago weather indicates snow
         if ([71, 73, 75, 77, 85, 86].includes(code) && !isSnowMode) {
           toggleSnowMode();
         }
@@ -921,6 +821,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- CUSTOM RIGHT-CLICK CONTEXT MENU & TOAST ENGINE ---
+  function showToast(msg) {
+    if (!actionToast) return;
+    actionToast.textContent = msg;
+    actionToast.classList.remove('hidden');
+    gsap.fromTo(actionToast, 
+      { opacity: 0, y: 15 }, 
+      { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' }
+    );
+    setTimeout(() => {
+      gsap.to(actionToast, {
+        opacity: 0,
+        y: 15,
+        duration: 0.25,
+        ease: 'power2.in',
+        onComplete: () => actionToast.classList.add('hidden')
+      });
+    }, 2000);
+  }
+
+  function hideContextMenu() {
+    if (contextMenu && !contextMenu.classList.contains('hidden')) {
+      gsap.to(contextMenu, {
+        opacity: 0,
+        scale: 0.92,
+        duration: 0.12,
+        ease: 'power2.in',
+        onComplete: () => contextMenu.classList.add('hidden')
+      });
+    }
+  }
+
+  // Intercept right click across the entire screen
+  window.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+
+    if (!contextMenu) return;
+
+    const menuWidth = 220;
+    const menuHeight = 220;
+
+    let posX = e.clientX;
+    let posY = e.clientY;
+
+    if (posX + menuWidth > window.innerWidth) {
+      posX = window.innerWidth - menuWidth - 10;
+    }
+    if (posY + menuHeight > window.innerHeight) {
+      posY = window.innerHeight - menuHeight - 10;
+    }
+
+    contextMenu.style.left = `${posX}px`;
+    contextMenu.style.top = `${posY}px`;
+
+    contextMenu.classList.remove('hidden');
+    gsap.fromTo(contextMenu,
+      { opacity: 0, scale: 0.92 },
+      { opacity: 1, scale: 1, duration: 0.18, ease: 'power2.out' }
+    );
+  }, { capture: true });
+
+  // Hide context menu when clicking outside
+  document.addEventListener('pointerdown', (e) => {
+    if (contextMenu && !contextMenu.contains(e.target)) {
+      hideContextMenu();
+    }
+  });
+
+  // Context Menu Item Actions
+  document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('[COPIED PROFILE URL]');
+    hideContextMenu();
+  });
+
+  document.getElementById('ctx-toggle-cinema')?.addEventListener('click', () => {
+    toggleCinemaMode();
+    hideContextMenu();
+  });
+
+  document.getElementById('ctx-toggle-weather')?.addEventListener('click', () => {
+    toggleSnowMode();
+    showToast(isSnowMode ? '[WEATHER: SNOWFALL]' : '[WEATHER: RAIN]');
+    hideContextMenu();
+  });
+
+  document.getElementById('ctx-toggle-music')?.addEventListener('click', () => {
+    toggleDrawer();
+    hideContextMenu();
+  });
+
+  document.getElementById('ctx-close')?.addEventListener('click', () => {
+    hideContextMenu();
+  });
+
   // Keyboard Navigation: Tab, 1-4, F, S, M, /, Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
@@ -950,7 +945,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (e.key === 'Escape') {
-      if (!shortcutHud.classList.contains('hidden')) {
+      if (!contextMenu.classList.contains('hidden')) {
+        hideContextMenu();
+      } else if (!shortcutHud.classList.contains('hidden')) {
         shortcutHud.classList.add('hidden');
       } else if (isCinemaMode) {
         toggleCinemaMode();
