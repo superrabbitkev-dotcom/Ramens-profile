@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hackerThemeBtn = document.getElementById('hacker-theme');
   const discordThemeBtn = document.getElementById('discord-theme');
   const timeThemeBtn = document.getElementById('time-theme');
+  const navButtons = [homeThemeBtn, hackerThemeBtn, discordThemeBtn, timeThemeBtn];
 
   const resultsButton = document.getElementById('results-theme');
   const resultsButtonContainer = document.getElementById('results-button-container');
@@ -118,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Background Video Parallax Depth
+  // Background Parallax
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
     const parallaxState = { x: 0, y: 0 };
@@ -127,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      const targetX = ((e.clientX - centerX) / centerX) * -35;
-      const targetY = ((e.clientY - centerY) / centerY) * -35;
+      const targetX = ((e.clientX - centerX) / centerX) * -25;
+      const targetY = ((e.clientY - centerY) / centerY) * -25;
 
       gsap.to(parallaxState, {
         x: targetX,
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- ACRYLIC CARD GLARE TRACKING ---
+  // Mocha Card Acrylic Glare
   const activeCards = [profileBlock, skillsBlock, discordBlock, timeBlock];
 
   function updateCardGlare(e, element) {
@@ -159,23 +160,23 @@ document.addEventListener('DOMContentLoaded', () => {
     element.style.setProperty('--glare-y', `${y}px`);
   }
 
-  // --- RANDOM LIGHTNING FLASH ENGINE (10 - 20s INTERVAL) ---
+  // Soft Mocha Lightning Flash
   function triggerLightningFlash() {
     if (!lightningFlash) return;
 
     gsap.timeline()
-      .to(lightningFlash, { opacity: 0.85, duration: 0.04, ease: 'power1.out' })
+      .to(lightningFlash, { opacity: 0.75, duration: 0.04, ease: 'power1.out' })
       .to(lightningFlash, { opacity: 0.15, duration: 0.06 })
-      .to(lightningFlash, { opacity: 0.95, duration: 0.05 })
-      .to(lightningFlash, { opacity: 0.3, duration: 0.08 })
-      .to(lightningFlash, { opacity: 0, duration: 0.45, ease: 'power2.out' });
+      .to(lightningFlash, { opacity: 0.85, duration: 0.05 })
+      .to(lightningFlash, { opacity: 0.25, duration: 0.08 })
+      .to(lightningFlash, { opacity: 0, duration: 0.5, ease: 'power2.out' });
 
     const nextInterval = Math.floor(Math.random() * 10001) + 10000;
     setTimeout(triggerLightningFlash, nextInterval);
   }
   setTimeout(triggerLightningFlash, Math.floor(Math.random() * 6000) + 7000);
 
-  // --- COZY WEATHER PARTICLES ENGINE (RAIN / SNOWFALL TOGGLE) ---
+  // Weather Particles
   const weatherCanvas = document.getElementById('weather-canvas');
   const weatherCtx = weatherCanvas.getContext('2d');
   let isSnowMode = false;
@@ -187,19 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeWeatherCanvas();
   window.addEventListener('resize', resizeWeatherCanvas);
 
-  const particleCount = 85;
+  const particleCount = 80;
   const particles = [];
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      len: Math.random() * 20 + 10,
-      radius: Math.random() * 2.2 + 1.2,
-      speed: Math.random() * 4 + 3,
-      snowSpeed: Math.random() * 1.5 + 0.8,
+      len: Math.random() * 18 + 8,
+      radius: Math.random() * 2 + 1,
+      speed: Math.random() * 3.5 + 2.5,
+      snowSpeed: Math.random() * 1.3 + 0.7,
       wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: Math.random() * 0.03 + 0.01,
-      opacity: Math.random() * 0.45 + 0.2
+      wobbleSpeed: Math.random() * 0.025 + 0.01,
+      opacity: Math.random() * 0.35 + 0.15
     });
   }
 
@@ -212,22 +213,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isSnowMode) {
         p.wobble += p.wobbleSpeed;
         p.y += p.snowSpeed;
-        p.x += Math.sin(p.wobble) * 0.75;
+        p.x += Math.sin(p.wobble) * 0.65;
 
-        weatherCtx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+        weatherCtx.fillStyle = `rgba(205, 214, 244, ${p.opacity})`;
         weatherCtx.beginPath();
         weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         weatherCtx.fill();
       } else {
         p.y += p.speed;
-        p.x -= 0.6;
+        p.x -= 0.5;
 
-        weatherCtx.strokeStyle = `rgba(174, 214, 241, ${p.opacity})`;
-        weatherCtx.lineWidth = 1.2;
+        weatherCtx.strokeStyle = `rgba(137, 180, 250, ${p.opacity})`;
+        weatherCtx.lineWidth = 1.1;
         weatherCtx.lineCap = 'round';
         weatherCtx.beginPath();
         weatherCtx.moveTo(p.x, p.y);
-        weatherCtx.lineTo(p.x - 2, p.y + p.len);
+        weatherCtx.lineTo(p.x - 1.5, p.y + p.len);
         weatherCtx.stroke();
       }
 
@@ -251,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     snowToggleBtn.addEventListener('click', toggleSnowMode);
   }
 
-  // --- CHICAGO LIVE WEATHER SYNC (OPEN-METEO PUBLIC API) ---
+  // Chicago Weather Sync
   const weatherCodeMap = {
     0: "Clear Sky ☀️",
     1: "Mainly Clear 🌤️",
@@ -292,11 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchChicagoWeather();
   setInterval(fetchChicagoWeather, 600000);
 
-  // Neon Click Sparks Generator
-  const sparkColors = ['#00CED1', '#ff6b9e', '#22C55E', '#00f2fe', '#ffffff'];
+  // Soft Mocha Sparks
+  const sparkColors = ['#89b4fa', '#b4befe', '#74c7ec', '#cdd6f4', '#f5c2e7'];
 
   function createSparks(x, y) {
-    const sparkCount = 8;
+    const sparkCount = 7;
 
     for (let i = 0; i < sparkCount; i++) {
       const spark = document.createElement('div');
@@ -311,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(spark);
 
       const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5);
-      const distance = Math.floor(Math.random() * 45) + 30;
+      const distance = Math.floor(Math.random() * 40) + 25;
       const targetX = Math.cos(angle) * distance;
       const targetY = Math.sin(angle) * distance;
 
@@ -320,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         y: targetY,
         opacity: 0,
         scale: Math.random() * 0.4 + 0.2,
-        duration: Math.random() * 0.4 + 0.35,
+        duration: Math.random() * 0.35 + 0.3,
         ease: 'power2.out',
         onComplete: () => spark.remove()
       });
@@ -331,13 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Top Line Audio Visualizer & Bass Bounce Engine
+  // Mocha Line Visualizer
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
   function resizeLineCanvas() {
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 30 : 40;
+    const height = window.innerWidth <= 430 ? 28 : 36;
     lineCanvas.width = width * window.devicePixelRatio;
     lineCanvas.height = height * window.devicePixelRatio;
     lineCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -345,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeLineCanvas();
   window.addEventListener('resize', resizeLineCanvas);
 
-  const numBars = 54;
+  const numBars = 52;
   const barHeights = new Array(numBars).fill(2);
   let audioTick = 0;
 
@@ -353,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(renderLineVisualizer);
 
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 30 : 40;
+    const height = window.innerWidth <= 430 ? 28 : 36;
 
     lineCtx.clearRect(0, 0, width, height);
 
@@ -390,8 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const y = height - bH;
 
       const grad = lineCtx.createLinearGradient(0, height, 0, y);
-      grad.addColorStop(0, 'rgba(0, 206, 209, 0.2)');
-      grad.addColorStop(1, 'rgba(0, 255, 255, 0.95)');
+      grad.addColorStop(0, 'rgba(116, 199, 236, 0.2)');
+      grad.addColorStop(1, 'rgba(137, 180, 250, 0.95)');
 
       lineCtx.fillStyle = grad;
       lineCtx.fillRect(x, y, barWidth - spacing, bH);
@@ -402,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isPlaying && currentVol > 0) {
       const avgBass = bassMagnitude / 8;
       const bassPulse = Math.pow(avgBass, 3);
-      scaleVal = 1 + bassPulse * 0.035 * currentVol;
+      scaleVal = 1 + bassPulse * 0.025 * currentVol;
     }
 
     activeCards.forEach(card => {
@@ -414,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderLineVisualizer();
 
-  // Track Duration / Progress Scrubber Loop
+  // Track Duration Bar
   function updateTrackProgress() {
     if (isPlayerReady && player && player.getCurrentTime && player.getDuration) {
       const cur = player.getCurrentTime() || 0;
@@ -427,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setInterval(updateTrackProgress, 400);
 
-  // Dropboard Drawer Logic
+  // Dropboard Drawer
   function toggleDrawer() {
     dropboardDrawer.classList.toggle('open');
     if (dropboardDrawer.classList.contains('open')) {
@@ -437,13 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  if (drawerTabHandle) {
-    drawerTabHandle.addEventListener('click', toggleDrawer);
-  }
-
-  if (cardMusicBtn) {
-    cardMusicBtn.addEventListener('click', toggleDrawer);
-  }
+  if (drawerTabHandle) drawerTabHandle.addEventListener('click', toggleDrawer);
+  if (cardMusicBtn) cardMusicBtn.addEventListener('click', toggleDrawer);
 
   function extractYouTubeID(input) {
     input = input.trim();
@@ -459,8 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoId = extractYouTubeID(rawVal);
 
     if (!videoId) {
-      drawerFeedback.textContent = "Error: Invalid YouTube link or ID.";
-      drawerFeedback.style.color = "#ff6b6b";
+      drawerFeedback.textContent = "Invalid YouTube link or ID.";
+      drawerFeedback.style.color = "#f38ba8";
       return;
     }
 
@@ -475,8 +471,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bgIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&loop=1&playlist=${videoId}&playsinline=1`;
       }
 
-      drawerFeedback.textContent = `Loaded track ID: [${videoId}]!`;
-      drawerFeedback.style.color = "#43e97b";
+      drawerFeedback.textContent = `Loaded track [${videoId}]`;
+      drawerFeedback.style.color = "#a6e3a1";
       ytCustomInput.value = "";
 
       setTimeout(() => {
@@ -484,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     } catch (err) {
       drawerFeedback.textContent = "Error loading track.";
-      drawerFeedback.style.color = "#ff6b6b";
+      drawerFeedback.style.color = "#f38ba8";
     }
   }
 
@@ -496,8 +492,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Typewriter Start Screen
-  const startMessages = ["Click here to see the Website!"];
-  const startMessage = startMessages[Math.floor(Math.random() * startMessages.length)];
+  const startMessages = ["Click to open profile"];
+  const startMessage = startMessages[0];
   let startTextContent = '';
   let startIndex = 0;
   let startCursorVisible = true;
@@ -533,8 +529,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     profileBlock.classList.remove('hidden');
     gsap.fromTo(profileBlock,
-      { opacity: 0, y: -50, filter: 'blur(10px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out', onComplete: () => {
+      { opacity: 0, y: -40, filter: 'blur(10px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out', onComplete: () => {
         profileBlock.classList.add('profile-appear');
         profileContainer.classList.add('orbit');
       }}
@@ -558,8 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Profile Bio Typewriter
   const bioMessages = [
     "MentalKatt <3",
-    "I love developing in Python, CSS, and JavaScript",
-    "I Love playing CRK (CookieRun: Kingdom)",
+    "Developing in Python, CSS, and JavaScript",
+    "Playing CRK (CookieRun: Kingdom)",
     "We do not lick the dog",
     "I am a person :)",
     "Taken! Love them to the stars and back!"
@@ -595,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileBio) profileBio.textContent = bioText + (bioCursorVisible ? '|' : ' ');
   }, 500);
 
-  // Volume Controls with Memory Toggle
+  // Volume Controls
   function toggleMuteState() {
     if (!isPlayerReady || !player) return;
 
@@ -627,14 +623,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (transparencySlider) {
     transparencySlider.addEventListener('input', () => {
       const alpha = transparencySlider.value;
-      profileBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
-      skillsBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
-      discordBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
-      timeBlock.style.background = `rgba(0, 0, 0, ${alpha})`;
+      profileBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
+      skillsBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
+      discordBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
+      timeBlock.style.background = `rgba(30, 30, 46, ${alpha})`;
     });
   }
 
-  // 3D Card Tilt & Dynamic Glare Position Update
+  // 3D Card Tilt
   function handleTilt(e, element) {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -642,7 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
     const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
 
-    const maxTilt = 15;
+    const maxTilt = 12;
     const tiltX = ((clientY - centerY) / rect.height) * maxTilt;
     const tiltY = -((clientX - centerX) / rect.width) * maxTilt;
 
@@ -667,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
     el.addEventListener('touchend', () => resetTilt(el));
   });
 
-  // Profile picture spin
+  // Profile Picture Spin
   profilePicture.addEventListener('click', () => {
     profileContainer.classList.remove('fast-orbit', 'orbit');
     void profileContainer.offsetWidth;
@@ -679,12 +675,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // --- 4-TAB VERTICAL WIPE TRANSITION ENGINE ---
+  // Tab Switcher
   const allTabs = [
-    { name: 'profile', el: profileBlock, theme: 'home-theme' },
-    { name: 'skills', el: skillsBlock, theme: 'hacker-theme' },
-    { name: 'discord', el: discordBlock, theme: 'discord-theme' },
-    { name: 'time', el: timeBlock, theme: 'time-theme' }
+    { name: 'profile', el: profileBlock, theme: 'home-theme', btn: homeThemeBtn },
+    { name: 'skills', el: skillsBlock, theme: 'hacker-theme', btn: hackerThemeBtn },
+    { name: 'discord', el: discordBlock, theme: 'discord-theme', btn: discordThemeBtn },
+    { name: 'time', el: timeBlock, theme: 'time-theme', btn: timeThemeBtn }
   ];
 
   let currentActiveTab = 'profile';
@@ -699,13 +695,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const outgoing = allTabs[currentIndex];
     const incoming = allTabs[targetIndex];
 
+    navButtons.forEach(btn => btn?.classList.remove('active'));
+    incoming.btn?.classList.add('active');
+
     // Outgoing Vertical Wipe
     if (outgoing && outgoing.el) {
       gsap.to(outgoing.el, {
-        y: movingDown ? -60 : 60,
+        y: movingDown ? -50 : 50,
         opacity: 0,
-        filter: 'blur(8px)',
-        duration: 0.32,
+        filter: 'blur(6px)',
+        duration: 0.3,
         ease: 'power2.in',
         onComplete: () => {
           outgoing.el.classList.add('hidden');
@@ -721,17 +720,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       gsap.fromTo(incoming.el,
         {
-          y: movingDown ? 60 : -60,
+          y: movingDown ? 50 : -50,
           opacity: 0,
-          filter: 'blur(8px)'
+          filter: 'blur(6px)'
         },
         {
           y: 0,
           opacity: 1,
           filter: 'blur(0px)',
-          duration: 0.4,
+          duration: 0.38,
           ease: 'power2.out',
-          delay: 0.08
+          delay: 0.06
         }
       );
 
@@ -780,7 +779,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- CINEMA MODE & SHORTCUT HUD LOGIC ---
+  // Cinema Mode & Shortcut HUD
   const uiElementsToFade = [
     profileBlock,
     skillsBlock,
@@ -821,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- CUSTOM RIGHT-CLICK CONTEXT MENU & TOAST ENGINE ---
+  // Custom Context Menu & Toast
   function showToast(msg) {
     if (!actionToast) return;
     actionToast.textContent = msg;
@@ -853,7 +852,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Intercept right click across the entire screen
   window.addEventListener('contextmenu', (e) => {
     e.preventDefault();
 
@@ -882,17 +880,15 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }, { capture: true });
 
-  // Hide context menu when clicking outside
   document.addEventListener('pointerdown', (e) => {
     if (contextMenu && !contextMenu.contains(e.target)) {
       hideContextMenu();
     }
   });
 
-  // Context Menu Item Actions
   document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href);
-    showToast('[COPIED PROFILE URL]');
+    showToast('Copied profile URL');
     hideContextMenu();
   });
 
@@ -903,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('ctx-toggle-weather')?.addEventListener('click', () => {
     toggleSnowMode();
-    showToast(isSnowMode ? '[WEATHER: SNOWFALL]' : '[WEATHER: RAIN]');
+    showToast(isSnowMode ? 'Snowfall mode' : 'Rain mode');
     hideContextMenu();
   });
 
@@ -916,7 +912,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideContextMenu();
   });
 
-  // Keyboard Navigation: Tab, 1-4, F, S, M, /, Escape
+  // Keyboard Shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -979,7 +975,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Discord Asset Resolver
+  // Lanyard Presence Resolver
   function resolveDiscordAsset(appId, assetId) {
     if (!assetId) return null;
     if (assetId.startsWith('mp:external/')) {
@@ -991,7 +987,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
   }
 
-  // Fetch Live Presence via Lanyard
   async function fetchDiscordPresence() {
     try {
       const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
