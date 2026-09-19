@@ -41,9 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const discordBlock = document.getElementById('discord-block');
   const timeBlock = document.getElementById('time-block');
 
-  // HUD & Cinema Elements
+  // HUD, Cinema & Lightning Elements
   const shortcutHud = document.getElementById('shortcut-hud');
   const cinemaExitHint = document.getElementById('cinema-exit-hint');
+  const lightningFlash = document.getElementById('lightning-flash');
   let isCinemaMode = false;
 
   // Lanyard Status Elements
@@ -138,6 +139,40 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // --- ACRYLIC CARD GLARE TRACKING ---
+  const activeCards = [profileBlock, skillsBlock, discordBlock, timeBlock];
+
+  function updateCardGlare(e, element) {
+    const rect = element.getBoundingClientRect();
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    element.style.setProperty('--glare-x', `${x}px`);
+    element.style.setProperty('--glare-y', `${y}px`);
+  }
+
+  // --- RANDOM LIGHTNING FLASH ENGINE (10 - 20s INTERVAL) ---
+  function triggerLightningFlash() {
+    if (!lightningFlash) return;
+
+    // Fast multi-strike lightning effect
+    gsap.timeline()
+      .to(lightningFlash, { opacity: 0.85, duration: 0.04, ease: 'power1.out' })
+      .to(lightningFlash, { opacity: 0.15, duration: 0.06 })
+      .to(lightningFlash, { opacity: 0.95, duration: 0.05 })
+      .to(lightningFlash, { opacity: 0.3, duration: 0.08 })
+      .to(lightningFlash, { opacity: 0, duration: 0.45, ease: 'power2.out' });
+
+    // Schedule next random flash between 10 and 20 seconds
+    const nextInterval = Math.floor(Math.random() * 10001) + 10000;
+    setTimeout(triggerLightningFlash, nextInterval);
+  }
+  // Initial kickoff
+  setTimeout(triggerLightningFlash, Math.floor(Math.random() * 6000) + 7000);
 
   // --- COZY WEATHER PARTICLES ENGINE (RAIN / SNOWFALL TOGGLE) ---
   const weatherCanvas = document.getElementById('weather-canvas');
@@ -315,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const numBars = 54;
   const barHeights = new Array(numBars).fill(2);
   let audioTick = 0;
-  const activeCards = [profileBlock, skillsBlock, discordBlock, timeBlock];
 
   function renderLineVisualizer() {
     requestAnimationFrame(renderLineVisualizer);
@@ -602,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3D Card Tilt
+  // 3D Card Tilt & Dynamic Glare Position Update
   function handleTilt(e, element) {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -621,6 +655,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: 'power2.out',
       transformPerspective: 1000
     });
+
+    updateCardGlare(e, element);
   }
 
   function resetTilt(element) {
@@ -665,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outgoing = allTabs[currentIndex];
     const incoming = allTabs[targetIndex];
 
-    // Outgoing Vertical Wipe (slides up/down with lens defocus)
+    // Outgoing Vertical Wipe
     if (outgoing && outgoing.el) {
       gsap.to(outgoing.el, {
         y: movingDown ? -60 : 60,
@@ -680,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Incoming Vertical Wipe (enters from opposite side, clearing blur)
+    // Incoming Vertical Wipe
     if (incoming && incoming.el) {
       incoming.el.classList.remove('hidden');
       document.body.className = incoming.theme;
@@ -789,7 +825,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Keyboard Navigation: Tab, 1-4, F, S, M, /, Escape
   document.addEventListener('keydown', (e) => {
-    // TAB Key toggles the music drawer
     if (e.key === 'Tab') {
       e.preventDefault();
       toggleDrawer();
