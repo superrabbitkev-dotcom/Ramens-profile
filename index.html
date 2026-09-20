@@ -3,7 +3,7 @@
 <head>
     <link rel="icon" type="image/x-icon" href="/Sirramenboi-s-profile/assets/favicon.ico">    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Ramen's Profile</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,11 +16,11 @@
             --fluff-cloud-border: rgba(186, 194, 235, 0.28);
             --fluff-border-soft: rgba(255, 255, 255, 0.12);
             
-            --fluff-accent: #c4b5fd;      /* Soft lavender */
-            --fluff-blue: #a5f3fc;        /* Pastel sky */
-            --fluff-pink: #fbcfe8;        /* Marshmallow pink */
-            --fluff-cream: #fdf4ff;       /* Milk white */
-            --fluff-subtext: #cbd5e1;     /* Soft mist */
+            --fluff-accent: #c4b5fd;
+            --fluff-blue: #a5f3fc;
+            --fluff-pink: #fbcfe8;
+            --fluff-cream: #fdf4ff;
+            --fluff-subtext: #cbd5e1;
             --fluff-pill-bg: rgba(255, 255, 255, 0.08);
         }
 
@@ -36,6 +36,22 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        /* 10. Custom Styled Pill Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(19, 20, 31, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(196, 181, 253, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(196, 181, 253, 0.6);
         }
 
         .custom-cursor {
@@ -58,6 +74,7 @@
             background-color: var(--fluff-bg);
             color: var(--fluff-cream);
             overflow: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         .container {
@@ -85,7 +102,6 @@
             filter: saturate(0.9) brightness(0.92);
         }
 
-        /* Lightning Flash Overlay */
         #lightning-flash {
             position: fixed;
             top: 0;
@@ -100,7 +116,6 @@
             transition: opacity 0.08s ease-out;
         }
 
-        /* Weather Precipitation Layer */
         #weather-canvas {
             position: fixed;
             top: 0;
@@ -112,7 +127,7 @@
             opacity: 0.55;
         }
 
-        /* Soft Cloud Window System */
+        /* 1. Slender Window Frame with Corner L-Brackets & 2. Interactive Glass Layer */
         .window-frame-system {
             position: fixed;
             top: 0;
@@ -121,19 +136,21 @@
             height: 100vh;
             pointer-events: none;
             z-index: 4;
-            box-shadow: inset 0 0 140px rgba(19, 20, 31, 0.85);
+            box-shadow: inset 0 0 80px rgba(10, 11, 18, 0.6);
         }
 
-        .window-glass-frosting {
+        .glass-reflection-overlay {
             position: absolute;
             inset: 0;
-            background: 
-                radial-gradient(circle at 10% 10%, rgba(196, 181, 253, 0.16) 0%, transparent 45%),
-                radial-gradient(circle at 90% 10%, rgba(165, 243, 252, 0.16) 0%, transparent 45%),
-                radial-gradient(circle at 15% 90%, rgba(251, 207, 232, 0.18) 0%, transparent 50%),
-                radial-gradient(circle at 85% 90%, rgba(196, 181, 253, 0.18) 0%, transparent 50%);
-            backdrop-filter: blur(2.5px);
-            mix-blend-mode: screen;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                transparent 30%,
+                rgba(196, 181, 253, 0.03) 50%,
+                transparent 70%,
+                rgba(255, 255, 255, 0.04) 100%
+            );
+            backdrop-filter: blur(1px);
         }
 
         #raindrop-canvas {
@@ -142,55 +159,63 @@
             width: 100vw;
             height: 100vh;
             opacity: 0.85;
+            pointer-events: auto; /* Allows mouse wipe / defog */
         }
 
-        .window-outer-sill {
+        .window-rim {
             position: absolute;
             inset: 0;
-            border: 20px solid rgba(26, 27, 43, 0.85);
-            border-bottom: 28px solid rgba(22, 23, 37, 0.92);
-            border-radius: 12px;
+            border: 8px solid #1c1d2c;
+            border-bottom: 12px solid #161724;
             box-shadow: 
-                inset 0 6px 18px rgba(0, 0, 0, 0.6),
-                inset 0 -4px 12px rgba(255, 255, 255, 0.04),
-                0 0 50px rgba(0, 0, 0, 0.8);
+                inset 0 2px 6px rgba(0, 0, 0, 0.7),
+                inset 0 -1px 2px rgba(255, 255, 255, 0.08),
+                0 0 25px rgba(0, 0, 0, 0.75);
         }
 
-        .window-transom-bar {
+        .window-divider-h {
             position: absolute;
             top: 50%;
             left: 0;
             width: 100vw;
-            height: 20px;
+            height: 7px;
             transform: translateY(-50%);
-            background: linear-gradient(180deg, rgba(46, 48, 74, 0.85) 0%, rgba(26, 27, 43, 0.95) 100%);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            border-bottom: 2px solid rgba(10, 11, 18, 0.8);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+            background: linear-gradient(180deg, #373952 0%, #1e1f2f 45%, #131420 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.9);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.5),
+                0 -2px 6px rgba(0, 0, 0, 0.35);
         }
 
-        .window-sash {
-            position: absolute;
-            left: 0;
-            width: 100vw;
-            height: 50vh;
-        }
-
-        .window-sash-top { top: 0; }
-        .window-sash-bottom { top: 50%; }
-
-        .mullion-v {
+        .window-divider-v {
             position: absolute;
             top: 0;
             left: 50%;
-            width: 18px;
-            height: 100%;
+            width: 7px;
+            height: 100vh;
             transform: translateX(-50%);
-            background: linear-gradient(90deg, rgba(46, 48, 74, 0.85) 0%, rgba(26, 27, 43, 0.95) 100%);
-            border-left: 1px solid rgba(255, 255, 255, 0.14);
-            border-right: 1px solid rgba(10, 11, 18, 0.8);
-            box-shadow: 6px 0 20px rgba(0, 0, 0, 0.45), -6px 0 20px rgba(0, 0, 0, 0.45);
+            background: linear-gradient(90deg, #373952 0%, #1e1f2f 45%, #131420 100%);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0, 0, 0, 0.9);
+            box-shadow: 
+                4px 0 10px rgba(0, 0, 0, 0.5),
+                -4px 0 10px rgba(0, 0, 0, 0.5);
         }
+
+        /* 1. Structural Corner Brackets */
+        .window-bracket {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: rgba(255, 255, 255, 0.18);
+            border-style: solid;
+            pointer-events: none;
+        }
+        .bracket-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
+        .bracket-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
+        .bracket-bl { bottom: 16px; left: 12px; border-width: 0 0 2px 2px; }
+        .bracket-br { bottom: 16px; right: 12px; border-width: 0 2px 2px 0; }
 
         .glitch-overlay, #hacker-overlay, #snow-overlay {
             position: fixed;
@@ -203,7 +228,6 @@
         }
 
         .glitch-overlay { opacity: 0; transition: opacity 0.5s; }
-
         .hidden { display: none !important; }
 
         .click-spark {
@@ -216,7 +240,44 @@
             box-shadow: 0 0 10px currentColor;
         }
 
-        /* Pill Line Visualizer */
+        /* 4. Live Audio Title Ticker */
+        #music-ticker-pill {
+            position: fixed;
+            top: calc(50% - 170px - 72px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(30, 32, 50, 0.75);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--fluff-subtext);
+            backdrop-filter: blur(14px);
+            z-index: 25;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+            max-width: 820px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .ticker-note-icon {
+            width: 12px;
+            height: 12px;
+            color: var(--fluff-accent);
+            animation: pulse-note 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-note {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; color: var(--fluff-blue); }
+        }
+
+        /* 3. Interactive Line Visualizer & Progress Bar (Scrubbable) */
         #line-visualizer {
             position: fixed;
             top: calc(50% - 170px - 44px);
@@ -225,7 +286,7 @@
             width: 820px;
             height: 32px;
             z-index: 25;
-            pointer-events: none;
+            cursor: pointer;
             filter: drop-shadow(0 4px 10px rgba(196, 181, 253, 0.35));
         }
 
@@ -235,11 +296,11 @@
             left: 50%;
             transform: translateX(-50%);
             width: 820px;
-            height: 5px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             z-index: 25;
-            pointer-events: none;
+            cursor: pointer;
             overflow: hidden;
             backdrop-filter: blur(8px);
         }
@@ -254,9 +315,12 @@
         }
 
         @media (max-width: 430px) {
-            .window-outer-sill { border-width: 12px; border-bottom-width: 18px; }
-            .window-transom-bar { height: 14px; }
-            .mullion-v { width: 12px; }
+            #music-ticker-pill {
+                width: 90vw;
+                max-width: 350px;
+                top: calc(50% - 145px - 66px);
+                font-size: 10px;
+            }
 
             #line-visualizer {
                 width: 90vw;
@@ -272,7 +336,7 @@
             }
         }
 
-        /* Pill Dropboard Drawer */
+        /* Dropboard Drawer */
         #dropboard-drawer {
             position: fixed;
             top: 0;
@@ -401,7 +465,7 @@
             transform: rotate(180deg);
         }
 
-        /* Soft HUD */
+        /* Keyboard Shortcut HUD Overlay */
         #shortcut-hud {
             position: fixed;
             top: 0;
@@ -468,7 +532,7 @@
             opacity: 0.75;
         }
 
-        /* Soft Context Menu */
+        /* Context Menu & Toast */
         #custom-context-menu {
             position: fixed;
             z-index: 10000;
@@ -566,7 +630,6 @@
 
         #cinema-exit-hint strong { color: var(--fluff-accent); }
 
-        /* Fluffy Pill Controls */
         .controls {
             position: fixed;
             bottom: calc(50% - 240px - 10px);
@@ -653,9 +716,7 @@
             transition: transform 0.15s ease;
         }
 
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-        }
+        .slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
 
         #snow-toggle-btn {
             background: transparent;
@@ -698,12 +759,13 @@
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* Fluffy Soft-Glass Cards */
+        /* 8. Ambient Glow & Fluffy Cards */
         #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%;
             left: 50%;
             --bass-scale: 1;
+            --ambient-glow: rgba(196, 181, 253, 0.1);
             --glare-x: 50%;
             --glare-y: 50%;
             transform: translate(-50%, -50%) scale(var(--bass-scale));
@@ -722,13 +784,12 @@
             overflow: hidden;
             box-shadow: 
                 0 24px 60px rgba(12, 13, 22, 0.45),
-                0 0 40px rgba(196, 181, 253, 0.08),
+                0 0 45px var(--ambient-glow),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
             will-change: transform, filter, opacity;
-            transition: transform 0.1s ease-out, border-color 0.3s ease;
+            transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.15s ease;
         }
 
-        /* Dreamy Cloud Glare Reflection */
         #profile-block::before, #skills-block::before, #discord-block::before, #time-block::before {
             content: '';
             position: absolute;
@@ -808,6 +869,7 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         #profile-name {
@@ -818,6 +880,30 @@
             color: #ffffff;
             text-shadow: 0 0 16px rgba(196, 181, 253, 0.55);
         }
+
+        /* 5. Live Discord Presence Pill in Bio Header */
+        .discord-status-header-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(19, 20, 31, 0.6);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--fluff-subtext);
+        }
+
+        .discord-status-dot-inline {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #94a3b8;
+        }
+        .discord-status-dot-inline.online { background-color: #86efac; box-shadow: 0 0 8px #86efac; }
+        .discord-status-dot-inline.idle { background-color: #fde047; }
+        .discord-status-dot-inline.dnd { background-color: #f87171; }
 
         .badge-group {
             display: flex;
@@ -880,9 +966,7 @@
             pointer-events: auto;
         }
 
-        .badge:hover {
-            transform: scale(1.25);
-        }
+        .badge:hover { transform: scale(1.25); }
 
         #profile-bio {
             color: var(--fluff-subtext);
@@ -922,16 +1006,23 @@
             justify-self: center;
         }
 
-        .footer-btn {
+        .footer-buttons-wrap {
             justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 7. One-Click Copy / Share Profile Button */
+        .footer-btn {
             display: flex;
             align-items: center;
             gap: 6px;
             background: var(--fluff-pill-bg);
             border: 1px solid var(--fluff-cloud-border);
             color: var(--fluff-accent);
-            padding: 8px 18px;
-            border-radius: 24px;
+            padding: 7px 14px;
+            border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
@@ -947,7 +1038,7 @@
             box-shadow: 0 4px 14px rgba(196, 181, 253, 0.3);
         }
 
-        .footer-btn-icon { width: 14px; height: 14px; }
+        .footer-btn-icon { width: 13px; height: 13px; }
 
         .visitor-counter {
             display: flex;
@@ -1086,7 +1177,7 @@
             box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
         }
 
-        /* Pill Discord Activity */
+        /* Discord Tab Cards */
         .discord-card {
             display: flex;
             align-items: center;
@@ -1179,14 +1270,26 @@
             gap: 2px;
         }
 
-        /* Chicago Time Card */
+        /* 6. Chicago Time Card with Celestial Sun / Moon Phase */
         .time-card-content {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 10px;
+            gap: 10px;
+        }
+
+        .clock-header-wrap {
+            display: flex;
+            align-items: center;
             gap: 12px;
+        }
+
+        #celestial-phase-icon {
+            width: 32px;
+            height: 32px;
+            filter: drop-shadow(0 0 10px rgba(165, 243, 252, 0.6));
         }
 
         .digital-clock {
@@ -1283,7 +1386,6 @@
             margin-top: 8px;
         }
 
-        /* Dreamy Theme Tones */
         body.home-theme #profile-block,
         body.home-theme #skills-block,
         body.home-theme #discord-block,
@@ -1392,7 +1494,7 @@
             }
 
             .footer-row .visitor-counter,
-            .footer-btn {
+            .footer-buttons-wrap {
                 justify-self: center;
                 align-self: center;
             }
@@ -1449,7 +1551,6 @@
             </div>
         </div>
 
-        <!-- Cinema Mode Exit Hint -->
         <div id="cinema-exit-hint" class="hidden">
             <span>Press <strong>F</strong> or <strong>ESC</strong> to exit cinema mode</span>
         </div>
@@ -1470,29 +1571,37 @@
         <!-- Weather Canvas -->
         <canvas id="weather-canvas"></canvas>
 
-        <!-- Architectural Window Frame & Glass -->
+        <!-- 1. Slender Window Frame with Structural L-Brackets -->
         <div class="window-frame-system">
             <canvas id="raindrop-canvas"></canvas>
-            <div class="window-glass-frosting"></div>
-            <div class="window-outer-sill"></div>
-            <div class="window-sash window-sash-top">
-                <div class="mullion-v"></div>
-            </div>
-            <div class="window-sash window-sash-bottom">
-                <div class="mullion-v"></div>
-            </div>
-            <div class="window-transom-bar"></div>
+            <div class="glass-reflection-overlay"></div>
+            <div class="window-rim"></div>
+            <div class="window-divider-h"></div>
+            <div class="window-divider-v"></div>
+
+            <div class="window-bracket bracket-tl"></div>
+            <div class="window-bracket bracket-tr"></div>
+            <div class="window-bracket bracket-bl"></div>
+            <div class="window-bracket bracket-br"></div>
         </div>
 
         <div class="glitch-overlay"></div>
         <div id="hacker-overlay" class="hidden"></div>
         <div id="snow-overlay" class="hidden"></div>
 
-        <!-- Line Visualizer Canvas -->
-        <canvas id="line-visualizer"></canvas>
+        <!-- 4. Track Banner Ticker -->
+        <div id="music-ticker-pill">
+            <svg class="ticker-note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+            </svg>
+            <span id="ticker-text">Cozy Rain Ambience & Beat</span>
+        </div>
 
-        <!-- Track Duration Bar -->
-        <div id="track-progress-container">
+        <!-- 3. Scrubbable Audio Visualizer -->
+        <canvas id="line-visualizer" title="Click anywhere to scrub playback position"></canvas>
+
+        <!-- Scrubbable Progress Bar -->
+        <div id="track-progress-container" title="Click to seek">
             <div id="track-progress-fill"></div>
         </div>
 
@@ -1505,6 +1614,13 @@
                 <div class="profile-info">
                     <div class="name-and-badges">
                         <div id="profile-name">RAMEN</div>
+
+                        <!-- 5. Discord Presence Badge in Header -->
+                        <div class="discord-status-header-pill">
+                            <span id="discord-header-dot" class="discord-status-dot-inline"></span>
+                            <span id="discord-header-text">Discord</span>
+                        </div>
+
                         <div class="badge-box">
                             <div class="badge-box-inner">
                                 <div class="badge-group">
@@ -1561,7 +1677,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
-                        <span id="visitor-count">263,115</span>
+                        <span id="visitor-count">0</span>
                         <span class="tooltip">Profile Views</span>
                     </div>
 
@@ -1580,12 +1696,22 @@
                         </a>
                     </div>
 
-                    <button id="card-music-btn" class="footer-btn">
-                        <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                        </svg>
-                        <span>Music</span>
-                    </button>
+                    <div class="footer-buttons-wrap">
+                        <!-- 7. One-Click Copy Profile URL -->
+                        <button id="card-share-btn" class="footer-btn" title="Copy profile link">
+                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            <span id="share-btn-text">Share</span>
+                        </button>
+
+                        <button id="card-music-btn" class="footer-btn">
+                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                            </svg>
+                            <span>Music</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1641,11 +1767,15 @@
             </div>
         </div>
 
-        <!-- Tab 4: Chicago Local Time -->
+        <!-- Tab 4: Chicago Local Time & Weather -->
         <div id="time-block" class="hidden">
             <h2 class="skills-title">Local Time & Weather (Chicago)</h2>
             <div class="time-card-content">
-                <div id="digital-clock" class="digital-clock">--:--:-- --</div>
+                <div class="clock-header-wrap">
+                    <!-- 6. Celestial SVG -->
+                    <div id="celestial-phase-icon"></div>
+                    <div id="digital-clock" class="digital-clock">--:--:-- --</div>
+                </div>
                 <div id="clock-date" class="clock-date">Loading...</div>
                 
                 <div class="time-details-grid">
@@ -1700,7 +1830,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                 </svg>
-                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.75">
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.72">
             </div>
         </div>
     </div>
