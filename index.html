@@ -10,50 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        .badge-container {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .badge-container .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            width: max-content;
-            max-width: 140px;
-            background: rgba(15, 16, 26, 0.95);
-            color: #ffffff;
-            font-size: 11px;
-            font-weight: 700;
-            text-align: center;
-            border-radius: 8px;
-            padding: 5px 9px;
-            position: absolute;
-            z-index: 1000;
-            bottom: 130%;
-            left: 50%;
-            transform: translateX(-50%) translateY(4px);
-            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
-            pointer-events: none;
-            border: 1px solid var(--fluff-cloud-border);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
-            white-space: nowrap;
-        }
-
-        .badge-container:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .badge {
-            transition: transform 0.2s ease;
-        }
-
-        .badge:hover {
-            transform: scale(1.25);
-        }
         :root {
             --fluff-bg: #0f101a;
             --fluff-cloud: rgba(30, 32, 50, 0.78);
@@ -430,7 +386,7 @@
         }
 
         /* Fixed Flat Layer Stacking without Clipping */
-       #profile-block, #skills-block, #discord-block, #time-block {
+        #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -446,7 +402,7 @@
             gap: 14px;
             backdrop-filter: blur(var(--card-blur));
             pointer-events: auto;
-            overflow: visible; /* Changed from hidden so tooltips don't get cut off */
+            overflow: hidden;
             box-shadow: 0 24px 60px rgba(12, 13, 22, 0.45);
             will-change: transform;
         }
@@ -1067,44 +1023,20 @@
                             <span id="discord-header-text">Discord</span>
                         </div>
 
-                        <div class="badge-group">
-                                    <div class="badge-container" data-badge="Staff Member" data-desc="Official staff & moderator team member." data-img="assets/staff.gif">
-                                        <img src="assets/staff.gif" alt="Staff" class="badge">
-                                        <span class="tooltip">Idk what you expected lol</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Site Owner" data-desc="Architect and creator of this aesthetic bio space." data-img="assets/owner.gif">
-                                        <img src="assets/owner.gif" alt="Owner" class="badge">
-                                        <span class="tooltip">Owner</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Partner" data-desc="Recognized community contributor and partner." data-img="assets/partner.gif">
-                                        <img src="assets/partner.gif" alt="Partner" class="badge">
-                                        <span class="tooltip">Idk man</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Developer" data-desc="Building full-stack tools and web applications." data-img="assets/developer.png">
-                                        <img src="assets/developer.png" alt="Developer" class="badge">
-                                        <span class="tooltip">Developer</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Bug Hunter" data-desc="Squashed vulnerabilities and platform glitches." data-img="assets/bug_bounty.gif">
-                                        <img src="assets/bug_bounty.gif" alt="Bug Hunter" class="badge">
-                                        <span class="tooltip">Oops! you encountered a bug.</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Python Guru" data-desc="Writes scalable automation and machine learning code." data-img="assets/hated_guns.gif">
-                                        <img src="assets/hated_guns.gif" alt="Python" class="badge">
-                                        <span class="tooltip">Love using python to code</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Shadow Milk" data-desc="Pure chaotic magic and favorite CRK cookie." data-img="assets/hated_fakecrime.gif">
-                                        <img src="assets/hated_fakecrime.gif" alt="Shadow Milk" class="badge">
-                                        <span class="tooltip">SHADOW MILK COOKIE</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Verified" data-desc="Officially authenticated identity badge." data-img="assets/verified.gif">
-                                        <img src="assets/verified.gif" alt="Verified" class="badge">
-                                        <span class="tooltip">Verified</span>
-                                    </div>
-                                    <div class="badge-container" data-badge="Rule Maker" data-desc="Policy creator and community guardian." data-img="assets/rule_maker.gif">
-                                        <img src="assets/rule_maker.gif" alt="Rule Maker" class="badge">
-                                        <span class="tooltip">Rule Maker</span>
-                                    </div>
+                        <div class="badge-box">
+                            <div class="badge-box-inner">
+                                <div class="badge-group">
+                                    <div class="badge-container" data-badge="Staff Member" data-desc="Official staff & moderator team member." data-img="assets/staff.gif"><img src="assets/staff.gif" alt="Staff" class="badge"></div>
+                                    <div class="badge-container" data-badge="Site Owner" data-desc="Architect and creator of this aesthetic bio space." data-img="assets/owner.gif"><img src="assets/owner.gif" alt="Owner" class="badge"></div>
+                                    <div class="badge-container" data-badge="Partner" data-desc="Recognized community contributor and partner." data-img="assets/partner.gif"><img src="assets/partner.gif" alt="Partner" class="badge"></div>
+                                    <div class="badge-container" data-badge="Developer" data-desc="Building full-stack tools and web applications." data-img="assets/developer.png"><img src="assets/developer.png" alt="Developer" class="badge"></div>
+                                    <div class="badge-container" data-badge="Bug Hunter" data-desc="Squashed vulnerabilities and platform glitches." data-img="assets/bug_bounty.gif"><img src="assets/bug_bounty.gif" alt="Bug Hunter" class="badge"></div>
+                                    <div class="badge-container" data-badge="Python Guru" data-desc="Writes scalable automation and machine learning code." data-img="assets/hated_guns.gif"><img src="assets/hated_guns.gif" alt="Python" class="badge"></div>
+                                    <div class="badge-container" data-badge="Shadow Milk" data-desc="Pure chaotic magic and favorite CRK cookie." data-img="assets/hated_fakecrime.gif"><img src="assets/hated_fakecrime.gif" alt="Shadow Milk" class="badge"></div>
+                                    <div class="badge-container" data-badge="Verified" data-desc="Officially authenticated identity badge." data-img="assets/verified.gif"><img src="assets/verified.gif" alt="Verified" class="badge"></div>
+                                    <div class="badge-container" data-badge="Rule Maker" data-desc="Policy creator and community guardian." data-img="assets/rule_maker.gif"><img src="assets/rule_maker.gif" alt="Rule Maker" class="badge"></div>
                                 </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1302,17 +1234,17 @@
     <!-- Custom Right-Click Context Menu -->
     <div id="custom-context-menu" class="hidden">
         <div class="ctx-item" id="ctx-copy-link">
-            <span></span> Copy Profile Link
+            <span>🔗</span> Copy Profile Link
         </div>
         <div class="ctx-item" id="ctx-defog">
-            <span></span> Defog Screen
+            <span>✨</span> Defog Screen
         </div>
         <div class="ctx-item" id="ctx-cinema">
-            <span></span> Toggle Cinema Mode
+            <span>🎬</span> Toggle Cinema Mode
         </div>
         <div class="ctx-separator"></div>
         <div class="ctx-item" id="ctx-source">
-            <span></span> View GitHub Repo
+            <span>💻</span> View GitHub Repo
         </div>
     </div>
 
