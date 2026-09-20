@@ -10,6 +10,50 @@
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
+        .badge-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-container .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: max-content;
+            max-width: 140px;
+            background: rgba(15, 16, 26, 0.95);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            text-align: center;
+            border-radius: 8px;
+            padding: 5px 9px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+            pointer-events: none;
+            border: 1px solid var(--fluff-cloud-border);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+
+        .badge-container:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .badge {
+            transition: transform 0.2s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.25);
+        }
         :root {
             --fluff-bg: #0f101a;
             --fluff-cloud: rgba(30, 32, 50, 0.78);
