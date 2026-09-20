@@ -8,9 +8,26 @@ function onYouTubeIframeAPIReady() {
         isPlayerReady = true;
         player.mute();
         player.playVideo();
+      },
+      onStateChange: (event) => {
+        updateTickerTitle();
       }
     }
   });
+}
+
+function updateTickerTitle() {
+  const tickerText = document.getElementById('ticker-text');
+  if (!tickerText) return;
+
+  if (isPlayerReady && player && typeof player.getVideoData === 'function') {
+    const data = player.getVideoData();
+    if (data && data.title) {
+      tickerText.textContent = data.title;
+      return;
+    }
+  }
+  tickerText.textContent = "Cozy Rain Ambience & Lo-Fi Beats";
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,29 +58,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const discordBlock = document.getElementById('discord-block');
   const timeBlock = document.getElementById('time-block');
 
-  // HUD, Cinema & Lightning Elements
+  // HUD & Cinema Elements
   const shortcutHud = document.getElementById('shortcut-hud');
   const cinemaExitHint = document.getElementById('cinema-exit-hint');
   const lightningFlash = document.getElementById('lightning-flash');
   let isCinemaMode = false;
 
-  // Context Menu & Toast Elements
+  // Context Menu, Toast & Share Button
   const contextMenu = document.getElementById('custom-context-menu');
   const actionToast = document.getElementById('action-toast');
+  const cardShareBtn = document.getElementById('card-share-btn');
+  const shareBtnText = document.getElementById('share-btn-text');
 
-  // Lanyard Status Elements
+  // Lanyard Elements
   const DISCORD_USER_ID = "1245196598368141424";
   const lanyardAvatar = document.getElementById('lanyard-avatar');
   const lanyardStatusDot = document.getElementById('lanyard-status-dot');
   const lanyardUsername = document.getElementById('lanyard-username');
   const lanyardCustomStatus = document.getElementById('lanyard-custom-status');
   const lanyardActivity = document.getElementById('lanyard-activity');
+  const discordHeaderDot = document.getElementById('discord-header-dot');
+  const discordHeaderText = document.getElementById('discord-header-text');
 
   // Clock & Weather Elements
   const digitalClock = document.getElementById('digital-clock');
   const clockDate = document.getElementById('clock-date');
   const tzName = document.getElementById('tz-name');
   const chicagoWeatherVal = document.getElementById('chicago-weather-val');
+  const celestialIcon = document.getElementById('celestial-phase-icon');
 
   const pythonBar = document.getElementById('python-bar');
   const cppBar = document.getElementById('cpp-bar');
@@ -80,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ytCustomInput = document.getElementById('yt-custom-input');
   const ytLoadBtn = document.getElementById('yt-load-btn');
   const drawerFeedback = document.getElementById('drawer-feedback');
+  const trackProgressContainer = document.getElementById('track-progress-container');
   const trackProgressFill = document.getElementById('track-progress-fill');
 
   let isMuted = false;
@@ -127,8 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      const targetX = ((e.clientX - centerX) / centerX) * -20;
-      const targetY = ((e.clientY - centerY) / centerY) * -20;
+      const targetX = ((e.clientX - centerX) / centerX) * -18;
+      const targetY = ((e.clientY - centerY) / centerY) * -18;
 
       gsap.to(parallaxState, {
         x: targetX,
@@ -164,9 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!lightningFlash) return;
 
     gsap.timeline()
-      .to(lightningFlash, { opacity: 0.6, duration: 0.05, ease: 'power1.out' })
+      .to(lightningFlash, { opacity: 0.55, duration: 0.05, ease: 'power1.out' })
       .to(lightningFlash, { opacity: 0.15, duration: 0.08 })
-      .to(lightningFlash, { opacity: 0.7, duration: 0.05 })
+      .to(lightningFlash, { opacity: 0.65, duration: 0.05 })
       .to(lightningFlash, { opacity: 0, duration: 0.6, ease: 'power2.out' });
 
     const nextInterval = Math.floor(Math.random() * 10001) + 12000;
@@ -250,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
     snowToggleBtn.addEventListener('click', toggleSnowMode);
   }
 
-  // Realistic Raindrops on Glass
+  // 2. Realistic Raindrops on Glass with Interactive Defog / Wiper
   const glassCanvas = document.getElementById('raindrop-canvas');
   const glassCtx = glassCanvas.getContext('2d');
 
@@ -268,12 +291,25 @@ document.addEventListener('DOMContentLoaded', () => {
     droplets.push({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      r: Math.random() * 2.8 + 1.2,
-      speed: Math.random() < 0.15 ? Math.random() * 0.35 + 0.1 : 0,
+      r: Math.random() * 1.8 + 0.8,
+      speed: Math.random() < 0.18 ? Math.random() * 0.3 + 0.08 : 0,
       alpha: Math.random() * 0.35 + 0.3,
       trail: []
     });
   }
+
+  // Wipe / push droplets away when mouse moves across glass
+  window.addEventListener('mousemove', (e) => {
+    const wipeRadius = 45;
+    for (let i = 0; i < droplets.length; i++) {
+      const d = droplets[i];
+      const dist = Math.hypot(e.clientX - d.x, e.clientY - d.y);
+      if (dist < wipeRadius) {
+        d.alpha = Math.max(0.05, d.alpha - 0.2); // Fades / evaporates
+        d.y += (d.speed > 0 ? 3 : 1.5);
+      }
+    }
+  });
 
   function renderGlassDroplets() {
     glassCtx.clearRect(0, 0, glassCanvas.width, glassCanvas.height);
@@ -325,7 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
           d.y = -10;
           d.x = Math.random() * glassCanvas.width;
           d.trail = [];
-          d.speed = Math.random() < 0.15 ? Math.random() * 0.35 + 0.1 : 0;
+          d.alpha = Math.random() * 0.35 + 0.3;
+          d.speed = Math.random() < 0.18 ? Math.random() * 0.3 + 0.08 : 0;
         }
       }
     }
@@ -414,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Pill Visualizer
+  // 3. Interactive Line Visualizer & Scrubbing
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
@@ -481,24 +518,42 @@ document.addEventListener('DOMContentLoaded', () => {
       lineCtx.fill();
     }
 
-    // Soft Pulse Bounce
+    // 8. Dynamic Audio-Driven Ambient Card Glow
     let scaleVal = 1;
+    let glowAlpha = 0.08;
     if (isPlaying && currentVol > 0) {
       const avgBass = bassMagnitude / 8;
       const bassPulse = Math.pow(avgBass, 2.5);
       scaleVal = 1 + bassPulse * 0.02 * currentVol;
+      glowAlpha = 0.08 + bassPulse * 0.25 * currentVol;
     }
 
     activeCards.forEach(card => {
       if (card && !card.classList.contains('hidden')) {
         card.style.setProperty('--bass-scale', scaleVal.toFixed(4));
+        card.style.setProperty('--ambient-glow', `rgba(196, 181, 253, ${glowAlpha.toFixed(3)})`);
       }
     });
   }
 
   renderLineVisualizer();
 
-  // Track Duration Bar
+  // 3. Seek track when clicking on visualizer or progress bar
+  function seekTrackFromEvent(e, container) {
+    if (!isPlayerReady || !player || !player.getDuration) return;
+    const rect = container.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const pct = Math.max(0, Math.min(1, clickX / rect.width));
+    const duration = player.getDuration();
+    if (duration > 0) {
+      player.seekTo(duration * pct, true);
+      trackProgressFill.style.width = `${pct * 100}%`;
+    }
+  }
+
+  lineCanvas.addEventListener('click', (e) => seekTrackFromEvent(e, lineCanvas));
+  trackProgressContainer.addEventListener('click', (e) => seekTrackFromEvent(e, trackProgressContainer));
+
   function updateTrackProgress() {
     if (isPlayerReady && player && player.getCurrentTime && player.getDuration) {
       const cur = player.getCurrentTime() || 0;
@@ -554,6 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
       drawerFeedback.textContent = `Loaded track [${videoId}]`;
       drawerFeedback.style.color = "#86efac";
       ytCustomInput.value = "";
+      setTimeout(updateTickerTitle, 1500);
 
       setTimeout(() => {
         if (dropboardDrawer.classList.contains('open')) toggleDrawer();
@@ -592,11 +648,19 @@ document.addEventListener('DOMContentLoaded', () => {
     startText.textContent = startTextContent + (startCursorVisible ? '|' : ' ');
   }, 500);
 
-  function initializeVisitorCounter() {
-    let totalVisitors = Math.floor(Math.random() * 900000) + 100000;
-    if (visitorCount) visitorCount.textContent = totalVisitors.toLocaleString();
+  // 9. Animated Visitor Count-Up Easing
+  function animateVisitorCounter() {
+    const finalCount = 263115;
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: finalCount,
+      duration: 2.2,
+      ease: 'power2.out',
+      onUpdate: () => {
+        if (visitorCount) visitorCount.textContent = Math.floor(obj.val).toLocaleString();
+      }
+    });
   }
-  initializeVisitorCounter();
 
   function startExperience() {
     startScreen.classList.add('hidden');
@@ -623,6 +687,8 @@ document.addEventListener('DOMContentLoaded', () => {
     typeWriterBio();
     fetchDiscordPresence();
     updateChicagoTime();
+    animateVisitorCounter();
+    setTimeout(updateTickerTitle, 1000);
   }
 
   startScreen.addEventListener('click', startExperience);
@@ -700,7 +766,6 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>`;
   });
 
-  // Soft Transparency Slider
   if (transparencySlider) {
     transparencySlider.addEventListener('input', () => {
       const alpha = transparencySlider.value;
@@ -757,7 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // Tab Switcher with Pill Highlighting
+  // Tab Switcher
   const allTabs = [
     { name: 'profile', el: profileBlock, theme: 'home-theme', btn: homeThemeBtn },
     { name: 'skills', el: skillsBlock, theme: 'hacker-theme', btn: hackerThemeBtn },
@@ -780,9 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
     allTabs.forEach(tab => {
       if (tab.btn) tab.btn.classList.remove('active');
     });
-    if (incoming.btn) {
-      incoming.btn.classList.add('active');
-    }
+    if (incoming.btn) incoming.btn.classList.add('active');
 
     if (outgoing && outgoing.el) {
       gsap.to(outgoing.el, {
@@ -840,7 +903,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Button Listeners
   if (homeThemeBtn) homeThemeBtn.addEventListener('click', () => switchTab('profile'));
   if (hackerThemeBtn) hackerThemeBtn.addEventListener('click', () => switchTab('skills'));
   if (discordThemeBtn) {
@@ -867,12 +929,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 7. Share Button Copy Logic
+  if (cardShareBtn) {
+    cardShareBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href);
+      shareBtnText.textContent = "Copied! ✨";
+      showToast('Profile URL copied to clipboard ✨');
+      setTimeout(() => {
+        shareBtnText.textContent = "Share";
+      }, 2000);
+    });
+  }
+
   // Cinema Mode & Shortcut HUD
   const uiElementsToFade = [
     profileBlock,
     skillsBlock,
     discordBlock,
     timeBlock,
+    document.getElementById('music-ticker-pill'),
     document.getElementById('line-visualizer'),
     document.getElementById('track-progress-container'),
     document.querySelector('.controls'),
@@ -1045,7 +1120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Lanyard Assets
+  // Lanyard Presence Resolver
   function resolveDiscordAsset(appId, assetId) {
     if (!assetId) return null;
     if (assetId.startsWith('mp:external/')) {
@@ -1066,6 +1141,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const user = data.data;
 
       lanyardUsername.textContent = user.discord_user.global_name || user.discord_user.username;
+
+      // 5. Update header status dot & text
+      if (discordHeaderDot) {
+        discordHeaderDot.className = `discord-status-dot-inline ${user.discord_status}`;
+      }
+      if (discordHeaderText) {
+        discordHeaderText.textContent = user.discord_status.toUpperCase();
+      }
 
       if (user.discord_user.avatar) {
         const ext = user.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
@@ -1134,7 +1217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Chicago Local Time Clock
+  // 6. Chicago Local Time Clock & Celestial Sun / Moon Phase Icon
   function updateChicagoTime() {
     const now = new Date();
 
@@ -1159,6 +1242,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const tzString = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', timeZoneName: 'short' });
     const code = tzString.split(' ').pop();
     tzName.textContent = `Central Time (${code})`;
+
+    // Check daylight hours (6 AM to 7 PM)
+    const hour = parseInt(now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: false, hour: 'numeric' }), 10);
+    const isDaytime = hour >= 6 && hour < 19;
+
+    if (celestialIcon) {
+      if (isDaytime) {
+        celestialIcon.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        `;
+      } else {
+        celestialIcon.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        `;
+      }
+    }
   }
 
   setInterval(updateChicagoTime, 1000);
