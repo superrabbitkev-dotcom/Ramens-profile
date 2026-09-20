@@ -430,7 +430,7 @@
         }
 
         /* Fixed Flat Layer Stacking without Clipping */
-        #profile-block, #skills-block, #discord-block, #time-block {
+       #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -446,7 +446,7 @@
             gap: 14px;
             backdrop-filter: blur(var(--card-blur));
             pointer-events: auto;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden so tooltips don't get cut off */
             box-shadow: 0 24px 60px rgba(12, 13, 22, 0.45);
             will-change: transform;
         }
