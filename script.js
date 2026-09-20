@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cursor.style.display = 'block';
     });
     document.addEventListener('mousedown', () => {
-      cursor.style.transform = 'scale(0.8) translate(-50%, -50%)';
+      cursor.style.transform = 'scale(0.85) translate(-50%, -50%)';
     });
     document.addEventListener('mouseup', () => {
       cursor.style.transform = 'scale(1) translate(-50%, -50%)';
@@ -127,13 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const centerX = window.innerWidth / 2;
       const centerY = window.innerHeight / 2;
 
-      const targetX = ((e.clientX - centerX) / centerX) * -25;
-      const targetY = ((e.clientY - centerY) / centerY) * -25;
+      const targetX = ((e.clientX - centerX) / centerX) * -20;
+      const targetY = ((e.clientY - centerY) / centerY) * -20;
 
       gsap.to(parallaxState, {
         x: targetX,
         y: targetY,
-        duration: 0.6,
+        duration: 0.8,
         ease: 'power2.out',
         overwrite: 'auto',
         onUpdate: () => {
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Mocha Card Acrylic Glare
+  // Soft Cloud Glare
   const activeCards = [profileBlock, skillsBlock, discordBlock, timeBlock];
 
   function updateCardGlare(e, element) {
@@ -159,23 +159,22 @@ document.addEventListener('DOMContentLoaded', () => {
     element.style.setProperty('--glare-y', `${y}px`);
   }
 
-  // Soft Mocha Lightning Flash
+  // Gentle Lightning Flash
   function triggerLightningFlash() {
     if (!lightningFlash) return;
 
     gsap.timeline()
-      .to(lightningFlash, { opacity: 0.75, duration: 0.04, ease: 'power1.out' })
-      .to(lightningFlash, { opacity: 0.15, duration: 0.06 })
-      .to(lightningFlash, { opacity: 0.85, duration: 0.05 })
-      .to(lightningFlash, { opacity: 0.25, duration: 0.08 })
-      .to(lightningFlash, { opacity: 0, duration: 0.5, ease: 'power2.out' });
+      .to(lightningFlash, { opacity: 0.6, duration: 0.05, ease: 'power1.out' })
+      .to(lightningFlash, { opacity: 0.15, duration: 0.08 })
+      .to(lightningFlash, { opacity: 0.7, duration: 0.05 })
+      .to(lightningFlash, { opacity: 0, duration: 0.6, ease: 'power2.out' });
 
-    const nextInterval = Math.floor(Math.random() * 10001) + 10000;
+    const nextInterval = Math.floor(Math.random() * 10001) + 12000;
     setTimeout(triggerLightningFlash, nextInterval);
   }
   setTimeout(triggerLightningFlash, Math.floor(Math.random() * 6000) + 7000);
 
-  // Weather Particles
+  // Soft Weather Particles
   const weatherCanvas = document.getElementById('weather-canvas');
   const weatherCtx = weatherCanvas.getContext('2d');
   let isSnowMode = false;
@@ -187,19 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeWeatherCanvas();
   window.addEventListener('resize', resizeWeatherCanvas);
 
-  const particleCount = 80;
+  const particleCount = 75;
   const particles = [];
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
-      len: Math.random() * 18 + 8,
-      radius: Math.random() * 2 + 1,
-      speed: Math.random() * 3.5 + 2.5,
-      snowSpeed: Math.random() * 1.3 + 0.7,
+      len: Math.random() * 16 + 8,
+      radius: Math.random() * 2.5 + 1.2,
+      speed: Math.random() * 3.2 + 2.2,
+      snowSpeed: Math.random() * 1.2 + 0.6,
       wobble: Math.random() * Math.PI * 2,
-      wobbleSpeed: Math.random() * 0.025 + 0.01,
-      opacity: Math.random() * 0.35 + 0.15
+      wobbleSpeed: Math.random() * 0.02 + 0.01,
+      opacity: Math.random() * 0.35 + 0.2
     });
   }
 
@@ -212,22 +211,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isSnowMode) {
         p.wobble += p.wobbleSpeed;
         p.y += p.snowSpeed;
-        p.x += Math.sin(p.wobble) * 0.65;
+        p.x += Math.sin(p.wobble) * 0.7;
 
-        weatherCtx.fillStyle = `rgba(205, 214, 244, ${p.opacity})`;
+        weatherCtx.fillStyle = `rgba(253, 244, 255, ${p.opacity})`;
         weatherCtx.beginPath();
         weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         weatherCtx.fill();
       } else {
         p.y += p.speed;
-        p.x -= 0.5;
+        p.x -= 0.4;
 
-        weatherCtx.strokeStyle = `rgba(137, 180, 250, ${p.opacity})`;
-        weatherCtx.lineWidth = 1.1;
+        weatherCtx.strokeStyle = `rgba(196, 181, 253, ${p.opacity})`;
+        weatherCtx.lineWidth = 1.2;
         weatherCtx.lineCap = 'round';
         weatherCtx.beginPath();
         weatherCtx.moveTo(p.x, p.y);
-        weatherCtx.lineTo(p.x - 1.5, p.y + p.len);
+        weatherCtx.lineTo(p.x - 1, p.y + p.len);
         weatherCtx.stroke();
       }
 
@@ -250,6 +249,90 @@ document.addEventListener('DOMContentLoaded', () => {
   if (snowToggleBtn) {
     snowToggleBtn.addEventListener('click', toggleSnowMode);
   }
+
+  // Realistic Raindrops on Glass
+  const glassCanvas = document.getElementById('raindrop-canvas');
+  const glassCtx = glassCanvas.getContext('2d');
+
+  function resizeGlassCanvas() {
+    glassCanvas.width = window.innerWidth;
+    glassCanvas.height = window.innerHeight;
+  }
+  resizeGlassCanvas();
+  window.addEventListener('resize', resizeGlassCanvas);
+
+  const droplets = [];
+  const maxDroplets = 85;
+
+  for (let i = 0; i < maxDroplets; i++) {
+    droplets.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 2.8 + 1.2,
+      speed: Math.random() < 0.15 ? Math.random() * 0.35 + 0.1 : 0,
+      alpha: Math.random() * 0.35 + 0.3,
+      trail: []
+    });
+  }
+
+  function renderGlassDroplets() {
+    glassCtx.clearRect(0, 0, glassCanvas.width, glassCanvas.height);
+
+    for (let i = 0; i < droplets.length; i++) {
+      const d = droplets[i];
+
+      if (d.speed > 0 && d.trail.length > 0) {
+        glassCtx.strokeStyle = `rgba(196, 181, 253, ${d.alpha * 0.25})`;
+        glassCtx.lineWidth = d.r * 0.75;
+        glassCtx.beginPath();
+        glassCtx.moveTo(d.trail[0].x, d.trail[0].y);
+        for (let t = 1; t < d.trail.length; t++) {
+          glassCtx.lineTo(d.trail[t].x, d.trail[t].y);
+        }
+        glassCtx.stroke();
+      }
+
+      glassCtx.fillStyle = `rgba(0, 0, 0, ${d.alpha * 0.35})`;
+      glassCtx.beginPath();
+      glassCtx.arc(d.x + 1, d.y + 1.5, d.r, 0, Math.PI * 2);
+      glassCtx.fill();
+
+      const grad = glassCtx.createRadialGradient(
+        d.x - d.r * 0.3,
+        d.y - d.r * 0.3,
+        d.r * 0.1,
+        d.x,
+        d.y,
+        d.r
+      );
+      grad.addColorStop(0, `rgba(255, 255, 255, ${d.alpha * 0.95})`);
+      grad.addColorStop(0.6, `rgba(196, 181, 253, ${d.alpha * 0.45})`);
+      grad.addColorStop(1, `rgba(40, 42, 65, ${d.alpha * 0.55})`);
+
+      glassCtx.fillStyle = grad;
+      glassCtx.beginPath();
+      glassCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      glassCtx.fill();
+
+      if (d.speed > 0) {
+        d.trail.push({ x: d.x, y: d.y });
+        if (d.trail.length > 18) d.trail.shift();
+
+        d.y += d.speed;
+        d.x += (Math.random() - 0.5) * 0.2;
+
+        if (d.y > glassCanvas.height + 20) {
+          d.y = -10;
+          d.x = Math.random() * glassCanvas.width;
+          d.trail = [];
+          d.speed = Math.random() < 0.15 ? Math.random() * 0.35 + 0.1 : 0;
+        }
+      }
+    }
+
+    requestAnimationFrame(renderGlassDroplets);
+  }
+  renderGlassDroplets();
 
   // Chicago Weather Sync
   const weatherCodeMap = {
@@ -292,11 +375,11 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchChicagoWeather();
   setInterval(fetchChicagoWeather, 600000);
 
-  // Soft Mocha Sparks
-  const sparkColors = ['#89b4fa', '#b4befe', '#74c7ec', '#cdd6f4', '#f5c2e7'];
+  // Soft Pastel Sparks
+  const sparkColors = ['#c4b5fd', '#a5f3fc', '#fbcfe8', '#fdf4ff', '#e0e7ff'];
 
   function createSparks(x, y) {
-    const sparkCount = 7;
+    const sparkCount = 6;
 
     for (let i = 0; i < sparkCount; i++) {
       const spark = document.createElement('div');
@@ -311,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.appendChild(spark);
 
       const angle = (Math.PI * 2 * i) / sparkCount + (Math.random() - 0.5);
-      const distance = Math.floor(Math.random() * 40) + 25;
+      const distance = Math.floor(Math.random() * 35) + 20;
       const targetX = Math.cos(angle) * distance;
       const targetY = Math.sin(angle) * distance;
 
@@ -319,8 +402,8 @@ document.addEventListener('DOMContentLoaded', () => {
         x: targetX,
         y: targetY,
         opacity: 0,
-        scale: Math.random() * 0.4 + 0.2,
-        duration: Math.random() * 0.35 + 0.3,
+        scale: Math.random() * 0.4 + 0.3,
+        duration: Math.random() * 0.4 + 0.35,
         ease: 'power2.out',
         onComplete: () => spark.remove()
       });
@@ -331,13 +414,13 @@ document.addEventListener('DOMContentLoaded', () => {
     createSparks(e.clientX, e.clientY);
   });
 
-  // Mocha Line Visualizer
+  // Pill Visualizer
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas.getContext('2d');
 
   function resizeLineCanvas() {
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 28 : 36;
+    const height = window.innerWidth <= 430 ? 26 : 32;
     lineCanvas.width = width * window.devicePixelRatio;
     lineCanvas.height = height * window.devicePixelRatio;
     lineCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -345,64 +428,65 @@ document.addEventListener('DOMContentLoaded', () => {
   resizeLineCanvas();
   window.addEventListener('resize', resizeLineCanvas);
 
-  const numBars = 52;
-  const barHeights = new Array(numBars).fill(2);
+  const numBars = 48;
+  const barHeights = new Array(numBars).fill(3);
   let audioTick = 0;
 
   function renderLineVisualizer() {
     requestAnimationFrame(renderLineVisualizer);
 
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 820;
-    const height = window.innerWidth <= 430 ? 28 : 36;
+    const height = window.innerWidth <= 430 ? 26 : 32;
 
     lineCtx.clearRect(0, 0, width, height);
 
     const isPlaying = isPlayerReady && player && player.getPlayerState && player.getPlayerState() === 1;
     const currentVol = isMuted ? 0 : parseFloat(volumeSlider.value);
 
-    audioTick += 0.05;
+    audioTick += 0.045;
 
     const barWidth = width / numBars;
-    const spacing = 3;
+    const spacing = 4;
 
     let bassMagnitude = 0;
 
     for (let i = 0; i < numBars; i++) {
-      let targetH = 2;
+      let targetH = 3;
 
       if (isPlaying && currentVol > 0) {
-        const bass = Math.sin(audioTick * 3 + i * 0.2);
-        const mids = Math.cos(audioTick * 5 + i * 0.4);
-        const highs = Math.sin(audioTick * 7 + i * 0.7);
+        const bass = Math.sin(audioTick * 2.8 + i * 0.2);
+        const mids = Math.cos(audioTick * 4.6 + i * 0.35);
+        const highs = Math.sin(audioTick * 6.5 + i * 0.6);
 
         const mixed = Math.abs(bass * 0.55 + mids * 0.3 + highs * 0.15);
-        targetH = Math.max(2, mixed * (height - 4) * currentVol);
+        targetH = Math.max(3, mixed * (height - 4) * currentVol);
 
-        if (i < 8) {
-          bassMagnitude += Math.abs(bass);
-        }
+        if (i < 8) bassMagnitude += Math.abs(bass);
       }
 
-      barHeights[i] += (targetH - barHeights[i]) * 0.2;
+      barHeights[i] += (targetH - barHeights[i]) * 0.22;
 
       const x = i * barWidth + spacing / 2;
       const bH = barHeights[i];
       const y = height - bH;
+      const radius = Math.min((barWidth - spacing) / 2, bH / 2);
 
       const grad = lineCtx.createLinearGradient(0, height, 0, y);
-      grad.addColorStop(0, 'rgba(116, 199, 236, 0.2)');
-      grad.addColorStop(1, 'rgba(137, 180, 250, 0.95)');
+      grad.addColorStop(0, 'rgba(165, 243, 252, 0.25)');
+      grad.addColorStop(1, 'rgba(196, 181, 253, 0.95)');
 
       lineCtx.fillStyle = grad;
-      lineCtx.fillRect(x, y, barWidth - spacing, bH);
+      lineCtx.beginPath();
+      lineCtx.roundRect(x, y, barWidth - spacing, bH, [radius, radius, radius, radius]);
+      lineCtx.fill();
     }
 
-    // Card Bass Bounce
+    // Soft Pulse Bounce
     let scaleVal = 1;
     if (isPlaying && currentVol > 0) {
       const avgBass = bassMagnitude / 8;
-      const bassPulse = Math.pow(avgBass, 3);
-      scaleVal = 1 + bassPulse * 0.025 * currentVol;
+      const bassPulse = Math.pow(avgBass, 2.5);
+      scaleVal = 1 + bassPulse * 0.02 * currentVol;
     }
 
     activeCards.forEach(card => {
@@ -454,24 +538,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoId = extractYouTubeID(rawVal);
 
     if (!videoId) {
-      drawerFeedback.textContent = "Invalid YouTube link or ID.";
-      drawerFeedback.style.color = "#f38ba8";
+      drawerFeedback.textContent = "Please enter a valid YouTube link or ID.";
+      drawerFeedback.style.color = "#f87171";
       return;
     }
 
     try {
       if (isPlayerReady && player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById({
-          videoId: videoId,
-          startSeconds: 0
-        });
+        player.loadVideoById({ videoId: videoId, startSeconds: 0 });
         if (typeof player.setLoop === 'function') player.setLoop(true);
       } else {
         bgIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&loop=1&playlist=${videoId}&playsinline=1`;
       }
 
       drawerFeedback.textContent = `Loaded track [${videoId}]`;
-      drawerFeedback.style.color = "#a6e3a1";
+      drawerFeedback.style.color = "#86efac";
       ytCustomInput.value = "";
 
       setTimeout(() => {
@@ -479,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     } catch (err) {
       drawerFeedback.textContent = "Error loading track.";
-      drawerFeedback.style.color = "#f38ba8";
+      drawerFeedback.style.color = "#f87171";
     }
   }
 
@@ -528,8 +609,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     profileBlock.classList.remove('hidden');
     gsap.fromTo(profileBlock,
-      { opacity: 0, y: -40, filter: 'blur(10px)' },
-      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out', onComplete: () => {
+      { opacity: 0, y: -30, filter: 'blur(12px)' },
+      { opacity: 1, y: 0, filter: 'blur(0px)', duration: 1, ease: 'power2.out', onComplete: () => {
         profileBlock.classList.add('profile-appear');
         profileContainer.classList.add('orbit');
       }}
@@ -574,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bioIndex--;
     } else if (bioIndex === bioMessages[bioMessageIndex].length) {
       isBioDeleting = true;
-      setTimeout(typeWriterBio, 2000);
+      setTimeout(typeWriterBio, 2200);
       return;
     } else if (bioIndex === 0 && isBioDeleting) {
       isBioDeleting = false;
@@ -582,7 +663,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     profileBio.textContent = bioText + (bioCursorVisible ? '|' : ' ');
-    setTimeout(typeWriterBio, isBioDeleting ? 20 : Math.floor(Math.random() * 101) + 30);
+    setTimeout(typeWriterBio, isBioDeleting ? 25 : Math.floor(Math.random() * 90) + 35);
   }
 
   setInterval(() => {
@@ -619,19 +700,19 @@ document.addEventListener('DOMContentLoaded', () => {
     volumeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>`;
   });
 
-  // Slider changes opacity with Catppuccin Mocha tone
+  // Soft Transparency Slider
   if (transparencySlider) {
     transparencySlider.addEventListener('input', () => {
       const alpha = transparencySlider.value;
-      const mochaBg = `rgba(30, 30, 46, ${alpha})`;
-      profileBlock.style.background = mochaBg;
-      skillsBlock.style.background = mochaBg;
-      discordBlock.style.background = mochaBg;
-      timeBlock.style.background = mochaBg;
+      const fluffBg = `rgba(36, 38, 58, ${alpha})`;
+      profileBlock.style.background = fluffBg;
+      skillsBlock.style.background = fluffBg;
+      discordBlock.style.background = fluffBg;
+      timeBlock.style.background = fluffBg;
     });
   }
 
-  // 3D Card Tilt
+  // Smooth Gentle 3D Tilt
   function handleTilt(e, element) {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -639,14 +720,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
     const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
 
-    const maxTilt = 12;
+    const maxTilt = 8;
     const tiltX = ((clientY - centerY) / rect.height) * maxTilt;
     const tiltY = -((clientX - centerX) / rect.width) * maxTilt;
 
     gsap.to(element, {
       rotationX: tiltX,
       rotationY: tiltY,
-      duration: 0.3,
+      duration: 0.4,
       ease: 'power2.out',
       transformPerspective: 1000
     });
@@ -655,7 +736,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function resetTilt(element) {
-    gsap.to(element, { rotationX: 0, rotationY: 0, duration: 0.5, ease: 'power2.out' });
+    gsap.to(element, { rotationX: 0, rotationY: 0, duration: 0.6, ease: 'power2.out' });
   }
 
   activeCards.forEach(el => {
@@ -676,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 500);
   });
 
-  // Tab Switcher with Button Highlighting
+  // Tab Switcher with Pill Highlighting
   const allTabs = [
     { name: 'profile', el: profileBlock, theme: 'home-theme', btn: homeThemeBtn },
     { name: 'skills', el: skillsBlock, theme: 'hacker-theme', btn: hackerThemeBtn },
@@ -696,7 +777,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const outgoing = allTabs[currentIndex];
     const incoming = allTabs[targetIndex];
 
-    // Highlight the active button
     allTabs.forEach(tab => {
       if (tab.btn) tab.btn.classList.remove('active');
     });
@@ -704,13 +784,12 @@ document.addEventListener('DOMContentLoaded', () => {
       incoming.btn.classList.add('active');
     }
 
-    // Outgoing Vertical Wipe
     if (outgoing && outgoing.el) {
       gsap.to(outgoing.el, {
-        y: movingDown ? -50 : 50,
+        y: movingDown ? -40 : 40,
         opacity: 0,
-        filter: 'blur(6px)',
-        duration: 0.3,
+        filter: 'blur(8px)',
+        duration: 0.35,
         ease: 'power2.in',
         onComplete: () => {
           outgoing.el.classList.add('hidden');
@@ -719,28 +798,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Incoming Vertical Wipe
     if (incoming && incoming.el) {
       incoming.el.classList.remove('hidden');
       document.body.className = incoming.theme;
 
       if (transparencySlider) {
-        incoming.el.style.background = `rgba(30, 30, 46, ${transparencySlider.value})`;
+        incoming.el.style.background = `rgba(36, 38, 58, ${transparencySlider.value})`;
       }
 
       gsap.fromTo(incoming.el,
         {
-          y: movingDown ? 50 : -50,
+          y: movingDown ? 40 : -40,
           opacity: 0,
-          filter: 'blur(6px)'
+          filter: 'blur(8px)'
         },
         {
           y: 0,
           opacity: 1,
           filter: 'blur(0px)',
-          duration: 0.38,
+          duration: 0.42,
           ease: 'power2.out',
-          delay: 0.06
+          delay: 0.05
         }
       );
 
@@ -830,7 +908,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Custom Context Menu & Toast
+  // Toast & Context Menu
   function showToast(msg) {
     if (!actionToast) return;
     actionToast.textContent = msg;
@@ -854,8 +932,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contextMenu && !contextMenu.classList.contains('hidden')) {
       gsap.to(contextMenu, {
         opacity: 0,
-        scale: 0.92,
-        duration: 0.12,
+        scale: 0.94,
+        duration: 0.15,
         ease: 'power2.in',
         onComplete: () => contextMenu.classList.add('hidden')
       });
@@ -864,7 +942,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-
     if (!contextMenu) return;
 
     const menuWidth = 220;
@@ -873,12 +950,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let posX = e.clientX;
     let posY = e.clientY;
 
-    if (posX + menuWidth > window.innerWidth) {
-      posX = window.innerWidth - menuWidth - 10;
-    }
-    if (posY + menuHeight > window.innerHeight) {
-      posY = window.innerHeight - menuHeight - 10;
-    }
+    if (posX + menuWidth > window.innerWidth) posX = window.innerWidth - menuWidth - 12;
+    if (posY + menuHeight > window.innerHeight) posY = window.innerHeight - menuHeight - 12;
 
     contextMenu.style.left = `${posX}px`;
     contextMenu.style.top = `${posY}px`;
@@ -886,7 +959,7 @@ document.addEventListener('DOMContentLoaded', () => {
     contextMenu.classList.remove('hidden');
     gsap.fromTo(contextMenu,
       { opacity: 0, scale: 0.92 },
-      { opacity: 1, scale: 1, duration: 0.18, ease: 'power2.out' }
+      { opacity: 1, scale: 1, duration: 0.2, ease: 'power2.out' }
     );
   }, { capture: true });
 
@@ -898,7 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href);
-    showToast('Copied profile URL');
+    showToast('Copied profile URL ✨');
     hideContextMenu();
   });
 
@@ -909,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('ctx-toggle-weather')?.addEventListener('click', () => {
     toggleSnowMode();
-    showToast(isSnowMode ? 'Snowfall mode' : 'Rain mode');
+    showToast(isSnowMode ? 'Snowfall mode ❄️' : 'Rain mode 🌧️');
     hideContextMenu();
   });
 
@@ -964,28 +1037,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     switch (e.key.toLowerCase()) {
-      case '1':
-        switchTab('profile');
-        break;
-      case '2':
-        switchTab('skills');
-        break;
-      case '3':
-        switchTab('discord');
-        fetchDiscordPresence();
-        break;
-      case '4':
-        switchTab('time');
-        updateChicagoTime();
-        fetchChicagoWeather();
-        break;
-      case 'm':
-        toggleMuteState();
-        break;
+      case '1': switchTab('profile'); break;
+      case '2': switchTab('skills'); break;
+      case '3': switchTab('discord'); fetchDiscordPresence(); break;
+      case '4': switchTab('time'); updateChicagoTime(); fetchChicagoWeather(); break;
+      case 'm': toggleMuteState(); break;
     }
   });
 
-  // Lanyard Presence Resolver
+  // Lanyard Assets
   function resolveDiscordAsset(appId, assetId) {
     if (!assetId) return null;
     if (assetId.startsWith('mp:external/')) {
