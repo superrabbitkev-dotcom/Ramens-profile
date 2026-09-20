@@ -11,17 +11,44 @@
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         :root {
-            --fluff-bg: #13141f;
-            --fluff-cloud: rgba(36, 38, 58, 0.72);
-            --fluff-cloud-border: rgba(186, 194, 235, 0.28);
-            --fluff-border-soft: rgba(255, 255, 255, 0.12);
+            --fluff-bg: #0f101a;
+            --fluff-cloud: rgba(30, 32, 50, 0.78);
+            --fluff-cloud-border: rgba(196, 181, 253, 0.25);
+            --fluff-border-soft: rgba(255, 255, 255, 0.1);
             
             --fluff-accent: #c4b5fd;
             --fluff-blue: #a5f3fc;
             --fluff-pink: #fbcfe8;
             --fluff-cream: #fdf4ff;
             --fluff-subtext: #cbd5e1;
-            --fluff-pill-bg: rgba(255, 255, 255, 0.08);
+            --fluff-pill-bg: rgba(255, 255, 255, 0.07);
+            --card-blur: 24px;
+            --bg-dim: 0.85;
+        }
+
+        body.theme-palette-matcha {
+            --fluff-accent: #86efac;
+            --fluff-blue: #a7f3d0;
+            --fluff-pink: #fde047;
+            --fluff-cloud-border: rgba(134, 239, 172, 0.3);
+        }
+        body.theme-palette-peach {
+            --fluff-accent: #fdba74;
+            --fluff-blue: #fed7aa;
+            --fluff-pink: #f472b6;
+            --fluff-cloud-border: rgba(253, 186, 116, 0.3);
+        }
+        body.theme-palette-cotton {
+            --fluff-accent: #f472b6;
+            --fluff-blue: #bae6fd;
+            --fluff-pink: #fbcfe8;
+            --fluff-cloud-border: rgba(244, 114, 182, 0.3);
+        }
+        body.theme-palette-midnight {
+            --fluff-accent: #818cf8;
+            --fluff-blue: #38bdf8;
+            --fluff-pink: #c084fc;
+            --fluff-cloud-border: rgba(129, 140, 248, 0.3);
         }
 
         @font-face {
@@ -36,23 +63,12 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            user-select: none;
         }
 
-        /* 10. Custom Styled Pill Scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(19, 20, 31, 0.6);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(196, 181, 253, 0.3);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(196, 181, 253, 0.6);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 16, 26, 0.7); }
+        ::-webkit-scrollbar-thumb { background: rgba(196, 181, 253, 0.35); border-radius: 10px; }
 
         .custom-cursor {
             position: fixed;
@@ -63,18 +79,17 @@
             pointer-events: none;
             z-index: 99999;
             transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 8px rgba(196, 181, 253, 0.45));
+            filter: drop-shadow(0 0 10px rgba(196, 181, 253, 0.5));
         }
 
-        body:not(.touch-device) {
-            cursor: none;
-        }
+        body:not(.touch-device) { cursor: none; }
 
         body {
             background-color: var(--fluff-bg);
             color: var(--fluff-cream);
             overflow: hidden;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            width: 100vw;
+            height: 100vh;
         }
 
         .container {
@@ -85,81 +100,50 @@
 
         #background {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 110vw;
-            height: 110vh;
-            min-width: 195vh;
-            min-height: 65vw;
-            --parallax-x: 0px;
-            --parallax-y: 0px;
-            transform: translate(calc(-50% + var(--parallax-x)), calc(-50% + var(--parallax-y)));
+            top: 50%; left: 50%;
+            width: 114vw; height: 114vh;
+            min-width: 195vh; min-height: 65vw;
+            transform: translate(-50%, -50%);
             z-index: 1;
             pointer-events: none;
             border: none;
+            opacity: var(--bg-dim);
+            filter: saturate(0.92) brightness(0.92);
             will-change: transform;
-            opacity: 0.85;
-            filter: saturate(0.9) brightness(0.92);
         }
 
         #lightning-flash {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 50% 20%, rgba(196, 181, 253, 0.4) 0%, rgba(251, 207, 232, 0.2) 50%, transparent 100%);
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(196, 181, 253, 0.45) 0%, transparent 80%);
             mix-blend-mode: screen;
             opacity: 0;
             pointer-events: none;
             z-index: 2;
-            transition: opacity 0.08s ease-out;
         }
 
         #weather-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             z-index: 3;
             pointer-events: none;
             opacity: 0.55;
         }
 
-        /* 1. Slender Window Frame with Corner L-Brackets & 2. Interactive Glass Layer */
         .window-frame-system {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            inset: 0;
             pointer-events: none;
             z-index: 4;
             box-shadow: inset 0 0 80px rgba(10, 11, 18, 0.6);
         }
 
-        .glass-reflection-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                135deg,
-                rgba(255, 255, 255, 0.05) 0%,
-                transparent 30%,
-                rgba(196, 181, 253, 0.03) 50%,
-                transparent 70%,
-                rgba(255, 255, 255, 0.04) 100%
-            );
-            backdrop-filter: blur(1px);
-        }
-
         #raindrop-canvas {
             position: absolute;
             inset: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100vw; height: 100vh;
             opacity: 0.85;
-            pointer-events: auto; /* Allows mouse wipe / defog */
+            pointer-events: none;
         }
 
         .window-rim {
@@ -167,198 +151,138 @@
             inset: 0;
             border: 8px solid #1c1d2c;
             border-bottom: 12px solid #161724;
-            box-shadow: 
-                inset 0 2px 6px rgba(0, 0, 0, 0.7),
-                inset 0 -1px 2px rgba(255, 255, 255, 0.08),
-                0 0 25px rgba(0, 0, 0, 0.75);
+            pointer-events: none;
         }
 
         .window-divider-h {
             position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100vw;
-            height: 7px;
+            top: 50%; left: 0;
+            width: 100vw; height: 7px;
             transform: translateY(-50%);
             background: linear-gradient(180deg, #373952 0%, #1e1f2f 45%, #131420 100%);
             border-top: 1px solid rgba(255, 255, 255, 0.22);
             border-bottom: 1px solid rgba(0, 0, 0, 0.9);
-            box-shadow: 
-                0 4px 10px rgba(0, 0, 0, 0.5),
-                0 -2px 6px rgba(0, 0, 0, 0.35);
+            pointer-events: none;
         }
 
         .window-divider-v {
             position: absolute;
-            top: 0;
-            left: 50%;
-            width: 7px;
-            height: 100vh;
+            top: 0; left: 50%;
+            width: 7px; height: 100vh;
             transform: translateX(-50%);
             background: linear-gradient(90deg, #373952 0%, #1e1f2f 45%, #131420 100%);
             border-left: 1px solid rgba(255, 255, 255, 0.2);
             border-right: 1px solid rgba(0, 0, 0, 0.9);
-            box-shadow: 
-                4px 0 10px rgba(0, 0, 0, 0.5),
-                -4px 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 1. Structural Corner Brackets */
-        .window-bracket {
-            position: absolute;
-            width: 22px;
-            height: 22px;
-            border-color: rgba(255, 255, 255, 0.18);
-            border-style: solid;
             pointer-events: none;
         }
-        .bracket-tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; }
-        .bracket-tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; }
-        .bracket-bl { bottom: 16px; left: 12px; border-width: 0 0 2px 2px; }
-        .bracket-br { bottom: 16px; right: 12px; border-width: 0 2px 2px 0; }
 
-        .glitch-overlay, #hacker-overlay, #snow-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        .glitch-overlay { opacity: 0; transition: opacity 0.5s; }
         .hidden { display: none !important; }
 
         .click-spark {
             position: fixed;
-            width: 7px;
-            height: 7px;
+            width: 7px; height: 7px;
             border-radius: 50%;
             pointer-events: none;
             z-index: 100000;
-            box-shadow: 0 0 10px currentColor;
         }
 
-        /* 4. Live Audio Title Ticker */
         #music-ticker-pill {
             position: fixed;
-            top: calc(50% - 170px - 72px);
+            top: calc(50% - 175px - 76px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(30, 32, 50, 0.75);
+            gap: 12px;
+            background: rgba(30, 32, 50, 0.85);
             border: 1px solid var(--fluff-cloud-border);
-            padding: 4px 14px;
-            border-radius: 20px;
+            padding: 5px 16px;
+            border-radius: 24px;
             font-size: 11px;
             font-weight: 700;
             color: var(--fluff-subtext);
-            backdrop-filter: blur(14px);
+            backdrop-filter: blur(16px);
             z-index: 25;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-            max-width: 820px;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+            pointer-events: auto;
         }
 
-        .ticker-note-icon {
-            width: 12px;
-            height: 12px;
+        .audio-nav-btn {
+            background: transparent;
+            border: none;
             color: var(--fluff-accent);
-            animation: pulse-note 2s infinite ease-in-out;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .audio-nav-btn svg { width: 14px; height: 14px; }
+
+        #audio-time-stamp {
+            font-family: monospace;
+            font-size: 10px;
+            color: var(--fluff-accent);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 8px;
         }
 
-        @keyframes pulse-note {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 1; color: var(--fluff-blue); }
+        #eq-mode-badge, #vis-mode-badge {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 9px;
+            color: var(--fluff-accent);
+            cursor: pointer;
         }
 
-        /* 3. Interactive Line Visualizer & Progress Bar (Scrubbable) */
         #line-visualizer {
             position: fixed;
-            top: calc(50% - 170px - 44px);
+            top: calc(50% - 175px - 44px);
             left: 50%;
             transform: translateX(-50%);
-            width: 820px;
-            height: 32px;
+            width: 820px; height: 34px;
             z-index: 25;
             cursor: pointer;
-            filter: drop-shadow(0 4px 10px rgba(196, 181, 253, 0.35));
+            pointer-events: auto;
         }
 
         #track-progress-container {
             position: fixed;
-            top: calc(50% - 170px - 12px);
+            top: calc(50% - 175px - 10px);
             left: 50%;
             transform: translateX(-50%);
-            width: 820px;
-            height: 6px;
+            width: 820px; height: 6px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             z-index: 25;
             cursor: pointer;
             overflow: hidden;
-            backdrop-filter: blur(8px);
+            pointer-events: auto;
         }
 
         #track-progress-fill {
-            height: 100%;
-            width: 0%;
+            height: 100%; width: 0%;
             background: linear-gradient(90deg, var(--fluff-blue), var(--fluff-accent));
             border-radius: 12px;
-            box-shadow: 0 0 10px rgba(196, 181, 253, 0.55);
-            transition: width 0.3s ease;
         }
 
-        @media (max-width: 430px) {
-            #music-ticker-pill {
-                width: 90vw;
-                max-width: 350px;
-                top: calc(50% - 145px - 66px);
-                font-size: 10px;
-            }
-
-            #line-visualizer {
-                width: 90vw;
-                max-width: 350px;
-                top: calc(50% - 145px - 40px);
-                height: 26px;
-            }
-
-            #track-progress-container {
-                width: 90vw;
-                max-width: 350px;
-                top: calc(50% - 145px - 10px);
-            }
-        }
-
-        /* Dropboard Drawer */
         #dropboard-drawer {
             position: fixed;
-            top: 0;
-            left: 50%;
+            top: 0; left: 50%;
             transform: translate(-50%, -100%);
-            width: 620px;
-            max-width: 90vw;
+            width: 620px; max-width: 90vw;
             z-index: 100;
             transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+            pointer-events: auto;
         }
-
-        #dropboard-drawer.open {
-            transform: translate(-50%, 0%);
-        }
+        #dropboard-drawer.open { transform: translate(-50%, 0%); }
 
         .drawer-content {
-            background: rgba(30, 32, 50, 0.88);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(26, 28, 44, 0.95);
+            border: 1.5px solid var(--fluff-cloud-border);
             border-top: none;
-            border-radius: 0 0 26px 26px;
+            border-radius: 0 0 28px 28px;
             padding: 20px 26px;
-            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 25px rgba(196, 181, 253, 0.15);
             backdrop-filter: blur(24px);
             display: flex;
             flex-direction: column;
@@ -372,66 +296,80 @@
             font-size: 12px;
             font-weight: 700;
             color: var(--fluff-accent);
-            letter-spacing: 0.5px;
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
-        .drawer-shortcut {
-            color: var(--fluff-subtext);
-            font-size: 11px;
-            opacity: 0.8;
-        }
-
-        .drawer-input-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        #yt-custom-input {
-            flex: 1;
-            background: rgba(19, 20, 31, 0.6);
+        .preset-shelf { display: flex; gap: 8px; flex-wrap: wrap; }
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--fluff-cloud-border);
-            border-radius: 18px;
-            padding: 10px 16px;
-            color: var(--fluff-cream);
-            font-size: 13px;
-            outline: none;
-            transition: all 0.25s ease;
-        }
-
-        #yt-custom-input:focus {
-            border-color: var(--fluff-accent);
-            box-shadow: 0 0 16px rgba(196, 181, 253, 0.3);
-            background: rgba(19, 20, 31, 0.85);
-        }
-
-        #yt-load-btn {
-            background: linear-gradient(135deg, var(--fluff-accent), var(--fluff-pink));
-            color: #1e1b4b;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 11px;
             font-weight: 700;
-            font-size: 12px;
-            border: none;
-            border-radius: 18px;
-            padding: 10px 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(196, 181, 253, 0.35);
-            transition: all 0.25s ease;
-        }
-
-        #yt-load-btn:hover {
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 6px 18px rgba(196, 181, 253, 0.5);
-        }
-
-        #drawer-feedback {
-            font-size: 12px;
             color: var(--fluff-subtext);
+            cursor: pointer;
+        }
+
+        .sound-gen-shelf {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 16, 26, 0.5);
+            padding: 8px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--fluff-cloud-border);
+        }
+        .sound-gen-label { font-size: 11px; font-weight: 700; color: var(--fluff-accent); }
+        .sound-gen-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--fluff-cloud-border);
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 10px;
+            color: var(--fluff-subtext);
+            cursor: pointer;
+        }
+        .sound-gen-btn.active { background: var(--fluff-accent); color: #1a153a; font-weight: 700; }
+
+        #scratchpad-area {
+            width: 100%; height: 50px;
+            background: rgba(15, 16, 26, 0.6);
+            border: 1px solid var(--fluff-cloud-border);
+            border-radius: 14px;
+            padding: 8px 12px;
+            color: var(--fluff-cream);
+            font-size: 11px;
+            outline: none;
+            resize: none;
+        }
+
+        .drawer-sliders-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .drawer-slider-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--fluff-subtext);
+        }
+
+        .palette-row { display: flex; align-items: center; gap: 8px; }
+        .palette-btn {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
         }
 
         #drawer-tab-handle {
             width: fit-content;
             margin: 0 auto;
-            background: rgba(30, 32, 50, 0.85);
+            background: rgba(26, 28, 44, 0.9);
             border: 1px solid var(--fluff-cloud-border);
             border-top: none;
             border-radius: 0 0 18px 18px;
@@ -444,192 +382,330 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-            transition: all 0.25s ease;
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
-        #drawer-tab-handle:hover {
-            background: rgba(45, 48, 75, 0.9);
-            color: var(--fluff-pink);
-            transform: translateY(2px);
-        }
-
-        .handle-arrow {
-            display: inline-block;
-            transition: transform 0.3s ease;
-            font-size: 10px;
-        }
-
-        #dropboard-drawer.open .handle-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* Keyboard Shortcut HUD Overlay */
-        #shortcut-hud {
+        /* Fixed Flat Layer Stacking without Clipping */
+        #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(19, 20, 31, 0.65);
-            backdrop-filter: blur(16px);
-            z-index: 200;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 820px;
+            min-height: 332px;
+            background: var(--fluff-cloud);
+            border: 1.5px solid var(--fluff-cloud-border);
+            padding: 26px 30px;
+            border-radius: 32px;
+            z-index: 20;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            gap: 14px;
+            backdrop-filter: blur(var(--card-blur));
+            pointer-events: auto;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(12, 13, 22, 0.45);
+            will-change: transform;
         }
 
-        .hud-content {
-            background: rgba(34, 36, 56, 0.88);
+        .card-telemetry-badge {
+            position: absolute;
+            top: 14px; right: 18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--fluff-cloud-border);
-            border-radius: 28px;
-            padding: 26px 32px;
-            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
-            width: 410px;
-            max-width: 90vw;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .hud-title {
-            font-size: 13px;
-            color: var(--fluff-accent);
+            padding: 3px 9px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            font-family: 'Comfortaa', cursive, sans-serif;
+            color: var(--fluff-subtext);
         }
 
-        .hud-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .telemetry-pulse {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #86efac;
+            box-shadow: 0 0 6px #86efac;
         }
 
-        .hud-item {
-            display: flex;
-            justify-content: space-between;
+        .profile-header { display: flex; align-items: flex-start; gap: 20px; }
+        .profile-container { position: relative; width: 140px; height: 140px; }
+        .profile-container::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 10px 10px, var(--fluff-accent) 15%, transparent 25%);
+            animation: orbit 4s linear infinite;
+            z-index: -1;
+            filter: blur(2px);
+        }
+
+        .profile-picture {
+            width: 140px; height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .profile-info { flex: 1; display: flex; flex-direction: column; }
+        .name-and-badges { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+
+        #profile-name {
+            font-family: 'Angel Wish', sans-serif !important;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 16px rgba(196, 181, 253, 0.55);
+        }
+
+        .discord-status-header-pill {
+            display: inline-flex;
             align-items: center;
-            font-size: 13px;
-            color: var(--fluff-cream);
-        }
-
-        .hud-key {
-            background: rgba(255, 255, 255, 0.08);
+            gap: 6px;
+            background: rgba(15, 16, 26, 0.6);
             border: 1px solid var(--fluff-cloud-border);
             padding: 4px 10px;
-            border-radius: 12px;
-            color: var(--fluff-accent);
+            border-radius: 14px;
+            font-size: 11px;
             font-weight: 700;
-            font-size: 11px;
-        }
-
-        .hud-footnote {
-            font-size: 11px;
             color: var(--fluff-subtext);
-            text-align: center;
-            opacity: 0.75;
+            cursor: pointer;
         }
 
-        /* Context Menu & Toast */
-        #custom-context-menu {
-            position: fixed;
-            z-index: 10000;
-            width: 220px;
-            background: rgba(30, 32, 50, 0.92);
-            border: 1px solid var(--fluff-cloud-border);
-            border-radius: 20px;
-            padding: 8px;
-            backdrop-filter: blur(18px);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
-            user-select: none;
-        }
+        .discord-status-dot-inline { width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
+        .discord-status-dot-inline.online { background-color: #86efac; box-shadow: 0 0 8px #86efac; }
+        .discord-status-dot-inline.idle { background-color: #fde047; }
+        .discord-status-dot-inline.dnd { background-color: #f87171; }
 
-        .context-header {
+        .telemetry-row-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 10px;
-            letter-spacing: 0.5px;
             color: var(--fluff-subtext);
-            padding: 6px 10px 4px 10px;
+            margin-bottom: 6px;
+        }
+
+        .badge-group { display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge-container { position: relative; }
+        .badge-box { background: rgba(255, 255, 255, 0.08); padding: 3px; border-radius: 18px; }
+        .badge-box-inner { background: rgba(15, 16, 26, 0.6); padding: 4px 8px; border-radius: 14px; display: flex; gap: 6px; }
+        .badge { width: 19px; height: 19px; cursor: pointer; }
+
+        .mood-reaction-shelf { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px 0; }
+        .mood-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--fluff-cloud-border);
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 10px;
+            color: var(--fluff-subtext);
+            cursor: pointer;
+        }
+
+        #profile-bio { color: var(--fluff-subtext); font-size: 14px; line-height: 1.5; min-height: 22px; }
+        .bio-separator { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--fluff-cloud-border), transparent); margin: 12px 0; }
+
+        .profile-footer { width: 100%; margin-top: auto; }
+        .footer-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; gap: 12px; }
+        .footer-row .visitor-counter { justify-self: start; }
+        .footer-row .social-links { justify-self: center; }
+        .footer-buttons-wrap { justify-self: end; display: flex; align-items: center; gap: 8px; }
+
+        .footer-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--fluff-pill-bg);
+            border: 1px solid var(--fluff-cloud-border);
+            color: var(--fluff-accent);
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 700;
+            cursor: pointer;
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
-        .context-item {
+        .visitor-counter {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
+            gap: 8px;
+            background: var(--fluff-pill-bg);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 6px 14px;
+            border-radius: 24px;
             font-size: 12px;
             font-weight: 600;
+            color: var(--fluff-subtext);
+        }
+
+        .social-links { display: flex; justify-content: center; gap: 12px; }
+        .social-icon { width: 32px; height: 32px; border-radius: 12px; padding: 4px; background: rgba(255, 255, 255, 0.05); }
+
+        /* Skills Tab */
+        .skills-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
             color: var(--fluff-cream);
+            margin-bottom: 6px;
+            font-family: 'Comfortaa', cursive, sans-serif;
+        }
+
+        .skill { display: flex; flex-direction: column; gap: 4px; }
+        .skill-name { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--fluff-subtext); }
+        .skill-icon { width: 18px; height: 18px; margin-right: 6px; }
+
+        .skill-bar-container {
+            height: 8px;
+            background: rgba(15, 16, 26, 0.6);
+            border: 1px solid var(--fluff-cloud-border);
             border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            overflow: hidden;
         }
 
-        .context-item:hover {
-            background: linear-gradient(135deg, rgba(196, 181, 253, 0.3), rgba(251, 207, 232, 0.25));
-            color: #fff;
-            padding-left: 15px;
+        .skill-bar { height: 100%; border-radius: 12px; width: 0%; transition: width 2s; }
+        #python-bar { background: linear-gradient(90deg, #f472b6, #fb7185); }
+        #cpp-bar { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+        #csharp-bar { background: linear-gradient(90deg, #34d399, #2dd4bf); }
+
+        .project-showcase-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 6px;
         }
 
-        .ctx-shortcut {
+        .project-card {
+            background: rgba(15, 16, 26, 0.5);
+            border: 1px solid var(--fluff-cloud-border);
+            border-radius: 18px;
+            padding: 9px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-decoration: none;
+        }
+        .project-title { font-size: 12px; font-weight: 700; color: var(--fluff-cream); }
+        .project-desc { font-size: 10px; color: var(--fluff-subtext); }
+        .project-tags { display: flex; gap: 4px; margin-top: 4px; }
+        .proj-tag { background: rgba(255, 255, 255, 0.08); font-size: 9px; padding: 2px 6px; border-radius: 6px; color: var(--fluff-accent); }
+
+        /* Discord Tab */
+        .discord-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: rgba(15, 16, 26, 0.5);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 18px;
+            border-radius: 24px;
+        }
+
+        .discord-avatar-wrap { position: relative; width: 74px; height: 74px; flex-shrink: 0; }
+        #lanyard-avatar { width: 74px; height: 74px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.2); }
+        #lanyard-status-dot {
+            position: absolute;
+            bottom: 2px; right: 2px;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 3px solid rgba(19, 20, 31, 0.9);
+        }
+
+        .discord-details { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        #lanyard-username { font-size: 18px; font-weight: 700; color: var(--fluff-cream); }
+
+        .discord-activity-box {
+            font-size: 12px;
+            background: var(--fluff-pill-bg);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 10px 14px;
+            border-radius: 16px;
+            border-left: 4px solid var(--fluff-accent);
+            color: var(--fluff-subtext);
+        }
+
+        .activity-banner-wrap { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
+        .activity-large-image { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; border: 1px solid var(--fluff-cloud-border); flex-shrink: 0; }
+
+        /* Time & Weather Tab */
+        .time-card-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+        .clock-header-wrap { display: flex; align-items: center; gap: 12px; }
+        #celestial-phase-icon { width: 32px; height: 32px; filter: drop-shadow(0 0 10px rgba(165, 243, 252, 0.6)); }
+        .digital-clock {
+            font-size: 40px; font-weight: 700; letter-spacing: 1px;
+            color: var(--fluff-blue); text-shadow: 0 4px 20px rgba(165, 243, 252, 0.4);
+            font-family: 'Comfortaa', cursive, sans-serif;
+        }
+
+        .time-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 100%;
+            max-width: 520px;
+        }
+
+        .time-detail-box {
+            background: rgba(15, 16, 26, 0.5);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 8px 14px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label { font-size: 10px; text-transform: uppercase; color: var(--fluff-subtext); font-weight: 700; opacity: 0.7; }
+        .detail-val { font-size: 12px; font-weight: 700; color: var(--fluff-cream); }
+
+        .tz-comparison-strip {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
             font-size: 10px;
             color: var(--fluff-subtext);
-            font-weight: 600;
         }
-
-        .context-divider {
-            height: 1px;
-            background: var(--fluff-border-soft);
-            margin: 4px 0;
-        }
-
-        #action-toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(34, 36, 56, 0.9);
-            border: 1px solid var(--fluff-accent);
-            color: var(--fluff-accent);
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            backdrop-filter: blur(12px);
-            z-index: 10001;
-            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .cinema-hidden {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            transition: opacity 0.4s ease-out !important;
-        }
-
-        #cinema-exit-hint {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(30, 32, 50, 0.85);
+        .tz-chip {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 8px;
+            border-radius: 10px;
             border: 1px solid var(--fluff-cloud-border);
-            backdrop-filter: blur(12px);
-            padding: 9px 22px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--fluff-subtext);
-            z-index: 150;
-            pointer-events: none;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
-        #cinema-exit-hint strong { color: var(--fluff-accent); }
+        /* Badge Modal */
+        #badge-inspector-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: rgba(26, 28, 44, 0.95);
+            border: 1.5px solid var(--fluff-accent);
+            border-radius: 24px;
+            padding: 22px 26px;
+            z-index: 500;
+            width: 320px; max-width: 90vw;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+        }
+        #badge-inspector-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+        #badge-modal-img { width: 44px; height: 44px; }
+        #badge-modal-title { font-size: 15px; font-weight: 700; color: var(--fluff-cream); }
+        #badge-modal-desc { font-size: 12px; color: var(--fluff-subtext); }
 
+        /* Floating Navigation Controls */
         .controls {
             position: fixed;
             bottom: calc(50% - 240px - 10px);
@@ -643,12 +719,11 @@
             padding: 7px 14px;
             border-radius: 30px;
             backdrop-filter: blur(18px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            pointer-events: auto;
         }
 
         .theme-button {
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: 50%;
             border: 1px solid var(--fluff-cloud-border);
             background-color: var(--fluff-pill-bg);
@@ -657,90 +732,56 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 13px; font-weight: 700;
             font-family: 'Comfortaa', cursive, sans-serif;
         }
-
-        .theme-button:hover {
-            border-color: var(--fluff-accent);
-            color: #fff;
-            transform: scale(1.1);
-        }
-
         .theme-button.active {
             background: linear-gradient(135deg, var(--fluff-accent), var(--fluff-pink)) !important;
-            color: #1e1b4b !important;
+            color: #1a153a !important;
             border-color: transparent !important;
-            box-shadow: 0 4px 15px rgba(196, 181, 253, 0.5);
-            transform: scale(1.1);
         }
 
-        .volume-control, .transparency-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .volume-icon, .transparency-icon {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            display: flex;
-            color: var(--fluff-subtext);
-            transition: color 0.2s ease;
-        }
-
-        .volume-icon:hover { color: var(--fluff-accent); }
+        .volume-control, .transparency-control { display: flex; align-items: center; gap: 8px; position: relative; }
+        .volume-icon, .transparency-icon { width: 18px; height: 18px; cursor: pointer; color: var(--fluff-subtext); }
 
         .slider {
             -webkit-appearance: none;
             appearance: none;
-            width: 80px;
-            height: 6px;
+            width: 80px; height: 6px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
             outline: none;
         }
-
         .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 14px; height: 14px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--fluff-blue), var(--fluff-accent));
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(165, 243, 252, 0.6);
-            transition: transform 0.15s ease;
         }
 
-        .slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
-
-        #snow-toggle-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--fluff-subtext);
-            transition: all 0.25s ease;
-            padding: 2px;
+        #vol-tooltip {
+            position: absolute;
+            top: -24px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 16, 26, 0.9);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            color: var(--fluff-accent);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
         }
+        .volume-control:hover #vol-tooltip { opacity: 1; }
 
-        #snow-toggle-btn:hover {
-            color: var(--fluff-blue);
-            transform: scale(1.15);
-        }
+        #defog-glass-btn { background: transparent; border: none; color: var(--fluff-subtext); cursor: pointer; display: flex; align-items: center; }
+        #defog-glass-btn svg { width: 17px; height: 17px; }
 
-        #snow-toggle-btn.active {
-            color: var(--fluff-blue);
-            filter: drop-shadow(0 0 8px rgba(165, 243, 252, 0.7));
-        }
-
-        .snow-icon { width: 18px; height: 18px; }
+        #snow-toggle-btn { background: transparent; border: none; cursor: pointer; color: var(--fluff-subtext); }
+        #snow-toggle-btn.active { color: var(--fluff-blue); }
 
         .top-controls {
             position: fixed;
@@ -749,760 +790,99 @@
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
             z-index: 20;
             background: rgba(30, 32, 50, 0.75);
             border: 1px solid var(--fluff-cloud-border);
             padding: 8px 18px;
             border-radius: 30px;
             backdrop-filter: blur(18px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+            pointer-events: auto;
         }
 
-        /* 8. Ambient Glow & Fluffy Cards */
-        #profile-block, #skills-block, #discord-block, #time-block {
+        #action-toast {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            --bass-scale: 1;
-            --ambient-glow: rgba(196, 181, 253, 0.1);
-            --glare-x: 50%;
-            --glare-y: 50%;
-            transform: translate(-50%, -50%) scale(var(--bass-scale));
-            width: 820px;
-            min-height: 332px;
-            background: var(--fluff-cloud);
-            border: 1.5px solid var(--fluff-cloud-border);
-            padding: 26px 30px;
-            border-radius: 32px;
-            z-index: 20;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            backdrop-filter: blur(24px);
-            transform-style: preserve-3d;
-            overflow: hidden;
-            box-shadow: 
-                0 24px 60px rgba(12, 13, 22, 0.45),
-                0 0 45px var(--ambient-glow),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            will-change: transform, filter, opacity;
-            transition: transform 0.1s ease-out, border-color 0.3s ease, box-shadow 0.15s ease;
-        }
-
-        #profile-block::before, #skills-block::before, #discord-block::before, #time-block::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            bottom: 30px; right: 30px;
+            background: rgba(30, 32, 50, 0.95);
+            border: 1px solid var(--fluff-accent);
+            color: var(--fluff-accent);
+            padding: 10px 22px;
+            border-radius: 24px;
+            font-size: 12px; font-weight: 700;
+            z-index: 10001;
             pointer-events: none;
-            z-index: 30;
-            background: radial-gradient(
-                circle 450px at var(--glare-x) var(--glare-y),
-                rgba(255, 255, 255, 0.1) 0%,
-                rgba(196, 181, 253, 0.08) 35%,
-                transparent 70%
-            );
-            mix-blend-mode: overlay;
+            transition: all 0.3s ease;
         }
 
-        #profile-block {
-            opacity: 0;
-            pointer-events: auto;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .profile-container {
-            position: relative;
-            width: 140px;
-            height: 140px;
-        }
-
-        .profile-container::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            background: radial-gradient(
-                circle at 10px 10px,
-                var(--fluff-accent) 15%,
-                transparent 25%
-            );
-            animation: orbit 4s linear infinite;
-            z-index: -1;
-            filter: blur(2px);
-        }
-
-        .profile-container.fast-orbit::after {
-            animation: fast-orbit 0.5s linear forwards;
-        }
-
-        .profile-picture {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            pointer-events: auto;
-            border: 3px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        }
-
-        .profile-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .name-and-badges {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-
-        #profile-name {
-            font-family: 'Angel Wish', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #ffffff;
-            text-shadow: 0 0 16px rgba(196, 181, 253, 0.55);
-        }
-
-        /* 5. Live Discord Presence Pill in Bio Header */
-        .discord-status-header-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(19, 20, 31, 0.6);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 4px 10px;
-            border-radius: 14px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--fluff-subtext);
-        }
-
-        .discord-status-dot-inline {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #94a3b8;
-        }
-        .discord-status-dot-inline.online { background-color: #86efac; box-shadow: 0 0 8px #86efac; }
-        .discord-status-dot-inline.idle { background-color: #fde047; }
-        .discord-status-dot-inline.dnd { background-color: #f87171; }
-
-        .badge-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .badge-container {
-            position: relative;
-            pointer-events: auto;
-        }
-
-        .badge-container .tooltip {
-            visibility: hidden;
-            width: 120px;
-            background-color: rgba(22, 23, 37, 0.95);
-            border: 1px solid var(--fluff-cloud-border);
-            color: var(--fluff-cream);
-            text-align: center;
-            border-radius: 12px;
-            padding: 6px 10px;
-            font-size: 11px;
-            font-weight: 600;
-            position: absolute;
-            z-index: 100;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.2s;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(10px);
-        }
-
-        .badge-container:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .badge-box {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 3px;
-            border-radius: 18px;
-            display: inline-block;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .badge-box-inner {
-            background: rgba(19, 20, 31, 0.6);
-            padding: 5px 10px;
-            border-radius: 14px;
-            display: flex;
-            gap: 6px;
-        }
-
-        .badge {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-            pointer-events: auto;
-        }
-
-        .badge:hover { transform: scale(1.25); }
-
-        #profile-bio {
-            color: var(--fluff-subtext);
-            font-size: 15px;
-            line-height: 1.5;
-            margin-bottom: 8px;
-            min-height: 24px;
-            font-weight: 500;
-        }
-
-        .bio-separator {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--fluff-cloud-border), transparent);
-            margin: 16px 0;
-        }
-
-        .profile-footer {
-            width: 100%;
-            margin-top: auto;
-        }
-
-        .footer-row {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            width: 100%;
-            gap: 12px;
-        }
-
-        .footer-row .visitor-counter {
-            justify-self: start;
-            margin: 0;
-        }
-
-        .footer-row .social-links {
-            justify-self: center;
-        }
-
-        .footer-buttons-wrap {
-            justify-self: end;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* 7. One-Click Copy / Share Profile Button */
-        .footer-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
-            color: var(--fluff-accent);
-            padding: 7px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            transition: all 0.25s ease;
-            font-family: 'Comfortaa', cursive, sans-serif;
-        }
-
-        .footer-btn:hover {
-            background: linear-gradient(135deg, rgba(196, 181, 253, 0.3), rgba(251, 207, 232, 0.3));
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 14px rgba(196, 181, 253, 0.3);
-        }
-
-        .footer-btn-icon { width: 13px; height: 13px; }
-
-        .visitor-counter {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 7px 16px;
-            border-radius: 24px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--fluff-subtext);
-            align-self: flex-start;
-            position: relative;
-            pointer-events: auto;
-        }
-
-        .visitor-icon {
-            width: 16px;
-            height: 16px;
-            color: var(--fluff-accent);
-        }
-
-        .visitor-counter .tooltip {
-            visibility: hidden;
-            width: 110px;
-            background-color: rgba(22, 23, 37, 0.95);
-            border: 1px solid var(--fluff-cloud-border);
-            color: var(--fluff-cream);
-            text-align: center;
-            border-radius: 10px;
-            padding: 5px 0;
-            font-size: 11px;
-            font-weight: 600;
-            position: absolute;
-            z-index: 100;
-            top: -34px;
-            left: 50%;
-            margin-left: -55px;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .visitor-counter:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        #visitor-count {
-            color: var(--fluff-cream);
-            font-weight: 700;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            margin-top: 0;
-            pointer-events: auto;
-        }
-
-        .social-icon {
-            width: 34px;
-            height: 34px;
-            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
-            pointer-events: auto;
-            border-radius: 12px;
-            padding: 4px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .social-icon:hover {
-            transform: translateY(-4px) scale(1.18);
-            filter: drop-shadow(0 6px 14px rgba(196, 181, 253, 0.5));
-            background: rgba(196, 181, 253, 0.15);
-        }
-
-        .skills-title {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--fluff-cream);
-            margin-bottom: 12px;
-            font-family: 'Comfortaa', cursive, sans-serif;
-        }
-
-        .skill {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--fluff-subtext);
-        }
-
-        .skill-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        .skill-bar-container {
-            height: 10px;
-            background: rgba(19, 20, 31, 0.6);
-            border: 1px solid var(--fluff-cloud-border);
-            border-radius: 14px;
-            overflow: hidden;
-            padding: 1px;
-        }
-
-        .skill-bar {
-            height: 100%;
-            border-radius: 12px;
-            width: 0%;
-            transition: width 2s;
-        }
-
-        #python-bar {
-            background: linear-gradient(90deg, #f472b6, #fb7185);
-            box-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
-        }
-
-        #cpp-bar {
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-        }
-
-        #csharp-bar {
-            background: linear-gradient(90deg, #34d399, #2dd4bf);
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
-        }
-
-        /* Discord Tab Cards */
-        .discord-card {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            background: rgba(19, 20, 31, 0.5);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 18px;
-            border-radius: 24px;
-        }
-
-        .discord-avatar-wrap {
-            position: relative;
-            width: 74px;
-            height: 74px;
-            flex-shrink: 0;
-        }
-
-        #lanyard-avatar {
-            width: 74px;
-            height: 74px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-
-        #lanyard-status-dot {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 3px solid rgba(19, 20, 31, 0.9);
-        }
-
-        .status-online { background-color: #86efac; }
-        .status-idle { background-color: #fde047; }
-        .status-dnd { background-color: #f87171; }
-        .status-offline { background-color: #94a3b8; }
-
-        .discord-details {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            flex: 1;
-        }
-
-        #lanyard-username {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--fluff-cream);
-        }
-
-        #lanyard-custom-status {
-            font-size: 13px;
-            color: var(--fluff-subtext);
-            font-style: italic;
-        }
-
-        .discord-activity-box {
-            font-size: 12px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 10px 14px;
-            border-radius: 16px;
-            border-left: 4px solid var(--fluff-accent);
-            color: var(--fluff-subtext);
-            line-height: 1.4;
-        }
-
-        .activity-banner-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 6px;
-        }
-
-        .activity-large-image {
-            width: 54px;
-            height: 54px;
-            border-radius: 14px;
-            object-fit: cover;
-            border: 1px solid var(--fluff-cloud-border);
-            flex-shrink: 0;
-        }
-
-        .activity-text-details {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        /* 6. Chicago Time Card with Celestial Sun / Moon Phase */
-        .time-card-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            gap: 10px;
-        }
-
-        .clock-header-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        #celestial-phase-icon {
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 0 10px rgba(165, 243, 252, 0.6));
-        }
-
-        .digital-clock {
-            font-size: 46px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--fluff-blue);
-            text-shadow: 0 4px 20px rgba(165, 243, 252, 0.4);
-            font-family: 'Comfortaa', cursive, sans-serif;
-        }
-
-        .clock-date {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--fluff-subtext);
-            letter-spacing: 0.5px;
-        }
-
-        .time-details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            width: 100%;
-            max-width: 520px;
-            margin-top: 6px;
-        }
-
-        .time-detail-box {
-            background: rgba(19, 20, 31, 0.5);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 12px 18px;
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .detail-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--fluff-subtext);
-            font-weight: 700;
-            opacity: 0.7;
-        }
-
-        .detail-val {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--fluff-cream);
-        }
-
-        #results-button-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
+        .cinema-hidden { opacity: 0 !important; pointer-events: none !important; }
+        #cinema-exit-hint {
+            position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%);
-            z-index: 20;
+            background: rgba(30, 32, 50, 0.85);
+            border: 1px solid var(--fluff-cloud-border);
+            padding: 9px 22px; border-radius: 30px;
+            font-size: 12px; font-weight: 600; color: var(--fluff-subtext);
+            z-index: 150; pointer-events: none;
         }
 
-        #results-theme {
-            background: rgba(30, 32, 50, 0.85);
-            color: var(--fluff-cream);
+        /* Custom Context Menu */
+        #custom-context-menu {
+            position: fixed;
+            z-index: 100002;
+            background: rgba(22, 24, 38, 0.95);
             border: 1px solid var(--fluff-cloud-border);
-            padding: 8px 18px;
-            border-radius: 24px;
-            cursor: pointer;
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 190px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            pointer-events: auto;
+        }
+
+        .ctx-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
             font-size: 12px;
             font-weight: 700;
-            backdrop-filter: blur(12px);
-            transition: all 0.25s ease;
-            font-family: 'Comfortaa', cursive, sans-serif;
+            color: var(--fluff-cream);
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease;
         }
 
-        #results-theme:hover {
-            background: linear-gradient(135deg, rgba(196, 181, 253, 0.3), rgba(251, 207, 232, 0.3));
-            color: #fff;
-            transform: translateY(-1px);
+        .ctx-item:hover {
+            background: rgba(196, 181, 253, 0.2);
+            color: var(--fluff-accent);
         }
 
-        #results-hint {
-            position: absolute;
-            background: rgba(22, 23, 37, 0.95);
-            color: var(--fluff-subtext);
-            padding: 6px 14px;
-            border-radius: 14px;
-            font-size: 11px;
-            width: 190px;
-            text-align: center;
-            pointer-events: none;
-            z-index: 25;
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--fluff-cloud-border);
-            margin-top: 8px;
+        .ctx-separator {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 4px 0;
         }
 
-        body.home-theme #profile-block,
-        body.home-theme #skills-block,
-        body.home-theme #discord-block,
-        body.home-theme #time-block {
-            border-color: var(--fluff-cloud-border);
-        }
-
-        body.hacker-theme #profile-block,
-        body.hacker-theme #skills-block,
-        body.hacker-theme #discord-block,
-        body.hacker-theme #time-block {
-            border-color: rgba(134, 239, 172, 0.45);
-        }
-
-        body.discord-theme #profile-block,
-        body.discord-theme #skills-block,
-        body.discord-theme #discord-block,
-        body.discord-theme #time-block {
-            border-color: rgba(196, 181, 253, 0.5);
-        }
-
-        body.time-theme #profile-block,
-        body.time-theme #skills-block,
-        body.time-theme #discord-block,
-        body.time-theme #time-block {
-            border-color: rgba(165, 243, 252, 0.5);
-        }
-
-        @keyframes orbit {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fast-orbit {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes orbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         #start-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(19, 20, 31, 0.94);
+            position: fixed; inset: 0;
+            background: rgba(15, 16, 26, 0.95);
             backdrop-filter: blur(16px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 30;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99990;
             cursor: pointer;
+            pointer-events: auto;
         }
 
         #start-text {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 20px; font-weight: 700;
             color: var(--fluff-accent);
-            text-align: center;
-            letter-spacing: 0.5px;
             font-family: 'Comfortaa', cursive, sans-serif;
             text-shadow: 0 0 16px rgba(196, 181, 253, 0.5);
-        }
-
-        @media (max-width: 430px) {
-            #profile-block, #skills-block, #discord-block, #time-block {
-                width: 90vw;
-                max-width: 350px;
-                min-height: 280px;
-                padding: 18px;
-                top: 50%;
-                left: 50%;
-                border-radius: 26px;
-            }
-
-            .profile-header {
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .profile-container, .profile-picture {
-                width: 110px;
-                height: 110px;
-            }
-
-            .profile-info {
-                align-items: center;
-                text-align: center;
-            }
-
-            .name-and-badges {
-                flex-direction: column;
-                align-items: center;
-                gap: 6px;
-            }
-
-            #profile-name { font-size: 22px; }
-            .badge-group { justify-content: center; gap: 4px; }
-            .badge { width: 18px; height: 18px; }
-            #profile-bio { font-size: 13px; }
-
-            .footer-row {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .footer-row .visitor-counter,
-            .footer-buttons-wrap {
-                justify-self: center;
-                align-self: center;
-            }
-
-            .digital-clock { font-size: 32px; }
-            .time-details-grid { grid-template-columns: 1fr; gap: 8px; }
-            .controls { bottom: 20px; }
-            .top-controls { bottom: 70px; padding: 6px 14px; gap: 10px; }
         }
     </style>
 </head>
@@ -1511,43 +891,73 @@
     <div class="custom-cursor"></div>
 
     <div id="start-screen">
-        <div id="start-text"></div>
+        <div id="start-text">Click anywhere to open profile</div>
     </div>
 
-    <!-- Dropboard Drawer -->
+    <!-- Dropboard Sound Lounge -->
     <div id="dropboard-drawer">
         <div class="drawer-content">
             <div class="drawer-header">
-                <span class="drawer-title">Music Loader</span>
+                <span class="drawer-title">Sound Lounge & Comfort Settings</span>
                 <span class="drawer-shortcut">[TAB to close]</span>
             </div>
-            <div class="drawer-input-row">
-                <input type="text" id="yt-custom-input" placeholder="Paste YouTube link or ID..." autocomplete="off">
-                <button id="yt-load-btn">Load Track</button>
+            
+            <div class="preset-shelf">
+                <button class="preset-btn" data-video="JD-kMIpDfnY">🌧️ Rainy Lo-Fi</button>
+                <button class="preset-btn" data-video="jfKfPfyJRdk">☕ Cozy Cafe</button>
+                <button class="preset-btn" data-video="5qap5aO4i9A">🌌 Midnight Chill</button>
+                <button class="preset-btn" data-video="lTRiuFIWV54">🌿 Synth Forest</button>
             </div>
-            <div id="drawer-feedback">Enter a YouTube URL (e.g. youtube.com/watch?v=...)</div>
+
+            <div class="sound-gen-shelf">
+                <span class="sound-gen-label">Atmosphere:</span>
+                <button class="sound-gen-btn" id="gen-rain-btn">🌧️ Rain Noise</button>
+                <button class="sound-gen-btn" id="gen-white-btn">💨 Calm Breeze</button>
+                <button class="sound-gen-btn" id="gen-rumble-btn">⚡ Thunder Pad</button>
+            </div>
+
+            <textarea id="scratchpad-area" placeholder="Write cozy notes or paste links here... (auto-saved)"></textarea>
+
+            <div class="drawer-sliders-grid">
+                <div class="drawer-slider-item">
+                    <span>Video Dimmer (<span id="bg-dim-val">85%</span>)</span>
+                    <input type="range" id="bg-dim-slider" min="0.2" max="1" step="0.05" value="0.85">
+                </div>
+                <div class="drawer-slider-item">
+                    <span>Card Glass Frost (<span id="glass-blur-val">24px</span>)</span>
+                    <input type="range" id="glass-blur-slider" min="4" max="40" step="2" value="24">
+                </div>
+            </div>
+
+            <div class="palette-row">
+                <span style="font-size: 11px; font-weight: 700; color: var(--fluff-accent);">Accent Theme:</span>
+                <div class="palette-btn" data-palette="" style="background: #c4b5fd;"></div>
+                <div class="palette-btn" data-palette="theme-palette-matcha" style="background: #86efac;"></div>
+                <div class="palette-btn" data-palette="theme-palette-peach" style="background: #fdba74;"></div>
+                <div class="palette-btn" data-palette="theme-palette-cotton" style="background: #f472b6;"></div>
+                <div class="palette-btn" data-palette="theme-palette-midnight" style="background: #818cf8;"></div>
+            </div>
         </div>
         <div id="drawer-tab-handle">
-            <span>Music Loader (TAB)</span>
+            <span>Sound Lounge (TAB)</span>
             <span class="handle-arrow">▼</span>
         </div>
     </div>
 
     <div class="container">
-        <!-- Keyboard Shortcut HUD Overlay -->
         <div id="shortcut-hud" class="hidden">
             <div class="hud-content">
                 <div class="hud-title">Keyboard Shortcuts</div>
                 <div class="hud-grid">
-                    <div class="hud-item"><span class="hud-key">TAB</span><span>Music Drawer</span></div>
+                    <div class="hud-item"><span class="hud-key">TAB</span><span>Sound Lounge</span></div>
                     <div class="hud-item"><span class="hud-key">F</span><span>Cinema Mode</span></div>
+                    <div class="hud-item"><span class="hud-key">H</span><span>Minimalist Clock Mode</span></div>
                     <div class="hud-item"><span class="hud-key">1 - 4</span><span>Switch Tabs</span></div>
                     <div class="hud-item"><span class="hud-key">S</span><span>Toggle Rain / Snow</span></div>
+                    <div class="hud-item"><span class="hud-key">C</span><span>Defog Window Glass</span></div>
                     <div class="hud-item"><span class="hud-key">M</span><span>Mute / Unmute</span></div>
-                    <div class="hud-item"><span class="hud-key">/</span><span>Toggle Shortcut HUD</span></div>
                     <div class="hud-item"><span class="hud-key">ESC</span><span>Close Windows</span></div>
                 </div>
-                <div class="hud-footnote">[Press / or ESC to dismiss]</div>
             </div>
         </div>
 
@@ -1555,7 +965,6 @@
             <span>Press <strong>F</strong> or <strong>ESC</strong> to exit cinema mode</span>
         </div>
 
-        <!-- Background Video -->
         <iframe 
             id="background" 
             src="https://www.youtube-nocookie.com/embed/JD-kMIpDfnY?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=JD-kMIpDfnY&playsinline=1" 
@@ -1565,48 +974,42 @@
             allowfullscreen>
         </iframe>
 
-        <!-- Lightning Flash -->
         <div id="lightning-flash"></div>
-
-        <!-- Weather Canvas -->
         <canvas id="weather-canvas"></canvas>
 
-        <!-- 1. Slender Window Frame with Structural L-Brackets -->
         <div class="window-frame-system">
             <canvas id="raindrop-canvas"></canvas>
             <div class="glass-reflection-overlay"></div>
             <div class="window-rim"></div>
             <div class="window-divider-h"></div>
             <div class="window-divider-v"></div>
-
-            <div class="window-bracket bracket-tl"></div>
-            <div class="window-bracket bracket-tr"></div>
-            <div class="window-bracket bracket-bl"></div>
-            <div class="window-bracket bracket-br"></div>
         </div>
 
-        <div class="glitch-overlay"></div>
-        <div id="hacker-overlay" class="hidden"></div>
-        <div id="snow-overlay" class="hidden"></div>
-
-        <!-- 4. Track Banner Ticker -->
         <div id="music-ticker-pill">
-            <svg class="ticker-note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-            </svg>
+            <button class="audio-nav-btn" id="prev-track-btn" title="Previous Track">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <button class="audio-nav-btn" id="next-track-btn" title="Next Track">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </button>
             <span id="ticker-text">Cozy Rain Ambience & Beat</span>
+            <span id="audio-time-stamp">00:00 / 00:00</span>
+            <span id="eq-mode-badge" title="Click to cycle EQ">EQ: Chill</span>
+            <span id="vis-mode-badge" title="Click to cycle Vis">Vis: Bars</span>
         </div>
 
-        <!-- 3. Scrubbable Audio Visualizer -->
-        <canvas id="line-visualizer" title="Click anywhere to scrub playback position"></canvas>
-
-        <!-- Scrubbable Progress Bar -->
+        <canvas id="line-visualizer" title="Click to scrub position"></canvas>
         <div id="track-progress-container" title="Click to seek">
             <div id="track-progress-fill"></div>
         </div>
 
         <!-- Tab 1: Profile Block -->
         <div id="profile-block">
+            <div class="card-telemetry-badge">
+                <span class="telemetry-pulse"></span>
+                <span id="uptime-counter">Up 00:00</span>
+            </div>
+
             <div class="profile-header">
                 <div class="profile-container">
                     <img src="assets/profile.gif" alt="Profile" class="profile-picture">
@@ -1615,8 +1018,7 @@
                     <div class="name-and-badges">
                         <div id="profile-name">RAMEN</div>
 
-                        <!-- 5. Discord Presence Badge in Header -->
-                        <div class="discord-status-header-pill">
+                        <div class="discord-status-header-pill" id="discord-header-pill" title="Click to copy Discord Tag">
                             <span id="discord-header-dot" class="discord-status-dot-inline"></span>
                             <span id="discord-header-text">Discord</span>
                         </div>
@@ -1624,46 +1026,35 @@
                         <div class="badge-box">
                             <div class="badge-box-inner">
                                 <div class="badge-group">
-                                    <div class="badge-container">
-                                        <img src="assets/staff.gif" alt="Staff" class="badge">
-                                        <span class="tooltip">Staff Member</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/owner.gif" alt="Owner" class="badge">
-                                        <span class="tooltip">Owner</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/partner.gif" alt="Partner" class="badge">
-                                        <span class="tooltip">Partner</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/developer.png" alt="Developer" class="badge">
-                                        <span class="tooltip">Developer</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/bug_bounty.gif" alt="Bug Hunter" class="badge">
-                                        <span class="tooltip">Bug Hunter</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/hated_guns.gif" alt="Python" class="badge">
-                                        <span class="tooltip">Python Enthusiast</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/hated_fakecrime.gif" alt="Shadow Milk" class="badge">
-                                        <span class="tooltip">Shadow Milk Cookie</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/verified.gif" alt="Verified" class="badge">
-                                        <span class="tooltip">Verified</span>
-                                    </div>
-                                    <div class="badge-container">
-                                        <img src="assets/rule_maker.gif" alt="Rule Maker" class="badge">
-                                        <span class="tooltip">Rule Maker</span>
-                                    </div>
+                                    <div class="badge-container" data-badge="Staff Member" data-desc="Official staff & moderator team member." data-img="assets/staff.gif"><img src="assets/staff.gif" alt="Staff" class="badge"></div>
+                                    <div class="badge-container" data-badge="Site Owner" data-desc="Architect and creator of this aesthetic bio space." data-img="assets/owner.gif"><img src="assets/owner.gif" alt="Owner" class="badge"></div>
+                                    <div class="badge-container" data-badge="Partner" data-desc="Recognized community contributor and partner." data-img="assets/partner.gif"><img src="assets/partner.gif" alt="Partner" class="badge"></div>
+                                    <div class="badge-container" data-badge="Developer" data-desc="Building full-stack tools and web applications." data-img="assets/developer.png"><img src="assets/developer.png" alt="Developer" class="badge"></div>
+                                    <div class="badge-container" data-badge="Bug Hunter" data-desc="Squashed vulnerabilities and platform glitches." data-img="assets/bug_bounty.gif"><img src="assets/bug_bounty.gif" alt="Bug Hunter" class="badge"></div>
+                                    <div class="badge-container" data-badge="Python Guru" data-desc="Writes scalable automation and machine learning code." data-img="assets/hated_guns.gif"><img src="assets/hated_guns.gif" alt="Python" class="badge"></div>
+                                    <div class="badge-container" data-badge="Shadow Milk" data-desc="Pure chaotic magic and favorite CRK cookie." data-img="assets/hated_fakecrime.gif"><img src="assets/hated_fakecrime.gif" alt="Shadow Milk" class="badge"></div>
+                                    <div class="badge-container" data-badge="Verified" data-desc="Officially authenticated identity badge." data-img="assets/verified.gif"><img src="assets/verified.gif" alt="Verified" class="badge"></div>
+                                    <div class="badge-container" data-badge="Rule Maker" data-desc="Policy creator and community guardian." data-img="assets/rule_maker.gif"><img src="assets/rule_maker.gif" alt="Rule Maker" class="badge"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="telemetry-row-pill">
+                        <span id="device-battery-chip">🔋 100%</span>
+                        <span>•</span>
+                        <span id="network-chip">📶 Online</span>
+                        <span>•</span>
+                        <span id="device-spec-chip">Desktop</span>
+                    </div>
+
+                    <div class="mood-reaction-shelf">
+                        <button class="mood-btn" data-mood="☁️ Cozy">☁️ Cozy</button>
+                        <button class="mood-btn" data-mood="🌙 Sleepy">🌙 Sleepy</button>
+                        <button class="mood-btn" data-mood="☕ Focused">☕ Focused</button>
+                        <button class="mood-btn" data-mood="🌧️ Dreamy">🌧️ Dreamy</button>
+                    </div>
+
                     <div id="profile-bio"></div>
                 </div>
             </div>
@@ -1678,82 +1069,83 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                         <span id="visitor-count">0</span>
-                        <span class="tooltip">Profile Views</span>
                     </div>
 
                     <div class="social-links">
-                        <a href="https://discord.gg/9S7k85tuk9" target="_blank">
-                            <img src="assets/discord.png" alt="Discord" class="social-icon">
-                        </a>
-                        <a href="https://github.com/superrabbitkev-dotcom" target="_blank">
-                            <img src="assets/github.png" alt="GitHub" class="social-icon">
-                        </a>
-                        <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank">
-                            <img src="assets/youtube.png" alt="YouTube" class="social-icon">
-                        </a>
-                        <a href="#" target="_blank">
-                            <img src="assets/tiktok.png" alt="TikTok" class="social-icon">
-                        </a>
+                        <a href="https://discord.gg/9S7k85tuk9" target="_blank"><img src="assets/discord.png" alt="Discord" class="social-icon"></a>
+                        <a href="https://github.com/superrabbitkev-dotcom" target="_blank"><img src="assets/github.png" alt="GitHub" class="social-icon"></a>
+                        <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank"><img src="assets/youtube.png" alt="YouTube" class="social-icon"></a>
+                        <a href="#" target="_blank"><img src="assets/tiktok.png" alt="TikTok" class="social-icon"></a>
                     </div>
 
                     <div class="footer-buttons-wrap">
-                        <!-- 7. One-Click Copy Profile URL -->
-                        <button id="card-share-btn" class="footer-btn" title="Copy profile link">
-                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                            </svg>
+                        <button id="card-share-btn" class="footer-btn">
+                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             <span id="share-btn-text">Share</span>
                         </button>
 
                         <button id="card-music-btn" class="footer-btn">
-                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
-                            </svg>
-                            <span>Music</span>
+                            <svg class="footer-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                            <span>Lounge</span>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tab 2: Skills Block -->
+        <!-- Tab 2: Skills & Projects -->
         <div id="skills-block" class="hidden">
-            <h2 class="skills-title">Programming Skills</h2>
+            <div class="card-telemetry-badge">
+                <span class="telemetry-pulse"></span>
+                <span>Dev Metrics</span>
+            </div>
+            <h2 class="skills-title">Programming & Projects</h2>
+            
             <div class="skill">
                 <div class="skill-name">
-                    <img src="assets/python.png" alt="Python" class="skill-icon">
-                    <span>Python</span>
+                    <div><img src="assets/python.png" alt="Python" class="skill-icon"><span>Python (Automation & ML)</span></div>
                     <span>87%</span>
                 </div>
-                <div class="skill-bar-container">
-                    <div id="python-bar" class="skill-bar"></div>
-                </div>
+                <div class="skill-bar-container"><div id="python-bar" class="skill-bar"></div></div>
             </div>
+
             <div class="skill">
                 <div class="skill-name">
-                    <img src="assets/cpp.png" alt="C++" class="skill-icon">
-                    <span>C++</span>
+                    <div><img src="assets/cpp.png" alt="C++" class="skill-icon"><span>C++ (Core Logic & Games)</span></div>
                     <span>15%</span>
                 </div>
-                <div class="skill-bar-container">
-                    <div id="cpp-bar" class="skill-bar"></div>
-                </div>
+                <div class="skill-bar-container"><div id="cpp-bar" class="skill-bar"></div></div>
             </div>
+
             <div class="skill">
                 <div class="skill-name">
-                    <img src="assets/csharp.png" alt="C#" class="skill-icon">
-                    <span>C#</span>
+                    <div><img src="assets/csharp.png" alt="C#" class="skill-icon"><span>C# (Desktop Tools & GUI)</span></div>
                     <span>35%</span>
                 </div>
-                <div class="skill-bar-container">
-                    <div id="csharp-bar" class="skill-bar"></div>
-                </div>
+                <div class="skill-bar-container"><div id="csharp-bar" class="skill-bar"></div></div>
+            </div>
+
+            <div class="project-showcase-row">
+                <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
+                    <span class="project-title">⚡ Aesthetic Bio Page</span>
+                    <span class="project-desc">Responsive profile card with live Discord presence.</span>
+                    <div class="project-tags"><span class="proj-tag">JavaScript</span><span class="proj-tag">CSS3</span></div>
+                </a>
+                <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
+                    <span class="project-title">🐍 Discord Automation Bot</span>
+                    <span class="project-desc">Async Python bot with dynamic rich activity triggers.</span>
+                    <div class="project-tags"><span class="proj-tag">Python</span><span class="proj-tag">AsyncIO</span></div>
+                </a>
             </div>
         </div>
 
-        <!-- Tab 3: Discord Activity Block -->
+        <!-- Tab 3: Discord Activity -->
         <div id="discord-block" class="hidden">
-            <h2 class="skills-title">Discord Activity</h2>
+            <div class="card-telemetry-badge">
+                <span class="telemetry-pulse"></span>
+                <span>Lanyard API</span>
+            </div>
+            <h2 class="skills-title">Live Discord Presence</h2>
             <div class="discord-card">
                 <div class="discord-avatar-wrap">
                     <img id="lanyard-avatar" src="assets/profile.gif" alt="Discord Avatar">
@@ -1767,59 +1159,63 @@
             </div>
         </div>
 
-        <!-- Tab 4: Chicago Local Time & Weather -->
+        <!-- Tab 4: Chicago Weather Station -->
         <div id="time-block" class="hidden">
-            <h2 class="skills-title">Local Time & Weather (Chicago)</h2>
+            <div class="card-telemetry-badge">
+                <span class="telemetry-pulse"></span>
+                <span>NOAA Telemetry</span>
+            </div>
+            <h2 class="skills-title">Chicago Weather Station</h2>
             <div class="time-card-content">
                 <div class="clock-header-wrap">
-                    <!-- 6. Celestial SVG -->
                     <div id="celestial-phase-icon"></div>
                     <div id="digital-clock" class="digital-clock">--:--:-- --</div>
                 </div>
                 <div id="clock-date" class="clock-date">Loading...</div>
                 
                 <div class="time-details-grid">
-                    <div class="time-detail-box">
-                        <span class="detail-label">Location</span>
-                        <span class="detail-val">Chicago, IL (US)</span>
-                    </div>
-                    <div class="time-detail-box">
-                        <span class="detail-label">Time Zone</span>
-                        <span id="tz-name" class="detail-val">Central Time (CDT)</span>
-                    </div>
-                    <div class="time-detail-box">
-                        <span class="detail-label">Live Weather</span>
-                        <span id="chicago-weather-val" class="detail-val" style="color: var(--fluff-blue);">Fetching...</span>
-                    </div>
-                    <div class="time-detail-box">
-                        <span class="detail-label">Ping / Latency</span>
-                        <span class="detail-val" style="color: #86efac;">18ms (Optimal)</span>
-                    </div>
+                    <div class="time-detail-box"><span class="detail-label">Location / Zone</span><span class="detail-val">Chicago, IL (CDT)</span></div>
+                    <div class="time-detail-box"><span class="detail-label">Condition & Feels</span><span id="chicago-weather-val" class="detail-val" style="color: var(--fluff-blue);">Loading...</span></div>
+                    <div class="time-detail-box"><span class="detail-label">Wind & Humidity</span><span id="chicago-wind-humidity" class="detail-val">-- mph • --%</span></div>
+                    <div class="time-detail-box"><span class="detail-label">Sun Cycle</span><span id="chicago-sun-cycle" class="detail-val">Calculating...</span></div>
+                </div>
+
+                <div class="tz-comparison-strip">
+                    <span class="tz-chip" id="tz-utc">UTC: --:--</span>
+                    <span class="tz-chip" id="tz-tokyo">Tokyo: --:--</span>
+                    <span class="tz-chip" id="tz-london">London: --:--</span>
                 </div>
             </div>
         </div>
 
-        <div id="results-button-container" class="hidden">
-            <button id="results-theme">View Skills</button>
-            <div id="results-hint" class="hidden">Click again to return to profile</div>
+        <!-- Badge Modal -->
+        <div id="badge-inspector-modal">
+            <img id="badge-modal-img" src="" alt="Badge">
+            <span id="badge-modal-title">Badge Title</span>
+            <span id="badge-modal-desc">Badge Description</span>
+            <button class="footer-btn" id="badge-modal-close" style="margin-top: 6px;">Close</button>
         </div>
 
-        <!-- Tab Controls -->
+        <!-- Navigation Buttons -->
         <div class="controls">
-            <div id="home-theme" class="theme-button active">1</div>
-            <div id="hacker-theme" class="theme-button">2</div>
-            <div id="discord-theme" class="theme-button">3</div>
-            <div id="time-theme" class="theme-button">4</div>
+            <div id="home-theme" class="theme-button active" title="Profile (1)">1</div>
+            <div id="hacker-theme" class="theme-button" title="Skills (2)">2</div>
+            <div id="discord-theme" class="theme-button" title="Discord (3)">3</div>
+            <div id="time-theme" class="theme-button" title="Chicago (4)">4</div>
         </div>
 
+        <!-- Controls Pod -->
         <div class="top-controls">
-            <button id="snow-toggle-btn" title="Toggle Rain / Snowfall (Hotkey: S)">
-                <svg class="snow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14M19.07 19.07L4.93 4.93M8 4l4 4 4-4M8 20l4-4 4 4M4 8l4 4-4 4m16-8l-4 4 4 4"></path>
-                </svg>
+            <button id="defog-glass-btn" title="Defog Glass (Hotkey: C)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+            </button>
+
+            <button id="snow-toggle-btn" title="Toggle Rain / Snow (Hotkey: S)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v20m10-10H2m15.07-7.07l-14.14 14.14M19.07 19.07L4.93 4.93M8 4l4 4 4-4M8 20l4-4 4 4M4 8l4 4-4 4m16-8l-4 4 4 4"></path></svg>
             </button>
 
             <div class="volume-control">
+                <span id="vol-tooltip">30%</span>
                 <svg id="volume-icon" class="volume-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                 </svg>
@@ -1830,39 +1226,29 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                 </svg>
-                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.72">
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.76">
             </div>
         </div>
     </div>
 
     <!-- Custom Right-Click Context Menu -->
     <div id="custom-context-menu" class="hidden">
-        <div class="context-header">Actions</div>
-        <div class="context-item" id="ctx-copy-link">
-            <span>Copy Profile URL</span>
-            <span class="ctx-shortcut">Ctrl+C</span>
+        <div class="ctx-item" id="ctx-copy-link">
+            <span>🔗</span> Copy Profile Link
         </div>
-        <div class="context-item" id="ctx-toggle-cinema">
-            <span>Toggle Cinema Mode</span>
-            <span class="ctx-shortcut">F</span>
+        <div class="ctx-item" id="ctx-defog">
+            <span>✨</span> Defog Screen
         </div>
-        <div class="context-item" id="ctx-toggle-weather">
-            <span>Toggle Rain / Snow</span>
-            <span class="ctx-shortcut">S</span>
+        <div class="ctx-item" id="ctx-cinema">
+            <span>🎬</span> Toggle Cinema Mode
         </div>
-        <div class="context-item" id="ctx-toggle-music">
-            <span>Music Loader</span>
-            <span class="ctx-shortcut">Tab</span>
-        </div>
-        <div class="context-divider"></div>
-        <div class="context-item" id="ctx-close">
-            <span>Close</span>
-            <span class="ctx-shortcut">Esc</span>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" id="ctx-source">
+            <span>💻</span> View GitHub Repo
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="action-toast" class="hidden">Copied to clipboard</div>
+    <div id="action-toast" class="hidden">Notification</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="script.js"></script>
