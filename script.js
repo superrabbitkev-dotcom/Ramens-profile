@@ -717,9 +717,9 @@ document.addEventListener('DOMContentLoaded', () => {
   startScreen.addEventListener('touchstart', (e) => { e.preventDefault(); startExperience(); });
 
   const bioMessages = [
-    "Im sorry I wasnt their for you katt...", "Developing in Python, CSS, and JavaScript",
+    "Im sorry...", "Developing in Python, CSS, and JavaScript",
     "Playing CRK (CookieRun: Kingdom)", "We do not lick the dog",
-    "I am a person :)", "...im sorry"
+    "I am a person :)", "i dont get it, why?"
   ];
   let bioText = '';
   let bioIndex = 0;
