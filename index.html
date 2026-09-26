@@ -12,7 +12,7 @@
     <style>
         :root {
             --cozy-bg: #14131d;
-            --cozy-cloud: rgba(32, 30, 48, 0.82);
+            --cozy-cloud: rgba(32, 30, 48, 0.85);
             --cozy-cloud-border: rgba(221, 214, 254, 0.28);
             --cozy-accent: #ddd6fe;
             --cozy-blue: #bae6fd;
@@ -22,6 +22,7 @@
             --cozy-pill-bg: rgba(255, 255, 255, 0.08);
             --card-blur: 24px;
             --bg-dim: 0.82;
+            --primary-font: 'Nunito', sans-serif;
         }
 
         body.theme-palette-matcha {
@@ -48,6 +49,12 @@
             --cozy-pink: #fcd34d;
             --cozy-cloud-border: rgba(254, 240, 138, 0.32);
         }
+        body.theme-palette-sky {
+            --cozy-accent: #7dd3fc;
+            --cozy-blue: #bae6fd;
+            --cozy-pink: #c7d2fe;
+            --cozy-cloud-border: rgba(125, 211, 252, 0.32);
+        }
 
         @font-face {
             font-family: 'Angel Wish';
@@ -60,11 +67,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: var(--primary-font);
             user-select: none;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 8px; height: 6px; }
         ::-webkit-scrollbar-track { background: rgba(20, 19, 29, 0.7); }
         ::-webkit-scrollbar-thumb { background: rgba(221, 214, 254, 0.35); border-radius: 12px; }
 
@@ -116,7 +123,7 @@
             pointer-events: none;
         }
 
-        #fireplace-canvas { z-index: 2; opacity: 0.65; }
+        #fireplace-canvas { z-index: 2; opacity: 0.7; }
         #weather-canvas { z-index: 3; opacity: 0.55; }
 
         .window-frame-system {
@@ -131,7 +138,6 @@
 
         .hidden { display: none !important; }
 
-        /* Floating Cute Particles */
         .cozy-float-particle {
             position: fixed;
             pointer-events: none;
@@ -139,15 +145,16 @@
             font-size: 20px;
         }
 
+        /* Top Music Pill & Track Navigation */
         #music-ticker-pill {
             position: fixed;
-            top: calc(50% - 180px - 76px);
+            top: calc(50% - 195px - 76px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(32, 30, 48, 0.9);
+            background: rgba(32, 30, 48, 0.92);
             border: 1px solid var(--cozy-cloud-border);
             padding: 6px 18px;
             border-radius: 26px;
@@ -171,7 +178,7 @@
             transition: transform 0.15s ease;
         }
         .audio-nav-btn:hover { transform: scale(1.2); color: #fff; }
-        .audio-nav-btn svg { width: 15px; height: 15px; }
+        .audio-nav-btn svg { width: 15px; height: 15px; pointer-events: none; }
 
         #audio-time-stamp {
             font-family: monospace;
@@ -182,24 +189,12 @@
             border-radius: 10px;
         }
 
-        #eq-mode-badge, #vis-mode-badge {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--cozy-cloud-border);
-            padding: 3px 9px;
-            border-radius: 14px;
-            font-size: 9px;
-            color: var(--cozy-accent);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        #eq-mode-badge:hover, #vis-mode-badge:hover { background: rgba(255, 255, 255, 0.15); }
-
         #line-visualizer {
             position: fixed;
-            top: calc(50% - 180px - 44px);
+            top: calc(50% - 195px - 44px);
             left: 50%;
             transform: translateX(-50%);
-            width: 820px; height: 34px;
+            width: 840px; height: 34px;
             z-index: 25;
             cursor: pointer;
             pointer-events: auto;
@@ -207,10 +202,10 @@
 
         #track-progress-container {
             position: fixed;
-            top: calc(50% - 180px - 10px);
+            top: calc(50% - 195px - 10px);
             left: 50%;
             transform: translateX(-50%);
-            width: 820px; height: 6px;
+            width: 840px; height: 6px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             z-index: 25;
@@ -225,12 +220,12 @@
             pointer-events: none;
         }
 
-        /* Sound Lounge Dropboard */
+        /* Sound Lounge Drawer */
         #dropboard-drawer {
             position: fixed;
             top: 0; left: 50%;
             transform: translate(-50%, -100%);
-            width: 640px; max-width: 90vw;
+            width: 660px; max-width: 90vw;
             z-index: 100;
             transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
             pointer-events: auto;
@@ -282,6 +277,7 @@
             padding: 8px 14px;
             border-radius: 18px;
             border: 1px solid var(--cozy-cloud-border);
+            flex-wrap: wrap;
         }
         .sound-gen-label { font-size: 11px; font-weight: 700; color: var(--cozy-accent); }
         .sound-gen-btn {
@@ -296,8 +292,32 @@
         }
         .sound-gen-btn.active { background: var(--cozy-accent); color: #1e1b2e; font-weight: 800; }
 
+        .bubble-wrap-shelf {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 15, 24, 0.5);
+            padding: 8px 14px;
+            border-radius: 18px;
+            border: 1px solid var(--cozy-cloud-border);
+        }
+        .bubble-grid { display: flex; gap: 6px; }
+        .cozy-bubble {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 7px 7px, rgba(255, 255, 255, 0.6), rgba(221, 214, 254, 0.2));
+            border: 1px solid rgba(221, 214, 254, 0.4);
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .cozy-bubble.popped {
+            opacity: 0.25;
+            transform: scale(0.85);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
         #scratchpad-area {
-            width: 100%; height: 55px;
+            width: 100%; height: 50px;
             background: rgba(16, 15, 24, 0.6);
             border: 1px solid var(--cozy-cloud-border);
             border-radius: 16px;
@@ -341,13 +361,13 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.25);
         }
 
-        /* Cozy Main Cards */
-        #profile-block, #skills-block, #discord-block, #time-block {
+        /* Main Cards */
+        #profile-block, #skills-block, #discord-block, #time-block, #games-block {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 820px;
-            min-height: 340px;
+            width: 840px;
+            min-height: 355px;
             background: var(--cozy-cloud);
             border: 1.5px solid var(--cozy-cloud-border);
             padding: 26px 32px;
@@ -363,13 +383,12 @@
             will-change: transform;
         }
 
-        /* Sleepy Pet Mascot */
         #cozy-pet-mascot {
             position: absolute;
             top: -24px; right: 28px;
             background: rgba(32, 30, 48, 0.95);
             border: 1px solid var(--cozy-cloud-border);
-            padding: 4px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
@@ -382,6 +401,23 @@
             transition: transform 0.2s ease;
         }
         #cozy-pet-mascot:hover { transform: scale(1.1) rotate(2deg); }
+
+        #cozy-desk-lamp {
+            position: absolute;
+            top: -24px; left: 28px;
+            background: rgba(32, 30, 48, 0.95);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--cozy-warm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
         .profile-header { display: flex; align-items: flex-start; gap: 20px; }
         .profile-container { position: relative; width: 140px; height: 140px; cursor: pointer; }
@@ -440,7 +476,7 @@
         .discord-status-dot-inline.dnd { background-color: #f87171; box-shadow: 0 0 8px #f87171; }
         .discord-status-dot-inline.offline { background-color: #80848e; }
 
-        /* Tea & Mood Pill Strip */
+        /* Widget Strip */
         .cozy-widget-strip {
             display: flex;
             align-items: center;
@@ -449,7 +485,7 @@
             flex-wrap: wrap;
         }
 
-        .cozy-tea-cup, .cozy-affirmation-chip, .cozy-habit-chip {
+        .cozy-tea-cup, .cozy-affirmation-chip, .cozy-habit-chip, .cozy-pomodoro-chip, .cozy-fortune-chip {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--cozy-cloud-border);
             padding: 3px 10px;
@@ -460,7 +496,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .cozy-tea-cup:hover, .cozy-affirmation-chip:hover, .cozy-habit-chip:hover {
+        .cozy-tea-cup:hover, .cozy-affirmation-chip:hover, .cozy-habit-chip:hover, .cozy-pomodoro-chip:hover, .cozy-fortune-chip:hover {
             background: rgba(221, 214, 254, 0.2);
             color: #fff;
             transform: translateY(-1px);
@@ -529,7 +565,7 @@
         .social-icon { width: 32px; height: 32px; border-radius: 12px; padding: 4px; background: rgba(255, 255, 255, 0.05); transition: transform 0.2s; }
         .social-icon:hover { transform: scale(1.2); }
 
-        /* Skills Tab */
+        /* Tab 2: Skills & Bookshelf */
         .skills-title {
             text-align: center;
             font-size: 18px;
@@ -556,31 +592,28 @@
         #cpp-bar { background: linear-gradient(90deg, #38bdf8, #818cf8); }
         #csharp-bar { background: linear-gradient(90deg, #34d399, #2dd4bf); }
 
-        .project-showcase-row {
+        .bookshelf-shelf {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 6px;
         }
 
-        .project-card {
+        .book-item {
             background: rgba(16, 15, 24, 0.5);
             border: 1px solid var(--cozy-cloud-border);
-            border-radius: 18px;
-            padding: 9px 14px;
+            border-radius: 16px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
-            gap: 3px;
-            text-decoration: none;
-            transition: all 0.2s;
+            gap: 2px;
         }
-        .project-card:hover { border-color: var(--cozy-accent); transform: translateY(-2px); }
-        .project-title { font-size: 12px; font-weight: 700; color: #fff; }
-        .project-desc { font-size: 10px; color: var(--cozy-subtext); }
-        .project-tags { display: flex; gap: 4px; margin-top: 4px; }
-        .proj-tag { background: rgba(255, 255, 255, 0.08); font-size: 9px; padding: 2px 6px; border-radius: 6px; color: var(--cozy-accent); }
+        .book-title { font-size: 11px; font-weight: 700; color: #fff; }
+        .book-meta { font-size: 9px; color: var(--cozy-subtext); }
+        .book-progress { height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden; margin-top: 3px; }
+        .book-fill { height: 100%; background: var(--cozy-accent); }
 
-        /* Discord Tab */
+        /* Tab 3: Discord Tab */
         .discord-card {
             display: flex;
             align-items: center;
@@ -624,7 +657,7 @@
         .activity-large-image { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 1px solid var(--cozy-cloud-border); flex-shrink: 0; }
         .activity-text-details { display: flex; flex-direction: column; gap: 3px; font-size: 12px; line-height: 1.4; }
 
-        /* Time & Weather Tab */
+        /* Tab 4: Time & Weather */
         .time-card-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
         .clock-header-wrap { display: flex; align-items: center; gap: 12px; }
         #celestial-phase-icon { width: 34px; height: 34px; filter: drop-shadow(0 0 12px rgba(186, 230, 253, 0.6)); }
@@ -639,7 +672,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             width: 100%;
-            max-width: 520px;
+            max-width: 540px;
         }
 
         .time-detail-box {
@@ -669,6 +702,131 @@
             border: 1px solid var(--cozy-cloud-border);
         }
 
+        /* Tab 5: 10-Game Arcade */
+        .arcade-subnav {
+            display: flex;
+            justify-content: flex-start;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            width: 100%;
+        }
+
+        .arcade-tab-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cozy-subtext);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .arcade-tab-btn:hover, .arcade-tab-btn.active {
+            background: var(--cozy-accent);
+            color: #1a153a;
+            border-color: transparent;
+        }
+
+        .game-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        #memory-game-grid {
+            display: grid;
+            gap: 6px;
+            width: 100%;
+            max-height: 210px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .memory-card {
+            height: 52px;
+            background: rgba(16, 15, 24, 0.65);
+            border: 1px solid var(--cozy-cloud-border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .memory-card.flipped {
+            background: rgba(221, 214, 254, 0.25);
+            border-color: var(--cozy-accent);
+        }
+
+        .fishing-pond {
+            width: 100%;
+            height: 140px;
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.15) 0%, rgba(16, 15, 24, 0.6) 80%);
+            border: 1.5px dashed var(--cozy-cloud-border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fishing-pond:hover {
+            border-color: var(--cozy-blue);
+            background: radial-gradient(circle, rgba(186, 230, 253, 0.25) 0%, rgba(16, 15, 24, 0.6) 80%);
+        }
+        .fishing-catch-display { font-size: 13px; font-weight: 700; color: var(--cozy-blue); }
+
+        .coin-display {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fef08a, #fed7aa);
+            border: 3px solid #fef3c7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(254, 240, 138, 0.3);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .coin-result-text { margin-top: 10px; font-size: 13px; font-weight: 700; color: var(--cozy-accent); }
+
+        .kalimba-keyboard { display: flex; gap: 8px; margin-top: 10px; }
+        .kalimba-key {
+            width: 44px; height: 110px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--cozy-cloud-border);
+            border-radius: 0 0 16px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--cozy-accent);
+            transition: all 0.1s;
+        }
+        .kalimba-key:active { transform: translateY(4px); background: var(--cozy-accent); color: #1a153a; }
+
+        .big-click-item {
+            font-size: 60px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 4px 12px rgba(254, 215, 170, 0.4));
+        }
+        .big-click-item:active { transform: scale(0.88); }
+
         /* Badge Modal */
         #badge-inspector-modal {
             position: fixed;
@@ -696,7 +854,7 @@
         #badge-modal-title { font-size: 15px; font-weight: 700; color: #fff; }
         #badge-modal-desc { font-size: 12px; color: var(--cozy-subtext); }
 
-        /* Floating Navigation Controls */
+        /* Floating Nav Controls */
         .controls {
             position: fixed;
             bottom: calc(50% - 240px - 10px);
@@ -705,7 +863,7 @@
             display: flex;
             gap: 10px;
             z-index: 20;
-            background: rgba(32, 30, 48, 0.78);
+            background: rgba(32, 30, 48, 0.8);
             border: 1px solid var(--cozy-cloud-border);
             padding: 7px 14px;
             border-radius: 30px;
@@ -785,7 +943,7 @@
             align-items: center;
             gap: 14px;
             z-index: 20;
-            background: rgba(32, 30, 48, 0.78);
+            background: rgba(32, 30, 48, 0.8);
             border: 1px solid var(--cozy-cloud-border);
             padding: 8px 18px;
             border-radius: 30px;
@@ -818,7 +976,6 @@
             z-index: 150; pointer-events: none;
         }
 
-        /* Custom Context Menu */
         #custom-context-menu {
             position: fixed;
             z-index: 100002;
@@ -847,17 +1004,8 @@
             cursor: pointer;
             transition: background 0.15s ease, color 0.15s ease;
         }
-
-        .ctx-item:hover {
-            background: rgba(221, 214, 254, 0.2);
-            color: var(--cozy-accent);
-        }
-
-        .ctx-separator {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.08);
-            margin: 4px 0;
-        }
+        .ctx-item:hover { background: rgba(221, 214, 254, 0.2); color: var(--cozy-accent); }
+        .ctx-separator { height: 1px; background: rgba(255, 255, 255, 0.08); margin: 4px 0; }
 
         @keyframes orbit { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -891,15 +1039,15 @@
     <div id="dropboard-drawer">
         <div class="drawer-content">
             <div class="drawer-header">
-                <span class="drawer-title">Sound Lounge & Cozy Hearth</span>
+                <span class="drawer-title">Sound Lounge & Comfort Drawer</span>
                 <span class="drawer-shortcut">[TAB to close]</span>
             </div>
             
             <div class="preset-shelf">
-                <button class="preset-btn" data-video="n61ULEU7CO0">🌧️ Lofi Girl Compilation</button>
-                <button class="preset-btn" data-video="5yx6BWlEVcY">☕ Chillhop Café</button>
-                <button class="preset-btn" data-video="TURbeWK2wwg">🌌 Midnight Nostalgia</button>
-                <button class="preset-btn" data-video="7NOSDKb0HlU">🌿 Peaceful Sanctuary</button>
+                <button class="preset-btn" data-video="n61ULEU7CO0">🌧️ Cozy Lofi Rain</button>
+                <button class="preset-btn" data-video="1fueZCTYkpA">☕ Warm Coffee Beats</button>
+                <button class="preset-btn" data-video="lTRiuFIWV54">🌌 Midnight Chill</button>
+                <button class="preset-btn" data-video="S4L8T2kFFck">🌿 Soft Garden Breeze</button>
             </div>
 
             <div class="sound-gen-shelf">
@@ -907,6 +1055,22 @@
                 <button class="sound-gen-btn" id="gen-rain-btn">🌧️ Gentle Rain</button>
                 <button class="sound-gen-btn" id="gen-white-btn">💨 Soft Breeze</button>
                 <button class="sound-gen-btn" id="gen-rumble-btn">🔥 Hearth Fire</button>
+                <button class="sound-gen-btn" id="gen-chime-btn">🎐 Windchimes</button>
+            </div>
+
+            <div class="bubble-wrap-shelf">
+                <span class="sound-gen-label">Bubble Wrap:</span>
+                <div class="bubble-grid" id="bubble-wrap-grid">
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                    <div class="cozy-bubble"></div>
+                </div>
+                <button class="sound-gen-btn" id="reset-bubbles-btn" style="margin-left: auto;">Reset</button>
             </div>
 
             <textarea id="scratchpad-area" placeholder="Write cozy thoughts, journal prompts, or links... (auto-saved)"></textarea>
@@ -923,12 +1087,13 @@
             </div>
 
             <div class="palette-row">
-                <span style="font-size: 11px; font-weight: 700; color: var(--cozy-accent);">Cozy Palette:</span>
+                <span style="font-size: 11px; font-weight: 700; color: var(--cozy-accent);">Pastel Palette:</span>
                 <div class="palette-btn" data-palette="" style="background: #ddd6fe;" title="Lavender Latte"></div>
                 <div class="palette-btn" data-palette="theme-palette-matcha" style="background: #bbf7d0;" title="Matcha Mochi"></div>
                 <div class="palette-btn" data-palette="theme-palette-peach" style="background: #fed7aa;" title="Peach Cream"></div>
                 <div class="palette-btn" data-palette="theme-palette-strawberry" style="background: #fbcfe8;" title="Strawberry Milk"></div>
                 <div class="palette-btn" data-palette="theme-palette-honey" style="background: #fef08a;" title="Warm Honey"></div>
+                <div class="palette-btn" data-palette="theme-palette-sky" style="background: #7dd3fc;" title="Morning Sky"></div>
             </div>
         </div>
         <div id="drawer-tab-handle">
@@ -971,10 +1136,8 @@
             <button class="audio-nav-btn" id="next-track-btn" title="Next Track">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </button>
-            <span id="ticker-text">Best of Lofi Beats</span>
+            <span id="ticker-text">Cozy Lofi Rain - Soft Melodies</span>
             <span id="audio-time-stamp">00:00 / 00:00</span>
-            <span id="eq-mode-badge" title="Click to cycle EQ">EQ: Soft</span>
-            <span id="vis-mode-badge" title="Click to cycle Vis">Vis: Waves</span>
         </div>
 
         <canvas id="line-visualizer" title="Click to scrub position"></canvas>
@@ -984,13 +1147,18 @@
 
         <!-- Tab 1: Profile Block -->
         <div id="profile-block">
+            <div id="cozy-desk-lamp" title="Click to toggle desk lamp glow">
+                <span>💡</span>
+                <span id="lamp-text">Lamp ON</span>
+            </div>
+
             <div id="cozy-pet-mascot" title="Click to pet!">
                 <span id="mascot-emoji">🐱</span>
                 <span id="mascot-text">purring...</span>
             </div>
 
             <div class="profile-header">
-                <div class="profile-container" id="avatar-container" title="Click for noodle magic!">
+                <div class="profile-container" id="avatar-container" title="Click for noodle burst!">
                     <img src="assets/profile.gif" alt="Profile" class="profile-picture">
                 </div>
                 <div class="profile-info">
@@ -1019,11 +1187,12 @@
                         </div>
                     </div>
 
-                    <!-- Cozy Widget Strip -->
                     <div class="cozy-widget-strip">
-                        <div class="cozy-tea-cup" id="tea-cup-btn" title="Click to brew another cozy drink">🍵 Matcha Latte</div>
-                        <div class="cozy-affirmation-chip" id="affirmation-btn" title="Click for a cozy affirmation">✨ "You are doing great"</div>
-                        <div class="cozy-habit-chip" id="water-sip-btn" title="Click to take a cozy sip">💧 4 sips taken</div>
+                        <div class="cozy-tea-cup" id="tea-cup-btn" title="Click to brew another drink">🍵 Matcha Latte</div>
+                        <div class="cozy-affirmation-chip" id="affirmation-btn" title="Click for affirmation">✨ "You are doing great"</div>
+                        <div class="cozy-habit-chip" id="water-sip-btn" title="Click to take a sip">💧 4 sips taken</div>
+                        <div class="cozy-pomodoro-chip" id="pomodoro-btn" title="Click to start 25m focus timer">⏳ Focus: 25:00</div>
+                        <div class="cozy-fortune-chip" id="fortune-cookie-btn" title="Click to crack fortune cookie">🥠 Crack Fortune</div>
                     </div>
 
                     <div class="mood-reaction-shelf">
@@ -1071,9 +1240,9 @@
             </div>
         </div>
 
-        <!-- Tab 2: Skills & Projects -->
+        <!-- Tab 2: Skills & Bookshelf -->
         <div id="skills-block" class="hidden">
-            <h2 class="skills-title">Programming & Projects</h2>
+            <h2 class="skills-title">Programming & Reading Corner 📚</h2>
             
             <div class="skill">
                 <div class="skill-name">
@@ -1099,23 +1268,23 @@
                 <div class="skill-bar-container"><div id="csharp-bar" class="skill-bar"></div></div>
             </div>
 
-            <div class="project-showcase-row">
-                <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
-                    <span class="project-title">☁️ Aesthetic Bio Page</span>
-                    <span class="project-desc">Responsive cozy card with real-time presence.</span>
-                    <div class="project-tags"><span class="proj-tag">JavaScript</span><span class="proj-tag">CSS3</span></div>
-                </a>
-                <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
-                    <span class="project-title">🍵 Discord Automation Bot</span>
-                    <span class="project-desc">Async Python bot with dynamic rich activity triggers.</span>
-                    <div class="project-tags"><span class="proj-tag">Python</span><span class="proj-tag">AsyncIO</span></div>
-                </a>
+            <div class="bookshelf-shelf">
+                <div class="book-item">
+                    <span class="book-title">📖 Atomic Habits</span>
+                    <span class="book-meta">James Clear • Page 142 / 320</span>
+                    <div class="book-progress"><div class="book-fill" style="width: 44%;"></div></div>
+                </div>
+                <div class="book-item">
+                    <span class="book-title">☁️ The Little Prince</span>
+                    <span class="book-meta">Antoine de Saint-Exupéry • Complete</span>
+                    <div class="book-progress"><div class="book-fill" style="width: 100%;"></div></div>
+                </div>
             </div>
         </div>
 
         <!-- Tab 3: Discord Activity -->
         <div id="discord-block" class="hidden">
-            <h2 class="skills-title">Live Discord Presence</h2>
+            <h2 class="skills-title">Live Discord Presence 🎧</h2>
             <div class="discord-card">
                 <div class="discord-avatar-wrap">
                     <img id="lanyard-avatar" src="assets/profile.gif" alt="Discord Avatar">
@@ -1131,7 +1300,7 @@
 
         <!-- Tab 4: Central Time Station -->
         <div id="time-block" class="hidden">
-            <h2 class="skills-title">Central Time Station ☁️</h2>
+            <h2 class="skills-title">Texas Time & Sun Station ☁️</h2>
             <div class="time-card-content">
                 <div class="clock-header-wrap">
                     <div id="celestial-phase-icon"></div>
@@ -1154,6 +1323,111 @@
             </div>
         </div>
 
+        <!-- Tab 5: 10-Game Cozy Arcade -->
+        <div id="games-block" class="hidden">
+            <h2 class="skills-title">Cozy Arcade & Mini-Games (10-in-1) 🎮</h2>
+            
+            <div class="arcade-subnav">
+                <button class="arcade-tab-btn active" data-game="memory">🌸 Memory Cards</button>
+                <button class="arcade-tab-btn" data-game="fishing">🎣 Fish Pond</button>
+                <button class="arcade-tab-btn" data-game="bubble">🫧 Bubble Wrap</button>
+                <button class="arcade-tab-btn" data-game="cookie">🍪 Cookie Baker</button>
+                <button class="arcade-tab-btn" data-game="bunny">🐰 Whack-a-Fluff</button>
+                <button class="arcade-tab-btn" data-game="kalimba">🎵 Lo-Fi Kalimba</button>
+                <button class="arcade-tab-btn" data-game="coin">🪙 Cozy Coin</button>
+                <button class="arcade-tab-btn" data-game="dice">🎲 Oracle Dice</button>
+                <button class="arcade-tab-btn" data-game="petals">🍃 Catch Petals</button>
+                <button class="arcade-tab-btn" data-game="stacker">🍵 Cup Stacker</button>
+            </div>
+
+            <!-- 1. Progressive Memory Cards -->
+            <div id="panel-memory" class="game-panel">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px; color: var(--cozy-accent); font-weight: 700; margin-bottom: 6px;">
+                    <span id="memory-lvl-display">Round 1 (10 Cards)</span>
+                    <span id="memory-moves-display">Moves: 0</span>
+                </div>
+                <div id="memory-game-grid"></div>
+            </div>
+
+            <!-- 2. Fishing Pond -->
+            <div id="panel-fishing" class="game-panel hidden">
+                <div class="fishing-pond" id="fishing-pond-btn">
+                    <span style="font-size: 36px;">🎣</span>
+                    <span style="font-size: 12px; color: var(--cozy-subtext);">Tap water to cast cozy rod!</span>
+                </div>
+                <div class="fishing-catch-display" id="fishing-log" style="margin-top: 10px;">Catches: 0 • Ready to cast!</div>
+            </div>
+
+            <!-- 3. Bubble Wrap -->
+            <div id="panel-bubble" class="game-panel hidden">
+                <div id="arcade-bubble-grid" style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;"></div>
+                <button class="footer-btn" id="arcade-reset-bubbles" style="margin-top: 12px;">Reset Sheet</button>
+            </div>
+
+            <!-- 4. Cookie Baker -->
+            <div id="panel-cookie" class="game-panel hidden">
+                <div class="big-click-item" id="cozy-cookie-btn">🍪</div>
+                <div style="font-size: 14px; font-weight: 800; color: var(--cozy-warm); margin-top: 6px;" id="cookie-counter">0 Fresh Cookies</div>
+                <span style="font-size: 10px; color: var(--cozy-subtext);">Bake as many warm treats as you can!</span>
+            </div>
+
+            <!-- 5. Whack-A-Fluff Bunny -->
+            <div id="panel-bunny" class="game-panel hidden">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 11px; color: var(--cozy-accent); margin-bottom: 6px;">
+                    <span>Tap the sleepy bunny!</span>
+                    <span id="bunny-score">Score: 0</span>
+                </div>
+                <div id="bunny-field" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; max-width: 280px;">
+                    <div class="bunny-hole" style="height: 60px; background: rgba(0,0,0,0.4); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer;">🕳️</div>
+                    <div class="bunny-hole" style="height: 60px; background: rgba(0,0,0,0.4); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer;">🕳️</div>
+                    <div class="bunny-hole" style="height: 60px; background: rgba(0,0,0,0.4); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; cursor: pointer;">🕳️</div>
+                </div>
+            </div>
+
+            <!-- 6. Lo-Fi Kalimba -->
+            <div id="panel-kalimba" class="game-panel hidden">
+                <span style="font-size: 11px; color: var(--cozy-subtext);">Acoustic Pentatonic Chimes (Tap keys or press 1-6)</span>
+                <div class="kalimba-keyboard">
+                    <div class="kalimba-key" data-note="261.63">C</div>
+                    <div class="kalimba-key" data-note="293.66">D</div>
+                    <div class="kalimba-key" data-note="329.63">E</div>
+                    <div class="kalimba-key" data-note="392.00">G</div>
+                    <div class="kalimba-key" data-note="440.00">A</div>
+                    <div class="kalimba-key" data-note="523.25">C2</div>
+                </div>
+            </div>
+
+            <!-- 7. Coin Flip -->
+            <div id="panel-coin" class="game-panel hidden">
+                <div class="coin-display" id="cozy-coin-btn">☁️</div>
+                <div class="coin-result-text" id="coin-result">Click coin to flip for answers!</div>
+            </div>
+
+            <!-- 8. Oracle Dice -->
+            <div id="panel-dice" class="game-panel hidden">
+                <div style="display: flex; gap: 15px; font-size: 45px; cursor: pointer;" id="roll-dice-btn">
+                    <span id="die-1">🎲</span>
+                    <span id="die-2">🎲</span>
+                </div>
+                <div id="dice-result" style="margin-top: 10px; font-size: 12px; font-weight: 700; color: var(--cozy-blue);">Tap dice to roll daily luck!</div>
+            </div>
+
+            <!-- 9. Catch Falling Petals -->
+            <div id="panel-petals" class="game-panel hidden">
+                <div id="petal-catcher-box" style="position: relative; width: 100%; height: 160px; background: rgba(0,0,0,0.3); border: 1px dashed var(--cozy-cloud-border); border-radius: 18px; overflow: hidden; cursor: crosshair;">
+                    <div style="position: absolute; top: 8px; left: 10px; font-size: 11px; color: var(--cozy-pink); font-weight: 700;" id="petal-score">Petals Caught: 0</div>
+                </div>
+            </div>
+
+            <!-- 10. Cup Stacker -->
+            <div id="panel-stacker" class="game-panel hidden">
+                <div id="cup-tower" style="display: flex; flex-direction: column-reverse; align-items: center; justify-content: flex-end; width: 100%; height: 130px; gap: 2px;">
+                    <div style="font-size: 26px;">🍵</div>
+                </div>
+                <button class="footer-btn" id="stack-cup-btn" style="margin-top: 10px;">Stack Next Cup!</button>
+            </div>
+        </div>
+
         <!-- Badge Modal -->
         <div id="badge-inspector-modal">
             <img id="badge-modal-img" src="" alt="Badge">
@@ -1168,6 +1442,7 @@
             <div id="hacker-theme" class="theme-button" title="Skills (2)">2</div>
             <div id="discord-theme" class="theme-button" title="Discord (3)">3</div>
             <div id="time-theme" class="theme-button" title="Central Time (4)">4</div>
+            <div id="games-theme" class="theme-button" title="Mini-Games (5)">5</div>
         </div>
 
         <!-- Controls Pod -->
