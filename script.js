@@ -719,7 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bioMessages = [
     "Im sorry I wasnt their for you katt...", "Developing in Python, CSS, and JavaScript",
     "Playing CRK (CookieRun: Kingdom)", "We do not lick the dog",
-    "I am a person :)", "..."
+    "I am a person :)", "...im sorry"
   ];
   let bioText = '';
   let bioIndex = 0;
