@@ -4,51 +4,49 @@
     <link rel="icon" type="image/x-icon" href="/Sirramenboi-s-profile/assets/favicon.ico">    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Ramen's Profile</title>
+    <title>Ramen's Cozy Corner ☁️</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.youtube.com/iframe_api"></script>
     <style>
         :root {
-            --fluff-bg: #0f101a;
-            --fluff-cloud: rgba(30, 32, 50, 0.78);
-            --fluff-cloud-border: rgba(196, 181, 253, 0.25);
-            --fluff-border-soft: rgba(255, 255, 255, 0.1);
-            
-            --fluff-accent: #c4b5fd;
-            --fluff-blue: #a5f3fc;
-            --fluff-pink: #fbcfe8;
-            --fluff-cream: #fdf4ff;
-            --fluff-subtext: #cbd5e1;
-            --fluff-pill-bg: rgba(255, 255, 255, 0.07);
+            --cozy-bg: #14131d;
+            --cozy-cloud: rgba(32, 30, 48, 0.82);
+            --cozy-cloud-border: rgba(221, 214, 254, 0.28);
+            --cozy-accent: #ddd6fe;
+            --cozy-blue: #bae6fd;
+            --cozy-pink: #fbcfe8;
+            --cozy-warm: #fef3c7;
+            --cozy-subtext: #cbd5e1;
+            --cozy-pill-bg: rgba(255, 255, 255, 0.08);
             --card-blur: 24px;
-            --bg-dim: 0.85;
+            --bg-dim: 0.82;
         }
 
         body.theme-palette-matcha {
-            --fluff-accent: #86efac;
-            --fluff-blue: #a7f3d0;
-            --fluff-pink: #fde047;
-            --fluff-cloud-border: rgba(134, 239, 172, 0.3);
+            --cozy-accent: #bbf7d0;
+            --cozy-blue: #ccfbf1;
+            --cozy-pink: #fef08a;
+            --cozy-cloud-border: rgba(187, 247, 208, 0.32);
         }
         body.theme-palette-peach {
-            --fluff-accent: #fdba74;
-            --fluff-blue: #fed7aa;
-            --fluff-pink: #f472b6;
-            --fluff-cloud-border: rgba(253, 186, 116, 0.3);
+            --cozy-accent: #fed7aa;
+            --cozy-blue: #ffedd5;
+            --cozy-pink: #fbcfe8;
+            --cozy-cloud-border: rgba(254, 215, 170, 0.32);
         }
-        body.theme-palette-cotton {
-            --fluff-accent: #f472b6;
-            --fluff-blue: #bae6fd;
-            --fluff-pink: #fbcfe8;
-            --fluff-cloud-border: rgba(244, 114, 182, 0.3);
+        body.theme-palette-strawberry {
+            --cozy-accent: #fbcfe8;
+            --cozy-blue: #e0e7ff;
+            --cozy-pink: #fda4af;
+            --cozy-cloud-border: rgba(251, 207, 232, 0.32);
         }
-        body.theme-palette-midnight {
-            --fluff-accent: #818cf8;
-            --fluff-blue: #38bdf8;
-            --fluff-pink: #c084fc;
-            --fluff-cloud-border: rgba(129, 140, 248, 0.3);
+        body.theme-palette-honey {
+            --cozy-accent: #fef08a;
+            --cozy-blue: #fed7aa;
+            --cozy-pink: #fcd34d;
+            --cozy-cloud-border: rgba(254, 240, 138, 0.32);
         }
 
         @font-face {
@@ -66,9 +64,9 @@
             user-select: none;
         }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 16, 26, 0.7); }
-        ::-webkit-scrollbar-thumb { background: rgba(196, 181, 253, 0.35); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(20, 19, 29, 0.7); }
+        ::-webkit-scrollbar-thumb { background: rgba(221, 214, 254, 0.35); border-radius: 12px; }
 
         .custom-cursor {
             position: fixed;
@@ -79,14 +77,14 @@
             pointer-events: none;
             z-index: 99999;
             transform: translate(-50%, -50%);
-            filter: drop-shadow(0 0 10px rgba(196, 181, 253, 0.5));
+            filter: drop-shadow(0 0 10px rgba(221, 214, 254, 0.5));
         }
 
         body:not(.touch-device) { cursor: none; }
 
         body {
-            background-color: var(--fluff-bg);
-            color: var(--fluff-cream);
+            background-color: var(--cozy-bg);
+            color: #fff;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
@@ -112,132 +110,93 @@
             will-change: transform;
         }
 
-        #lightning-flash {
+        #fireplace-canvas, #weather-canvas, #raindrop-canvas {
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 50% 20%, rgba(196, 181, 253, 0.45) 0%, transparent 80%);
-            mix-blend-mode: screen;
-            opacity: 0;
             pointer-events: none;
-            z-index: 2;
         }
 
-        #weather-canvas {
-            position: fixed;
-            inset: 0;
-            z-index: 3;
-            pointer-events: none;
-            opacity: 0.55;
-        }
+        #fireplace-canvas { z-index: 2; opacity: 0.65; }
+        #weather-canvas { z-index: 3; opacity: 0.55; }
 
         .window-frame-system {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 4;
-            box-shadow: inset 0 0 80px rgba(10, 11, 18, 0.6);
+            box-shadow: inset 0 0 90px rgba(14, 13, 21, 0.65);
         }
 
-        #raindrop-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100vw; height: 100vh;
-            opacity: 0.85;
-            pointer-events: none;
-        }
-
-        .window-rim {
-            position: absolute;
-            inset: 0;
-            border: 8px solid #1c1d2c;
-            border-bottom: 12px solid #161724;
-            pointer-events: none;
-        }
-
-        .window-divider-h {
-            position: absolute;
-            top: 50%; left: 0;
-            width: 100vw; height: 7px;
-            transform: translateY(-50%);
-            background: linear-gradient(180deg, #373952 0%, #1e1f2f 45%, #131420 100%);
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.9);
-            pointer-events: none;
-        }
-
-        .window-divider-v {
-            position: absolute;
-            top: 0; left: 50%;
-            width: 7px; height: 100vh;
-            transform: translateX(-50%);
-            background: linear-gradient(90deg, #373952 0%, #1e1f2f 45%, #131420 100%);
-            border-left: 1px solid rgba(255, 255, 255, 0.2);
-            border-right: 1px solid rgba(0, 0, 0, 0.9);
-            pointer-events: none;
-        }
+        #raindrop-canvas { z-index: 5; opacity: 0.85; }
 
         .hidden { display: none !important; }
 
-        .click-spark {
+        /* Floating Cute Particles */
+        .cozy-float-particle {
             position: fixed;
-            width: 7px; height: 7px;
-            border-radius: 50%;
             pointer-events: none;
-            z-index: 100000;
+            z-index: 100001;
+            font-size: 20px;
         }
 
         #music-ticker-pill {
             position: fixed;
-            top: calc(50% - 175px - 76px);
+            top: calc(50% - 180px - 76px);
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(30, 32, 50, 0.85);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 5px 16px;
-            border-radius: 24px;
+            gap: 10px;
+            background: rgba(32, 30, 48, 0.9);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 6px 18px;
+            border-radius: 26px;
             font-size: 11px;
             font-weight: 700;
-            color: var(--fluff-subtext);
-            backdrop-filter: blur(16px);
+            color: var(--cozy-subtext);
+            backdrop-filter: blur(18px);
             z-index: 25;
             pointer-events: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
         }
 
         .audio-nav-btn {
             background: transparent;
             border: none;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             cursor: pointer;
             display: flex;
             align-items: center;
+            padding: 2px;
+            transition: transform 0.15s ease;
         }
-        .audio-nav-btn svg { width: 14px; height: 14px; }
+        .audio-nav-btn:hover { transform: scale(1.2); color: #fff; }
+        .audio-nav-btn svg { width: 15px; height: 15px; }
 
         #audio-time-stamp {
             font-family: monospace;
             font-size: 10px;
-            color: var(--fluff-accent);
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 6px;
-            border-radius: 8px;
+            color: var(--cozy-accent);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 7px;
+            border-radius: 10px;
         }
 
         #eq-mode-badge, #vis-mode-badge {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 2px 8px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 3px 9px;
+            border-radius: 14px;
             font-size: 9px;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             cursor: pointer;
+            transition: all 0.2s;
         }
+        #eq-mode-badge:hover, #vis-mode-badge:hover { background: rgba(255, 255, 255, 0.15); }
 
         #line-visualizer {
             position: fixed;
-            top: calc(50% - 175px - 44px);
+            top: calc(50% - 180px - 44px);
             left: 50%;
             transform: translateX(-50%);
             width: 820px; height: 34px;
@@ -248,7 +207,7 @@
 
         #track-progress-container {
             position: fixed;
-            top: calc(50% - 175px - 10px);
+            top: calc(50% - 180px - 10px);
             left: 50%;
             transform: translateX(-50%);
             width: 820px; height: 6px;
@@ -256,21 +215,22 @@
             border-radius: 12px;
             z-index: 25;
             cursor: pointer;
-            overflow: hidden;
             pointer-events: auto;
         }
 
         #track-progress-fill {
             height: 100%; width: 0%;
-            background: linear-gradient(90deg, var(--fluff-blue), var(--fluff-accent));
+            background: linear-gradient(90deg, var(--cozy-blue), var(--cozy-accent));
             border-radius: 12px;
+            pointer-events: none;
         }
 
+        /* Sound Lounge Dropboard */
         #dropboard-drawer {
             position: fixed;
             top: 0; left: 50%;
             transform: translate(-50%, -100%);
-            width: 620px; max-width: 90vw;
+            width: 640px; max-width: 90vw;
             z-index: 100;
             transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2);
             pointer-events: auto;
@@ -278,165 +238,159 @@
         #dropboard-drawer.open { transform: translate(-50%, 0%); }
 
         .drawer-content {
-            background: rgba(26, 28, 44, 0.95);
-            border: 1.5px solid var(--fluff-cloud-border);
+            background: rgba(28, 26, 42, 0.96);
+            border: 1.5px solid var(--cozy-cloud-border);
             border-top: none;
-            border-radius: 0 0 28px 28px;
-            padding: 20px 26px;
-            backdrop-filter: blur(24px);
+            border-radius: 0 0 32px 32px;
+            padding: 22px 28px;
+            backdrop-filter: blur(28px);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
 
         .drawer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
         .preset-shelf { display: flex; gap: 8px; flex-wrap: wrap; }
         .preset-btn {
             background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 6px 12px;
-            border-radius: 16px;
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 7px 14px;
+            border-radius: 18px;
             font-size: 11px;
             font-weight: 700;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .preset-btn:hover { border-color: var(--cozy-accent); color: #fff; transform: translateY(-2px); }
 
         .sound-gen-shelf {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(15, 16, 26, 0.5);
-            padding: 8px 12px;
-            border-radius: 16px;
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.5);
+            padding: 8px 14px;
+            border-radius: 18px;
+            border: 1px solid var(--cozy-cloud-border);
         }
-        .sound-gen-label { font-size: 11px; font-weight: 700; color: var(--fluff-accent); }
+        .sound-gen-label { font-size: 11px; font-weight: 700; color: var(--cozy-accent); }
         .sound-gen-btn {
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid var(--fluff-cloud-border);
-            border-radius: 12px;
-            padding: 4px 10px;
+            border: 1px solid var(--cozy-cloud-border);
+            border-radius: 14px;
+            padding: 5px 12px;
             font-size: 10px;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .sound-gen-btn.active { background: var(--fluff-accent); color: #1a153a; font-weight: 700; }
+        .sound-gen-btn.active { background: var(--cozy-accent); color: #1e1b2e; font-weight: 800; }
 
         #scratchpad-area {
-            width: 100%; height: 50px;
-            background: rgba(15, 16, 26, 0.6);
-            border: 1px solid var(--fluff-cloud-border);
-            border-radius: 14px;
-            padding: 8px 12px;
-            color: var(--fluff-cream);
-            font-size: 11px;
+            width: 100%; height: 55px;
+            background: rgba(16, 15, 24, 0.6);
+            border: 1px solid var(--cozy-cloud-border);
+            border-radius: 16px;
+            padding: 10px 14px;
+            color: #fff;
+            font-size: 12px;
             outline: none;
             resize: none;
         }
 
-        .drawer-sliders-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .drawer-slider-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--fluff-subtext);
-        }
+        .drawer-sliders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .drawer-slider-item { display: flex; flex-direction: column; gap: 4px; font-size: 10px; font-weight: 700; color: var(--cozy-subtext); }
 
         .palette-row { display: flex; align-items: center; gap: 8px; }
         .palette-btn {
-            width: 22px; height: 22px;
+            width: 24px; height: 24px;
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
+            transition: transform 0.2s;
         }
+        .palette-btn:hover { transform: scale(1.2); }
 
         #drawer-tab-handle {
             width: fit-content;
             margin: 0 auto;
-            background: rgba(26, 28, 44, 0.9);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(28, 26, 42, 0.95);
+            border: 1px solid var(--cozy-cloud-border);
             border-top: none;
-            border-radius: 0 0 18px 18px;
-            padding: 7px 18px;
+            border-radius: 0 0 20px 20px;
+            padding: 8px 22px;
             font-size: 11px;
             font-weight: 700;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             cursor: pointer;
-            backdrop-filter: blur(14px);
+            backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
             gap: 6px;
             font-family: 'Comfortaa', cursive, sans-serif;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
         }
 
-        /* Fixed Flat Layer Stacking without Clipping */
+        /* Cozy Main Cards */
         #profile-block, #skills-block, #discord-block, #time-block {
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 820px;
-            min-height: 332px;
-            background: var(--fluff-cloud);
-            border: 1.5px solid var(--fluff-cloud-border);
-            padding: 26px 30px;
-            border-radius: 32px;
+            min-height: 340px;
+            background: var(--cozy-cloud);
+            border: 1.5px solid var(--cozy-cloud-border);
+            padding: 26px 32px;
+            border-radius: 34px;
             z-index: 20;
             display: flex;
             flex-direction: column;
             gap: 14px;
             backdrop-filter: blur(var(--card-blur));
             pointer-events: auto;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(12, 13, 22, 0.45);
+            overflow: visible;
+            box-shadow: 0 26px 70px rgba(10, 9, 16, 0.45);
             will-change: transform;
         }
 
-        .card-telemetry-badge {
+        /* Sleepy Pet Mascot */
+        #cozy-pet-mascot {
             position: absolute;
-            top: 14px; right: 18px;
+            top: -24px; right: 28px;
+            background: rgba(32, 30, 48, 0.95);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--cozy-accent);
+            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 3px 9px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--fluff-subtext);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
         }
-
-        .telemetry-pulse {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: #86efac;
-            box-shadow: 0 0 6px #86efac;
-        }
+        #cozy-pet-mascot:hover { transform: scale(1.1) rotate(2deg); }
 
         .profile-header { display: flex; align-items: flex-start; gap: 20px; }
-        .profile-container { position: relative; width: 140px; height: 140px; }
+        .profile-container { position: relative; width: 140px; height: 140px; cursor: pointer; }
         .profile-container::after {
             content: '';
             position: absolute;
             inset: -4px;
             border-radius: 50%;
-            background: radial-gradient(circle at 10px 10px, var(--fluff-accent) 15%, transparent 25%);
+            background: radial-gradient(circle at 10px 10px, var(--cozy-accent) 15%, transparent 25%);
             animation: orbit 4s linear infinite;
             z-index: -1;
             filter: blur(2px);
@@ -446,9 +400,10 @@
             width: 140px; height: 140px;
             border-radius: 50%;
             object-fit: cover;
-            cursor: pointer;
             border: 3px solid rgba(255, 255, 255, 0.25);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .profile-picture:active { transform: scale(0.92); }
 
         .profile-info { flex: 1; display: flex; flex-direction: column; }
         .name-and-badges { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
@@ -459,56 +414,80 @@
             font-weight: 800;
             letter-spacing: 2px;
             color: #ffffff;
-            text-shadow: 0 0 16px rgba(196, 181, 253, 0.55);
+            text-shadow: 0 0 16px rgba(221, 214, 254, 0.55);
+            cursor: pointer;
         }
 
         .discord-status-header-pill {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(15, 16, 26, 0.6);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.6);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 4px 10px;
             border-radius: 14px;
             font-size: 11px;
             font-weight: 700;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .discord-status-header-pill:hover { border-color: var(--cozy-accent); color: #fff; }
 
         .discord-status-dot-inline { width: 8px; height: 8px; border-radius: 50%; background-color: #94a3b8; }
         .discord-status-dot-inline.online { background-color: #86efac; box-shadow: 0 0 8px #86efac; }
-        .discord-status-dot-inline.idle { background-color: #fde047; }
-        .discord-status-dot-inline.dnd { background-color: #f87171; }
+        .discord-status-dot-inline.idle { background-color: #fde047; box-shadow: 0 0 8px #fde047; }
+        .discord-status-dot-inline.dnd { background-color: #f87171; box-shadow: 0 0 8px #f87171; }
+        .discord-status-dot-inline.offline { background-color: #80848e; }
 
-        .telemetry-row-pill {
+        /* Tea & Mood Pill Strip */
+        .cozy-widget-strip {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 10px;
-            color: var(--fluff-subtext);
             margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .cozy-tea-cup, .cozy-affirmation-chip, .cozy-habit-chip {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cozy-accent);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cozy-tea-cup:hover, .cozy-affirmation-chip:hover, .cozy-habit-chip:hover {
+            background: rgba(221, 214, 254, 0.2);
+            color: #fff;
+            transform: translateY(-1px);
         }
 
         .badge-group { display: flex; flex-wrap: wrap; gap: 6px; }
         .badge-container { position: relative; }
         .badge-box { background: rgba(255, 255, 255, 0.08); padding: 3px; border-radius: 18px; }
-        .badge-box-inner { background: rgba(15, 16, 26, 0.6); padding: 4px 8px; border-radius: 14px; display: flex; gap: 6px; }
-        .badge { width: 19px; height: 19px; cursor: pointer; }
+        .badge-box-inner { background: rgba(16, 15, 24, 0.6); padding: 4px 8px; border-radius: 14px; display: flex; gap: 6px; }
+        .badge { width: 19px; height: 19px; cursor: pointer; transition: transform 0.2s; }
+        .badge:hover { transform: scale(1.25); }
 
         .mood-reaction-shelf { display: flex; align-items: center; gap: 6px; margin: 4px 0 8px 0; }
         .mood-btn {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--fluff-cloud-border);
+            border: 1px solid var(--cozy-cloud-border);
             border-radius: 12px;
-            padding: 2px 8px;
+            padding: 3px 9px;
             font-size: 10px;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .mood-btn:hover { background: rgba(221, 214, 254, 0.2); color: #fff; }
 
-        #profile-bio { color: var(--fluff-subtext); font-size: 14px; line-height: 1.5; min-height: 22px; }
-        .bio-separator { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--fluff-cloud-border), transparent); margin: 12px 0; }
+        #profile-bio { color: var(--cozy-subtext); font-size: 14px; line-height: 1.5; min-height: 22px; cursor: pointer; }
+        .bio-separator { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, var(--cozy-cloud-border), transparent); margin: 12px 0; }
 
         .profile-footer { width: 100%; margin-top: auto; }
         .footer-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; width: 100%; gap: 12px; }
@@ -520,56 +499,59 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
-            color: var(--fluff-accent);
+            background: var(--cozy-pill-bg);
+            border: 1px solid var(--cozy-cloud-border);
+            color: var(--cozy-accent);
             padding: 6px 13px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
             font-family: 'Comfortaa', cursive, sans-serif;
+            transition: all 0.2s;
         }
+        .footer-btn:hover { background: rgba(221, 214, 254, 0.2); color: #fff; transform: translateY(-2px); }
 
         .visitor-counter {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
+            background: var(--cozy-pill-bg);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 6px 14px;
             border-radius: 24px;
             font-size: 12px;
             font-weight: 600;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
         }
 
         .social-links { display: flex; justify-content: center; gap: 12px; }
-        .social-icon { width: 32px; height: 32px; border-radius: 12px; padding: 4px; background: rgba(255, 255, 255, 0.05); }
+        .social-icon { width: 32px; height: 32px; border-radius: 12px; padding: 4px; background: rgba(255, 255, 255, 0.05); transition: transform 0.2s; }
+        .social-icon:hover { transform: scale(1.2); }
 
         /* Skills Tab */
         .skills-title {
             text-align: center;
             font-size: 18px;
             font-weight: 700;
-            color: var(--fluff-cream);
+            color: #fff;
             margin-bottom: 6px;
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
         .skill { display: flex; flex-direction: column; gap: 4px; }
-        .skill-name { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--fluff-subtext); }
+        .skill-name { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; color: var(--cozy-subtext); }
         .skill-icon { width: 18px; height: 18px; margin-right: 6px; }
 
         .skill-bar-container {
             height: 8px;
-            background: rgba(15, 16, 26, 0.6);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.6);
+            border: 1px solid var(--cozy-cloud-border);
             border-radius: 14px;
             overflow: hidden;
         }
 
-        .skill-bar { height: 100%; border-radius: 12px; width: 0%; transition: width 2s; }
+        .skill-bar { height: 100%; border-radius: 12px; width: 0%; transition: width 1.5s; }
         #python-bar { background: linear-gradient(90deg, #f472b6, #fb7185); }
         #cpp-bar { background: linear-gradient(90deg, #38bdf8, #818cf8); }
         #csharp-bar { background: linear-gradient(90deg, #34d399, #2dd4bf); }
@@ -582,27 +564,29 @@
         }
 
         .project-card {
-            background: rgba(15, 16, 26, 0.5);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.5);
+            border: 1px solid var(--cozy-cloud-border);
             border-radius: 18px;
             padding: 9px 14px;
             display: flex;
             flex-direction: column;
             gap: 3px;
             text-decoration: none;
+            transition: all 0.2s;
         }
-        .project-title { font-size: 12px; font-weight: 700; color: var(--fluff-cream); }
-        .project-desc { font-size: 10px; color: var(--fluff-subtext); }
+        .project-card:hover { border-color: var(--cozy-accent); transform: translateY(-2px); }
+        .project-title { font-size: 12px; font-weight: 700; color: #fff; }
+        .project-desc { font-size: 10px; color: var(--cozy-subtext); }
         .project-tags { display: flex; gap: 4px; margin-top: 4px; }
-        .proj-tag { background: rgba(255, 255, 255, 0.08); font-size: 9px; padding: 2px 6px; border-radius: 6px; color: var(--fluff-accent); }
+        .proj-tag { background: rgba(255, 255, 255, 0.08); font-size: 9px; padding: 2px 6px; border-radius: 6px; color: var(--cozy-accent); }
 
         /* Discord Tab */
         .discord-card {
             display: flex;
             align-items: center;
             gap: 18px;
-            background: rgba(15, 16, 26, 0.5);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.5);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 18px;
             border-radius: 24px;
         }
@@ -614,32 +598,39 @@
             bottom: 2px; right: 2px;
             width: 18px; height: 18px;
             border-radius: 50%;
-            border: 3px solid rgba(19, 20, 31, 0.9);
+            border: 3px solid rgba(20, 19, 29, 0.95);
         }
 
+        #lanyard-status-dot.status-online { background-color: #23a55a !important; }
+        #lanyard-status-dot.status-idle { background-color: #f0b232 !important; }
+        #lanyard-status-dot.status-dnd { background-color: #f23f43 !important; }
+        #lanyard-status-dot.status-offline { background-color: #80848e !important; }
+
         .discord-details { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-        #lanyard-username { font-size: 18px; font-weight: 700; color: var(--fluff-cream); }
+        #lanyard-username { font-size: 18px; font-weight: 700; color: #fff; }
+        #lanyard-custom-status { font-size: 13px; color: var(--cozy-accent); font-style: italic; }
 
         .discord-activity-box {
             font-size: 12px;
-            background: var(--fluff-pill-bg);
-            border: 1px solid var(--fluff-cloud-border);
-            padding: 10px 14px;
+            background: var(--cozy-pill-bg);
+            border: 1px solid var(--cozy-cloud-border);
+            padding: 12px 16px;
             border-radius: 16px;
-            border-left: 4px solid var(--fluff-accent);
-            color: var(--fluff-subtext);
+            border-left: 4px solid var(--cozy-accent);
+            color: var(--cozy-subtext);
         }
 
-        .activity-banner-wrap { display: flex; align-items: center; gap: 12px; margin-top: 6px; }
-        .activity-large-image { width: 54px; height: 54px; border-radius: 14px; object-fit: cover; border: 1px solid var(--fluff-cloud-border); flex-shrink: 0; }
+        .activity-banner-wrap { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
+        .activity-large-image { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; border: 1px solid var(--cozy-cloud-border); flex-shrink: 0; }
+        .activity-text-details { display: flex; flex-direction: column; gap: 3px; font-size: 12px; line-height: 1.4; }
 
         /* Time & Weather Tab */
         .time-card-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
         .clock-header-wrap { display: flex; align-items: center; gap: 12px; }
-        #celestial-phase-icon { width: 32px; height: 32px; filter: drop-shadow(0 0 10px rgba(165, 243, 252, 0.6)); }
+        #celestial-phase-icon { width: 34px; height: 34px; filter: drop-shadow(0 0 12px rgba(186, 230, 253, 0.6)); }
         .digital-clock {
             font-size: 40px; font-weight: 700; letter-spacing: 1px;
-            color: var(--fluff-blue); text-shadow: 0 4px 20px rgba(165, 243, 252, 0.4);
+            color: var(--cozy-blue); text-shadow: 0 4px 20px rgba(186, 230, 253, 0.4);
             font-family: 'Comfortaa', cursive, sans-serif;
         }
 
@@ -652,8 +643,8 @@
         }
 
         .time-detail-box {
-            background: rgba(15, 16, 26, 0.5);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.5);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 8px 14px;
             border-radius: 18px;
             display: flex;
@@ -661,21 +652,21 @@
             gap: 2px;
         }
 
-        .detail-label { font-size: 10px; text-transform: uppercase; color: var(--fluff-subtext); font-weight: 700; opacity: 0.7; }
-        .detail-val { font-size: 12px; font-weight: 700; color: var(--fluff-cream); }
+        .detail-label { font-size: 10px; text-transform: uppercase; color: var(--cozy-subtext); font-weight: 700; opacity: 0.7; }
+        .detail-val { font-size: 12px; font-weight: 700; color: #fff; }
 
         .tz-comparison-strip {
             display: flex;
             gap: 8px;
             margin-top: 4px;
             font-size: 10px;
-            color: var(--fluff-subtext);
+            color: var(--cozy-subtext);
         }
         .tz-chip {
             background: rgba(255, 255, 255, 0.05);
             padding: 3px 8px;
             border-radius: 10px;
-            border: 1px solid var(--fluff-cloud-border);
+            border: 1px solid var(--cozy-cloud-border);
         }
 
         /* Badge Modal */
@@ -683,9 +674,9 @@
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%) scale(0.9);
-            background: rgba(26, 28, 44, 0.95);
-            border: 1.5px solid var(--fluff-accent);
-            border-radius: 24px;
+            background: rgba(28, 26, 42, 0.96);
+            border: 1.5px solid var(--cozy-accent);
+            border-radius: 26px;
             padding: 22px 26px;
             z-index: 500;
             width: 320px; max-width: 90vw;
@@ -702,8 +693,8 @@
         }
         #badge-inspector-modal.active { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
         #badge-modal-img { width: 44px; height: 44px; }
-        #badge-modal-title { font-size: 15px; font-weight: 700; color: var(--fluff-cream); }
-        #badge-modal-desc { font-size: 12px; color: var(--fluff-subtext); }
+        #badge-modal-title { font-size: 15px; font-weight: 700; color: #fff; }
+        #badge-modal-desc { font-size: 12px; color: var(--cozy-subtext); }
 
         /* Floating Navigation Controls */
         .controls {
@@ -714,8 +705,8 @@
             display: flex;
             gap: 10px;
             z-index: 20;
-            background: rgba(30, 32, 50, 0.75);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(32, 30, 48, 0.78);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 7px 14px;
             border-radius: 30px;
             backdrop-filter: blur(18px);
@@ -725,24 +716,26 @@
         .theme-button {
             width: 34px; height: 34px;
             border-radius: 50%;
-            border: 1px solid var(--fluff-cloud-border);
-            background-color: var(--fluff-pill-bg);
-            color: var(--fluff-subtext);
+            border: 1px solid var(--cozy-cloud-border);
+            background-color: var(--cozy-pill-bg);
+            color: var(--cozy-subtext);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 13px; font-weight: 700;
             font-family: 'Comfortaa', cursive, sans-serif;
+            transition: all 0.2s;
         }
+        .theme-button:hover { transform: scale(1.1); color: #fff; }
         .theme-button.active {
-            background: linear-gradient(135deg, var(--fluff-accent), var(--fluff-pink)) !important;
+            background: linear-gradient(135deg, var(--cozy-accent), var(--cozy-pink)) !important;
             color: #1a153a !important;
             border-color: transparent !important;
         }
 
         .volume-control, .transparency-control { display: flex; align-items: center; gap: 8px; position: relative; }
-        .volume-icon, .transparency-icon { width: 18px; height: 18px; cursor: pointer; color: var(--fluff-subtext); }
+        .volume-icon, .transparency-icon { width: 18px; height: 18px; cursor: pointer; color: var(--cozy-subtext); }
 
         .slider {
             -webkit-appearance: none;
@@ -757,7 +750,7 @@
             appearance: none;
             width: 14px; height: 14px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--fluff-blue), var(--fluff-accent));
+            background: linear-gradient(135deg, var(--cozy-blue), var(--cozy-accent));
             cursor: pointer;
         }
 
@@ -765,23 +758,23 @@
             position: absolute;
             top: -24px; left: 50%;
             transform: translateX(-50%);
-            background: rgba(15, 16, 26, 0.9);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(16, 15, 24, 0.9);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 9px;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s;
         }
         .volume-control:hover #vol-tooltip { opacity: 1; }
 
-        #defog-glass-btn { background: transparent; border: none; color: var(--fluff-subtext); cursor: pointer; display: flex; align-items: center; }
+        #defog-glass-btn { background: transparent; border: none; color: var(--cozy-subtext); cursor: pointer; display: flex; align-items: center; }
         #defog-glass-btn svg { width: 17px; height: 17px; }
 
-        #snow-toggle-btn { background: transparent; border: none; cursor: pointer; color: var(--fluff-subtext); }
-        #snow-toggle-btn.active { color: var(--fluff-blue); }
+        #snow-toggle-btn { background: transparent; border: none; cursor: pointer; color: var(--cozy-subtext); }
+        #snow-toggle-btn.active { color: var(--cozy-blue); }
 
         .top-controls {
             position: fixed;
@@ -792,8 +785,8 @@
             align-items: center;
             gap: 14px;
             z-index: 20;
-            background: rgba(30, 32, 50, 0.75);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(32, 30, 48, 0.78);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 8px 18px;
             border-radius: 30px;
             backdrop-filter: blur(18px);
@@ -803,9 +796,9 @@
         #action-toast {
             position: fixed;
             bottom: 30px; right: 30px;
-            background: rgba(30, 32, 50, 0.95);
-            border: 1px solid var(--fluff-accent);
-            color: var(--fluff-accent);
+            background: rgba(32, 30, 48, 0.96);
+            border: 1px solid var(--cozy-accent);
+            color: var(--cozy-accent);
             padding: 10px 22px;
             border-radius: 24px;
             font-size: 12px; font-weight: 700;
@@ -818,10 +811,10 @@
         #cinema-exit-hint {
             position: fixed; bottom: 24px; left: 50%;
             transform: translateX(-50%);
-            background: rgba(30, 32, 50, 0.85);
-            border: 1px solid var(--fluff-cloud-border);
+            background: rgba(32, 30, 48, 0.85);
+            border: 1px solid var(--cozy-cloud-border);
             padding: 9px 22px; border-radius: 30px;
-            font-size: 12px; font-weight: 600; color: var(--fluff-subtext);
+            font-size: 12px; font-weight: 600; color: var(--cozy-subtext);
             z-index: 150; pointer-events: none;
         }
 
@@ -829,9 +822,9 @@
         #custom-context-menu {
             position: fixed;
             z-index: 100002;
-            background: rgba(22, 24, 38, 0.95);
-            border: 1px solid var(--fluff-cloud-border);
-            border-radius: 16px;
+            background: rgba(26, 24, 38, 0.96);
+            border: 1px solid var(--cozy-cloud-border);
+            border-radius: 18px;
             padding: 8px;
             min-width: 190px;
             box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
@@ -847,17 +840,17 @@
             align-items: center;
             gap: 10px;
             padding: 8px 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: 700;
-            color: var(--fluff-cream);
+            color: #fff;
             cursor: pointer;
             transition: background 0.15s ease, color 0.15s ease;
         }
 
         .ctx-item:hover {
-            background: rgba(196, 181, 253, 0.2);
-            color: var(--fluff-accent);
+            background: rgba(221, 214, 254, 0.2);
+            color: var(--cozy-accent);
         }
 
         .ctx-separator {
@@ -870,7 +863,7 @@
 
         #start-screen {
             position: fixed; inset: 0;
-            background: rgba(15, 16, 26, 0.95);
+            background: rgba(16, 15, 24, 0.95);
             backdrop-filter: blur(16px);
             display: flex; align-items: center; justify-content: center;
             z-index: 99990;
@@ -880,9 +873,9 @@
 
         #start-text {
             font-size: 20px; font-weight: 700;
-            color: var(--fluff-accent);
+            color: var(--cozy-accent);
             font-family: 'Comfortaa', cursive, sans-serif;
-            text-shadow: 0 0 16px rgba(196, 181, 253, 0.5);
+            text-shadow: 0 0 16px rgba(221, 214, 254, 0.5);
         }
     </style>
 </head>
@@ -891,95 +884,78 @@
     <div class="custom-cursor"></div>
 
     <div id="start-screen">
-        <div id="start-text">Click anywhere to open profile</div>
+        <div id="start-text">Tap anywhere to enter cozy corner ☁️</div>
     </div>
 
     <!-- Dropboard Sound Lounge -->
     <div id="dropboard-drawer">
         <div class="drawer-content">
             <div class="drawer-header">
-                <span class="drawer-title">Sound Lounge & Comfort Settings</span>
+                <span class="drawer-title">Sound Lounge & Cozy Hearth</span>
                 <span class="drawer-shortcut">[TAB to close]</span>
             </div>
             
             <div class="preset-shelf">
-                <button class="preset-btn" data-video="JD-kMIpDfnY">🌧️ Rainy Lo-Fi</button>
-                <button class="preset-btn" data-video="jfKfPfyJRdk">☕ Cozy Cafe</button>
-                <button class="preset-btn" data-video="5qap5aO4i9A">🌌 Midnight Chill</button>
-                <button class="preset-btn" data-video="lTRiuFIWV54">🌿 Synth Forest</button>
+                <button class="preset-btn" data-video="n61ULEU7CO0">🌧️ Lofi Girl Compilation</button>
+                <button class="preset-btn" data-video="5yx6BWlEVcY">☕ Chillhop Café</button>
+                <button class="preset-btn" data-video="TURbeWK2wwg">🌌 Midnight Nostalgia</button>
+                <button class="preset-btn" data-video="7NOSDKb0HlU">🌿 Peaceful Sanctuary</button>
             </div>
 
             <div class="sound-gen-shelf">
                 <span class="sound-gen-label">Atmosphere:</span>
-                <button class="sound-gen-btn" id="gen-rain-btn">🌧️ Rain Noise</button>
-                <button class="sound-gen-btn" id="gen-white-btn">💨 Calm Breeze</button>
-                <button class="sound-gen-btn" id="gen-rumble-btn">⚡ Thunder Pad</button>
+                <button class="sound-gen-btn" id="gen-rain-btn">🌧️ Gentle Rain</button>
+                <button class="sound-gen-btn" id="gen-white-btn">💨 Soft Breeze</button>
+                <button class="sound-gen-btn" id="gen-rumble-btn">🔥 Hearth Fire</button>
             </div>
 
-            <textarea id="scratchpad-area" placeholder="Write cozy notes or paste links here... (auto-saved)"></textarea>
+            <textarea id="scratchpad-area" placeholder="Write cozy thoughts, journal prompts, or links... (auto-saved)"></textarea>
 
             <div class="drawer-sliders-grid">
                 <div class="drawer-slider-item">
-                    <span>Video Dimmer (<span id="bg-dim-val">85%</span>)</span>
-                    <input type="range" id="bg-dim-slider" min="0.2" max="1" step="0.05" value="0.85">
+                    <span>Background Dimmer (<span id="bg-dim-val">82%</span>)</span>
+                    <input type="range" id="bg-dim-slider" min="0.2" max="1" step="0.05" value="0.82">
                 </div>
                 <div class="drawer-slider-item">
-                    <span>Card Glass Frost (<span id="glass-blur-val">24px</span>)</span>
+                    <span>Card Frosting (<span id="glass-blur-val">24px</span>)</span>
                     <input type="range" id="glass-blur-slider" min="4" max="40" step="2" value="24">
                 </div>
             </div>
 
             <div class="palette-row">
-                <span style="font-size: 11px; font-weight: 700; color: var(--fluff-accent);">Accent Theme:</span>
-                <div class="palette-btn" data-palette="" style="background: #c4b5fd;"></div>
-                <div class="palette-btn" data-palette="theme-palette-matcha" style="background: #86efac;"></div>
-                <div class="palette-btn" data-palette="theme-palette-peach" style="background: #fdba74;"></div>
-                <div class="palette-btn" data-palette="theme-palette-cotton" style="background: #f472b6;"></div>
-                <div class="palette-btn" data-palette="theme-palette-midnight" style="background: #818cf8;"></div>
+                <span style="font-size: 11px; font-weight: 700; color: var(--cozy-accent);">Cozy Palette:</span>
+                <div class="palette-btn" data-palette="" style="background: #ddd6fe;" title="Lavender Latte"></div>
+                <div class="palette-btn" data-palette="theme-palette-matcha" style="background: #bbf7d0;" title="Matcha Mochi"></div>
+                <div class="palette-btn" data-palette="theme-palette-peach" style="background: #fed7aa;" title="Peach Cream"></div>
+                <div class="palette-btn" data-palette="theme-palette-strawberry" style="background: #fbcfe8;" title="Strawberry Milk"></div>
+                <div class="palette-btn" data-palette="theme-palette-honey" style="background: #fef08a;" title="Warm Honey"></div>
             </div>
         </div>
         <div id="drawer-tab-handle">
-            <span>Sound Lounge (TAB)</span>
+            <span>Cozy Lounge (TAB)</span>
             <span class="handle-arrow">▼</span>
         </div>
     </div>
 
     <div class="container">
-        <div id="shortcut-hud" class="hidden">
-            <div class="hud-content">
-                <div class="hud-title">Keyboard Shortcuts</div>
-                <div class="hud-grid">
-                    <div class="hud-item"><span class="hud-key">TAB</span><span>Sound Lounge</span></div>
-                    <div class="hud-item"><span class="hud-key">F</span><span>Cinema Mode</span></div>
-                    <div class="hud-item"><span class="hud-key">H</span><span>Minimalist Clock Mode</span></div>
-                    <div class="hud-item"><span class="hud-key">1 - 4</span><span>Switch Tabs</span></div>
-                    <div class="hud-item"><span class="hud-key">S</span><span>Toggle Rain / Snow</span></div>
-                    <div class="hud-item"><span class="hud-key">C</span><span>Defog Window Glass</span></div>
-                    <div class="hud-item"><span class="hud-key">M</span><span>Mute / Unmute</span></div>
-                    <div class="hud-item"><span class="hud-key">ESC</span><span>Close Windows</span></div>
-                </div>
-            </div>
-        </div>
-
         <div id="cinema-exit-hint" class="hidden">
-            <span>Press <strong>F</strong> or <strong>ESC</strong> to exit cinema mode</span>
+            <span>Press <strong>F</strong> or <strong>ESC</strong> to exit cozy view</span>
         </div>
 
         <iframe 
             id="background" 
-            src="https://www.youtube-nocookie.com/embed/JD-kMIpDfnY?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=JD-kMIpDfnY&playsinline=1" 
+            src="https://www.youtube-nocookie.com/embed/n61ULEU7CO0?enablejsapi=1&autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=n61ULEU7CO0&playsinline=1" 
             frameborder="0" 
             allow="autoplay; encrypted-media; picture-in-picture" 
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen>
         </iframe>
 
-        <div id="lightning-flash"></div>
+        <canvas id="fireplace-canvas"></canvas>
         <canvas id="weather-canvas"></canvas>
 
         <div class="window-frame-system">
             <canvas id="raindrop-canvas"></canvas>
-            <div class="glass-reflection-overlay"></div>
             <div class="window-rim"></div>
             <div class="window-divider-h"></div>
             <div class="window-divider-v"></div>
@@ -989,13 +965,16 @@
             <button class="audio-nav-btn" id="prev-track-btn" title="Previous Track">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
             </button>
+            <button class="audio-nav-btn" id="play-pause-btn" title="Play / Pause (Spacebar)">
+                <svg id="play-pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </button>
             <button class="audio-nav-btn" id="next-track-btn" title="Next Track">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
             </button>
-            <span id="ticker-text">Cozy Rain Ambience & Beat</span>
+            <span id="ticker-text">Best of Lofi Beats</span>
             <span id="audio-time-stamp">00:00 / 00:00</span>
-            <span id="eq-mode-badge" title="Click to cycle EQ">EQ: Chill</span>
-            <span id="vis-mode-badge" title="Click to cycle Vis">Vis: Bars</span>
+            <span id="eq-mode-badge" title="Click to cycle EQ">EQ: Soft</span>
+            <span id="vis-mode-badge" title="Click to cycle Vis">Vis: Waves</span>
         </div>
 
         <canvas id="line-visualizer" title="Click to scrub position"></canvas>
@@ -1005,18 +984,18 @@
 
         <!-- Tab 1: Profile Block -->
         <div id="profile-block">
-            <div class="card-telemetry-badge">
-                <span class="telemetry-pulse"></span>
-                <span id="uptime-counter">Up 00:00</span>
+            <div id="cozy-pet-mascot" title="Click to pet!">
+                <span id="mascot-emoji">🐱</span>
+                <span id="mascot-text">purring...</span>
             </div>
 
             <div class="profile-header">
-                <div class="profile-container">
+                <div class="profile-container" id="avatar-container" title="Click for noodle magic!">
                     <img src="assets/profile.gif" alt="Profile" class="profile-picture">
                 </div>
                 <div class="profile-info">
                     <div class="name-and-badges">
-                        <div id="profile-name">RAMEN</div>
+                        <div id="profile-name" title="Click to copy handle">RAMEN</div>
 
                         <div class="discord-status-header-pill" id="discord-header-pill" title="Click to copy Discord Tag">
                             <span id="discord-header-dot" class="discord-status-dot-inline"></span>
@@ -1027,9 +1006,9 @@
                             <div class="badge-box-inner">
                                 <div class="badge-group">
                                     <div class="badge-container" data-badge="Staff Member" data-desc="Official staff & moderator team member." data-img="assets/staff.gif"><img src="assets/staff.gif" alt="Staff" class="badge"></div>
-                                    <div class="badge-container" data-badge="Site Owner" data-desc="Architect and creator of this aesthetic bio space." data-img="assets/owner.gif"><img src="assets/owner.gif" alt="Owner" class="badge"></div>
+                                    <div class="badge-container" data-badge="Site Owner" data-desc="Architect and creator of this cozy bio space." data-img="assets/owner.gif"><img src="assets/owner.gif" alt="Owner" class="badge"></div>
                                     <div class="badge-container" data-badge="Partner" data-desc="Recognized community contributor and partner." data-img="assets/partner.gif"><img src="assets/partner.gif" alt="Partner" class="badge"></div>
-                                    <div class="badge-container" data-badge="Developer" data-desc="Building full-stack tools and web applications." data-img="assets/developer.png"><img src="assets/developer.png" alt="Developer" class="badge"></div>
+                                    <div class="badge-container" data-badge="Developer" data-desc="Building full-stack cozy tools and web applications." data-img="assets/developer.png"><img src="assets/developer.png" alt="Developer" class="badge"></div>
                                     <div class="badge-container" data-badge="Bug Hunter" data-desc="Squashed vulnerabilities and platform glitches." data-img="assets/bug_bounty.gif"><img src="assets/bug_bounty.gif" alt="Bug Hunter" class="badge"></div>
                                     <div class="badge-container" data-badge="Python Guru" data-desc="Writes scalable automation and machine learning code." data-img="assets/hated_guns.gif"><img src="assets/hated_guns.gif" alt="Python" class="badge"></div>
                                     <div class="badge-container" data-badge="Shadow Milk" data-desc="Pure chaotic magic and favorite CRK cookie." data-img="assets/hated_fakecrime.gif"><img src="assets/hated_fakecrime.gif" alt="Shadow Milk" class="badge"></div>
@@ -1040,12 +1019,11 @@
                         </div>
                     </div>
 
-                    <div class="telemetry-row-pill">
-                        <span id="device-battery-chip">🔋 100%</span>
-                        <span>•</span>
-                        <span id="network-chip">📶 Online</span>
-                        <span>•</span>
-                        <span id="device-spec-chip">Desktop</span>
+                    <!-- Cozy Widget Strip -->
+                    <div class="cozy-widget-strip">
+                        <div class="cozy-tea-cup" id="tea-cup-btn" title="Click to brew another cozy drink">🍵 Matcha Latte</div>
+                        <div class="cozy-affirmation-chip" id="affirmation-btn" title="Click for a cozy affirmation">✨ "You are doing great"</div>
+                        <div class="cozy-habit-chip" id="water-sip-btn" title="Click to take a cozy sip">💧 4 sips taken</div>
                     </div>
 
                     <div class="mood-reaction-shelf">
@@ -1074,7 +1052,7 @@
                     <div class="social-links">
                         <a href="https://discord.gg/9S7k85tuk9" target="_blank"><img src="assets/discord.png" alt="Discord" class="social-icon"></a>
                         <a href="https://github.com/superrabbitkev-dotcom" target="_blank"><img src="assets/github.png" alt="GitHub" class="social-icon"></a>
-                        <a href="https://www.youtube.com/channel/UCSgdP2jS5p9-8k5UTwUyNDA" target="_blank"><img src="assets/youtube.png" alt="YouTube" class="social-icon"></a>
+                        <a href="https://youtube.com/@superrabbitkev" target="_blank"><img src="assets/youtube.png" alt="YouTube" class="social-icon"></a>
                         <a href="#" target="_blank"><img src="assets/tiktok.png" alt="TikTok" class="social-icon"></a>
                     </div>
 
@@ -1095,10 +1073,6 @@
 
         <!-- Tab 2: Skills & Projects -->
         <div id="skills-block" class="hidden">
-            <div class="card-telemetry-badge">
-                <span class="telemetry-pulse"></span>
-                <span>Dev Metrics</span>
-            </div>
             <h2 class="skills-title">Programming & Projects</h2>
             
             <div class="skill">
@@ -1127,12 +1101,12 @@
 
             <div class="project-showcase-row">
                 <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
-                    <span class="project-title">⚡ Aesthetic Bio Page</span>
-                    <span class="project-desc">Responsive profile card with live Discord presence.</span>
+                    <span class="project-title">☁️ Aesthetic Bio Page</span>
+                    <span class="project-desc">Responsive cozy card with real-time presence.</span>
                     <div class="project-tags"><span class="proj-tag">JavaScript</span><span class="proj-tag">CSS3</span></div>
                 </a>
                 <a href="https://github.com/superrabbitkev-dotcom" target="_blank" class="project-card">
-                    <span class="project-title">🐍 Discord Automation Bot</span>
+                    <span class="project-title">🍵 Discord Automation Bot</span>
                     <span class="project-desc">Async Python bot with dynamic rich activity triggers.</span>
                     <div class="project-tags"><span class="proj-tag">Python</span><span class="proj-tag">AsyncIO</span></div>
                 </a>
@@ -1141,10 +1115,6 @@
 
         <!-- Tab 3: Discord Activity -->
         <div id="discord-block" class="hidden">
-            <div class="card-telemetry-badge">
-                <span class="telemetry-pulse"></span>
-                <span>Lanyard API</span>
-            </div>
             <h2 class="skills-title">Live Discord Presence</h2>
             <div class="discord-card">
                 <div class="discord-avatar-wrap">
@@ -1159,13 +1129,9 @@
             </div>
         </div>
 
-        <!-- Tab 4: Chicago Weather Station -->
+        <!-- Tab 4: Central Time Station -->
         <div id="time-block" class="hidden">
-            <div class="card-telemetry-badge">
-                <span class="telemetry-pulse"></span>
-                <span>NOAA Telemetry</span>
-            </div>
-            <h2 class="skills-title">Chicago Weather Station</h2>
+            <h2 class="skills-title">Central Time Station ☁️</h2>
             <div class="time-card-content">
                 <div class="clock-header-wrap">
                     <div id="celestial-phase-icon"></div>
@@ -1174,8 +1140,8 @@
                 <div id="clock-date" class="clock-date">Loading...</div>
                 
                 <div class="time-details-grid">
-                    <div class="time-detail-box"><span class="detail-label">Location / Zone</span><span class="detail-val">Chicago, IL (CDT)</span></div>
-                    <div class="time-detail-box"><span class="detail-label">Condition & Feels</span><span id="chicago-weather-val" class="detail-val" style="color: var(--fluff-blue);">Loading...</span></div>
+                    <div class="time-detail-box"><span class="detail-label">Zone</span><span class="detail-val">Central Time (CT)</span></div>
+                    <div class="time-detail-box"><span class="detail-label">Condition & Feels</span><span id="chicago-weather-val" class="detail-val" style="color: var(--cozy-blue);">Loading...</span></div>
                     <div class="time-detail-box"><span class="detail-label">Wind & Humidity</span><span id="chicago-wind-humidity" class="detail-val">-- mph • --%</span></div>
                     <div class="time-detail-box"><span class="detail-label">Sun Cycle</span><span id="chicago-sun-cycle" class="detail-val">Calculating...</span></div>
                 </div>
@@ -1201,7 +1167,7 @@
             <div id="home-theme" class="theme-button active" title="Profile (1)">1</div>
             <div id="hacker-theme" class="theme-button" title="Skills (2)">2</div>
             <div id="discord-theme" class="theme-button" title="Discord (3)">3</div>
-            <div id="time-theme" class="theme-button" title="Chicago (4)">4</div>
+            <div id="time-theme" class="theme-button" title="Central Time (4)">4</div>
         </div>
 
         <!-- Controls Pod -->
@@ -1226,7 +1192,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                 </svg>
-                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.76">
+                <input id="transparency-slider" class="slider" type="range" min="0" max="1" step="0.01" value="0.82">
             </div>
         </div>
     </div>
@@ -1240,11 +1206,11 @@
             <span>✨</span> Defog Screen
         </div>
         <div class="ctx-item" id="ctx-cinema">
-            <span>🎬</span> Toggle Cinema Mode
+            <span>🎬</span> Toggle Cozy View
         </div>
         <div class="ctx-separator"></div>
         <div class="ctx-item" id="ctx-source">
-            <span>💻</span> View GitHub Repo
+            <span>☕</span> View GitHub Repo
         </div>
     </div>
 
