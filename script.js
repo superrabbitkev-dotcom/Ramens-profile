@@ -1,7 +1,7 @@
 let player;
 let isPlayerReady = false;
 
-// Permanent Cozy Uploads
+// Permanent Cozy Playlists (Verified Non-Expiring Embeds)
 const ambientPlaylist = [
   { id: "n61ULEU7CO0", title: "Cozy Lofi Rain - Soft Melodies" },
   { id: "1fueZCTYkpA", title: "Warm Coffee Beats - Chillhop" },
@@ -81,7 +81,7 @@ function toggleAtmosphereSound(type, btn) {
       }
       activeAmbientNodes[type] = null;
     }, 300);
-    btn.classList.remove('active');
+    btn?.classList.remove('active');
     return;
   }
 
@@ -123,7 +123,7 @@ function toggleAtmosphereSound(type, btn) {
   whiteNoise.start();
 
   activeAmbientNodes[type] = { source: whiteNoise, gain: gainNode };
-  btn.classList.add('active');
+  btn?.classList.add('active');
 }
 
 function onYouTubeIframeAPIReady() {
@@ -270,14 +270,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const deskLamp = document.getElementById('cozy-desk-lamp');
   const lampText = document.getElementById('lamp-text');
   let lampOn = true;
-  deskLamp?.addEventListener('click', () => {
+  function toggleDeskLamp() {
     lampOn = !lampOn;
-    lampText.textContent = lampOn ? "Lamp ON" : "Lamp OFF";
-    deskLamp.style.color = lampOn ? "var(--cozy-warm)" : "var(--cozy-subtext)";
+    if (lampText) lampText.textContent = lampOn ? "Lamp ON" : "Lamp OFF";
+    if (deskLamp) deskLamp.style.color = lampOn ? "var(--cozy-warm)" : "var(--cozy-subtext)";
     document.documentElement.style.setProperty('--card-blur', lampOn ? '24px' : '8px');
     playUiSound('click');
     showToast(lampOn ? "Warm lamp switched ON ✨" : "Lamp dimmed 🌙");
-  });
+  }
+  deskLamp?.addEventListener('click', toggleDeskLamp);
 
   // Pet Mascot
   const cozyMascot = document.getElementById('cozy-pet-mascot');
@@ -286,13 +287,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const mascotFeelings = ["purring softly...", "sleeping zzz", "happy loaf!", "curled up warm", "wiggles ears ✨"];
   let mascotIdx = 0;
 
-  cozyMascot?.addEventListener('click', () => {
+  function petMascot() {
     mascotIdx = (mascotIdx + 1) % mascotFeelings.length;
-    mascotText.textContent = mascotFeelings[mascotIdx];
-    mascotEmoji.textContent = mascotIdx % 2 === 0 ? "🐱" : "🐰";
+    if (mascotText) mascotText.textContent = mascotFeelings[mascotIdx];
+    if (mascotEmoji) mascotEmoji.textContent = mascotIdx % 2 === 0 ? "🐱" : "🐰";
     playUiSound('click');
     showToast("Petted companion 🐾");
-  });
+  }
+  cozyMascot?.addEventListener('click', petMascot);
 
   // Tea Brewer
   const teaCupBtn = document.getElementById('tea-cup-btn');
@@ -305,12 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
     "🌸 Sakura Milk Tea"
   ];
   let drinkIdx = 0;
-  teaCupBtn?.addEventListener('click', () => {
+  function brewNextTea() {
     drinkIdx = (drinkIdx + 1) % drinks.length;
-    teaCupBtn.textContent = drinks[drinkIdx];
+    if (teaCupBtn) teaCupBtn.textContent = drinks[drinkIdx];
     playUiSound('toast');
     showToast(`Brewed fresh ${drinks[drinkIdx]} ☕`);
-  });
+  }
+  teaCupBtn?.addEventListener('click', brewNextTea);
 
   // Daily Affirmations
   const affirmationBtn = document.getElementById('affirmation-btn');
@@ -338,11 +341,12 @@ document.addEventListener('DOMContentLoaded', () => {
     "Your creative work will bloom softly.",
     "Peace begins with a deep, calm breath."
   ];
-  fortuneBtn?.addEventListener('click', () => {
+  function crackFortune() {
     const f = fortunes[Math.floor(Math.random() * fortunes.length)];
     showToast(`🥠 Fortune: "${f}"`);
     playUiSound('pop');
-  });
+  }
+  fortuneBtn?.addEventListener('click', crackFortune);
 
   // Focus Timer
   const pomodoroBtn = document.getElementById('pomodoro-btn');
@@ -377,14 +381,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Hydration Tracker
   const waterSipBtn = document.getElementById('water-sip-btn');
   let sipCount = parseInt(localStorage.getItem('cozy_sips') || '4', 10);
-  waterSipBtn.textContent = `💧 ${sipCount} sips taken`;
-  waterSipBtn?.addEventListener('click', () => {
+  if (waterSipBtn) waterSipBtn.textContent = `💧 ${sipCount} sips taken`;
+  function takeWaterSip() {
     sipCount++;
     localStorage.setItem('cozy_sips', sipCount);
-    waterSipBtn.textContent = `💧 ${sipCount} sips taken`;
+    if (waterSipBtn) waterSipBtn.textContent = `💧 ${sipCount} sips taken`;
     playUiSound('click');
     showToast("Hydrated! Stay cozy 💧");
-  });
+  }
+  waterSipBtn?.addEventListener('click', takeWaterSip);
 
   // Drawer Bubble Wrap
   document.querySelectorAll('#bubble-wrap-grid .cozy-bubble').forEach(bubble => {
@@ -426,6 +431,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const paletteClasses = ['', 'theme-palette-matcha', 'theme-palette-peach', 'theme-palette-strawberry', 'theme-palette-honey', 'theme-palette-sky'];
+  let currentPaletteIdx = 0;
+  function cycleNextTheme() {
+    currentPaletteIdx = (currentPaletteIdx + 1) % paletteClasses.length;
+    document.body.className = `home-theme ${paletteClasses[currentPaletteIdx]}`;
+    playUiSound('click');
+    showToast("Pastel Palette Updated ✨");
+  }
+
   document.querySelectorAll('.palette-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.body.className = `home-theme ${btn.getAttribute('data-palette')}`;
@@ -445,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (defogBtn) defogBtn.addEventListener('click', defogWindow);
 
-  // Custom Cursor and Parallax
+  // Custom Cursor & Parallax
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (!isTouchDevice && cursor) {
     document.addEventListener('mousemove', (e) => {
@@ -479,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3D Card Tilt
+  // 3D Tilt
   activeCards.forEach(el => {
     if (!el) return;
     el.addEventListener('mousemove', (e) => {
@@ -514,8 +528,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Embers Canvas
   const fireCanvas = document.getElementById('fireplace-canvas');
-  const fireCtx = fireCanvas.getContext('2d');
+  const fireCtx = fireCanvas?.getContext('2d');
   function resizeFireCanvas() {
+    if (!fireCanvas) return;
     fireCanvas.width = window.innerWidth;
     fireCanvas.height = window.innerHeight;
   }
@@ -535,20 +550,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderEmbers() {
-    fireCtx.clearRect(0, 0, fireCanvas.width, fireCanvas.height);
-    for (let i = 0; i < embers.length; i++) {
-      const emb = embers[i];
-      emb.y -= emb.speedY;
-      emb.x += emb.speedX;
+    if (fireCtx && fireCanvas) {
+      fireCtx.clearRect(0, 0, fireCanvas.width, fireCanvas.height);
+      for (let i = 0; i < embers.length; i++) {
+        const emb = embers[i];
+        emb.y -= emb.speedY;
+        emb.x += emb.speedX;
 
-      fireCtx.fillStyle = `rgba(254, 215, 170, ${emb.alpha})`;
-      fireCtx.beginPath();
-      fireCtx.arc(emb.x, emb.y, emb.r, 0, Math.PI * 2);
-      fireCtx.fill();
+        fireCtx.fillStyle = `rgba(254, 215, 170, ${emb.alpha})`;
+        fireCtx.beginPath();
+        fireCtx.arc(emb.x, emb.y, emb.r, 0, Math.PI * 2);
+        fireCtx.fill();
 
-      if (emb.y < -20) {
-        emb.y = fireCanvas.height + 20;
-        emb.x = Math.random() * fireCanvas.width;
+        if (emb.y < -20) {
+          emb.y = fireCanvas.height + 20;
+          emb.x = Math.random() * fireCanvas.width;
+        }
       }
     }
     requestAnimationFrame(renderEmbers);
@@ -557,10 +574,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Weather Canvas
   const weatherCanvas = document.getElementById('weather-canvas');
-  const weatherCtx = weatherCanvas.getContext('2d');
+  const weatherCtx = weatherCanvas?.getContext('2d');
   let isSnowMode = false;
 
   function resizeWeatherCanvas() {
+    if (!weatherCanvas) return;
     weatherCanvas.width = window.innerWidth;
     weatherCanvas.height = window.innerHeight;
   }
@@ -582,31 +600,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderWeather() {
-    weatherCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      if (isSnowMode) {
-        p.wobble += 0.02;
-        p.y += p.snowSpeed;
-        p.x += Math.sin(p.wobble) * 0.6;
-        weatherCtx.fillStyle = `rgba(254, 243, 199, ${p.opacity})`;
-        weatherCtx.beginPath();
-        weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        weatherCtx.fill();
-      } else {
-        p.y += p.speed;
-        p.x -= 0.3;
-        weatherCtx.strokeStyle = `rgba(221, 214, 254, ${p.opacity})`;
-        weatherCtx.lineWidth = 1.2;
-        weatherCtx.beginPath();
-        weatherCtx.moveTo(p.x, p.y);
-        weatherCtx.lineTo(p.x - 1, p.y + p.len);
-        weatherCtx.stroke();
-      }
+    if (weatherCtx && weatherCanvas) {
+      weatherCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        if (isSnowMode) {
+          p.wobble += 0.02;
+          p.y += p.snowSpeed;
+          p.x += Math.sin(p.wobble) * 0.6;
+          weatherCtx.fillStyle = `rgba(254, 243, 199, ${p.opacity})`;
+          weatherCtx.beginPath();
+          weatherCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          weatherCtx.fill();
+        } else {
+          p.y += p.speed;
+          p.x -= 0.3;
+          weatherCtx.strokeStyle = `rgba(221, 214, 254, ${p.opacity})`;
+          weatherCtx.lineWidth = 1.2;
+          weatherCtx.beginPath();
+          weatherCtx.moveTo(p.x, p.y);
+          weatherCtx.lineTo(p.x - 1, p.y + p.len);
+          weatherCtx.stroke();
+        }
 
-      if (p.y > weatherCanvas.height) {
-        p.y = -20;
-        p.x = Math.random() * weatherCanvas.width;
+        if (p.y > weatherCanvas.height) {
+          p.y = -20;
+          p.x = Math.random() * weatherCanvas.width;
+        }
       }
     }
     requestAnimationFrame(renderWeather);
@@ -620,10 +640,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (snowToggleBtn) snowToggleBtn.addEventListener('click', toggleSnowMode);
 
-  // Raindrop Canvas
+  // Droplet Canvas
   const glassCanvas = document.getElementById('raindrop-canvas');
-  const glassCtx = glassCanvas.getContext('2d');
+  const glassCtx = glassCanvas?.getContext('2d');
   function resizeGlassCanvas() {
+    if (!glassCanvas) return;
     glassCanvas.width = window.innerWidth;
     glassCanvas.height = window.innerHeight;
   }
@@ -642,24 +663,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderGlassDroplets() {
-    glassCtx.clearRect(0, 0, glassCanvas.width, glassCanvas.height);
-    for (let i = 0; i < droplets.length; i++) {
-      const d = droplets[i];
-      const grad = glassCtx.createRadialGradient(d.x - d.r * 0.3, d.y - d.r * 0.3, d.r * 0.1, d.x, d.y, d.r);
-      grad.addColorStop(0, `rgba(255, 255, 255, ${d.alpha * 0.95})`);
-      grad.addColorStop(0.6, `rgba(221, 214, 254, ${d.alpha * 0.45})`);
-      grad.addColorStop(1, `rgba(32, 30, 48, ${d.alpha * 0.55})`);
+    if (glassCtx && glassCanvas) {
+      glassCtx.clearRect(0, 0, glassCanvas.width, glassCanvas.height);
+      for (let i = 0; i < droplets.length; i++) {
+        const d = droplets[i];
+        const grad = glassCtx.createRadialGradient(d.x - d.r * 0.3, d.y - d.r * 0.3, d.r * 0.1, d.x, d.y, d.r);
+        grad.addColorStop(0, `rgba(255, 255, 255, ${d.alpha * 0.95})`);
+        grad.addColorStop(0.6, `rgba(221, 214, 254, ${d.alpha * 0.45})`);
+        grad.addColorStop(1, `rgba(32, 30, 48, ${d.alpha * 0.55})`);
 
-      glassCtx.fillStyle = grad;
-      glassCtx.beginPath();
-      glassCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-      glassCtx.fill();
+        glassCtx.fillStyle = grad;
+        glassCtx.beginPath();
+        glassCtx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        glassCtx.fill();
 
-      if (d.speed > 0) {
-        d.y += d.speed;
-        if (d.y > glassCanvas.height + 20) {
-          d.y = -10;
-          d.x = Math.random() * glassCanvas.width;
+        if (d.speed > 0) {
+          d.y += d.speed;
+          if (d.y > glassCanvas.height + 20) {
+            d.y = -10;
+            d.x = Math.random() * glassCanvas.width;
+          }
         }
       }
     }
@@ -667,7 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderGlassDroplets();
 
-  // Weather API (Texas)
+  // Texas Weather Telemetry
   async function fetchTexasWeather() {
     try {
       const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=25.90&longitude=-97.50&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m&daily=sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FChicago');
@@ -693,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchTexasWeather();
   setInterval(fetchTexasWeather, 600000);
 
-  // Avatar Bursts
+  // Avatar Floating Bursts
   const cozyBursts = ['🍜', '🍥', '✨', '⭐', '🍵', '🌸', '☁️'];
   document.getElementById('avatar-container')?.addEventListener('click', (e) => {
     for (let i = 0; i < 7; i++) {
@@ -719,10 +742,11 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast("Cozy Ramen Boost! 🍜");
   });
 
-  // Visualizer Wave
+  // Wave Visualizer
   const lineCanvas = document.getElementById('line-visualizer');
-  const lineCtx = lineCanvas.getContext('2d');
+  const lineCtx = lineCanvas?.getContext('2d');
   function resizeLineCanvas() {
+    if (!lineCanvas || !lineCtx) return;
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 840;
     lineCanvas.width = width * window.devicePixelRatio;
     lineCanvas.height = 34 * window.devicePixelRatio;
@@ -736,6 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderLineVisualizer() {
     requestAnimationFrame(renderLineVisualizer);
+    if (!lineCanvas || !lineCtx) return;
     const width = window.innerWidth <= 430 ? Math.min(window.innerWidth * 0.9, 350) : 840;
     const height = 34;
     lineCtx.clearRect(0, 0, width, height);
@@ -767,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderLineVisualizer();
 
-  // Progress Seek
+  // Progress Bar Seek
   function seekTrackFromEvent(e, container) {
     if (!isPlayerReady || !player || !player.getDuration) return;
     const rect = container.getBoundingClientRect();
@@ -776,8 +801,8 @@ document.addEventListener('DOMContentLoaded', () => {
     trackProgressFill.style.width = `${pct * 100}%`;
     playUiSound('click');
   }
-  lineCanvas.addEventListener('click', (e) => seekTrackFromEvent(e, lineCanvas));
-  trackProgressContainer.addEventListener('click', (e) => seekTrackFromEvent(e, trackProgressContainer));
+  lineCanvas?.addEventListener('click', (e) => seekTrackFromEvent(e, lineCanvas));
+  trackProgressContainer?.addEventListener('click', (e) => seekTrackFromEvent(e, trackProgressContainer));
 
   function formatTrackTime(seconds) {
     const m = Math.floor(seconds / 60);
@@ -968,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   badgeModalClose?.addEventListener('click', () => badgeInspectorModal.classList.remove('active'));
 
-  // 5 Tabs Navigation Switcher
+  // 5 Tabs Navigation
   const allTabs = [
     { name: 'profile', el: profileBlock, btn: homeThemeBtn },
     { name: 'skills', el: skillsBlock, btn: hackerThemeBtn },
@@ -1126,12 +1151,14 @@ document.addEventListener('DOMContentLoaded', () => {
     { icon: '⭐', name: 'Sky Star' }
   ];
 
-  pondBtn?.addEventListener('click', () => {
+  function fishInPond() {
     playUiSound('pop');
     const item = catchLoot[Math.floor(Math.random() * catchLoot.length)];
     catchCount++;
     if (fishLog) fishLog.innerHTML = `Caught: <strong>${item.icon} ${item.name}</strong>! (Total: ${catchCount})`;
-  });
+    showToast(`Reeled in: ${item.icon} ${item.name}!`);
+  }
+  pondBtn?.addEventListener('click', fishInPond);
 
   // GAME 3: Bubble Sheet
   const arcadeBubbleGrid = document.getElementById('arcade-bubble-grid');
@@ -1218,17 +1245,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const coinBtn = document.getElementById('cozy-coin-btn');
   const coinResult = document.getElementById('coin-result');
   const coinSides = ['Yes ☁️', 'Take a Nap 🌙', 'Drink Tea 🍵', 'Signs are Good ✨'];
-  coinBtn?.addEventListener('click', () => {
-    gsap.to(coinBtn, {
-      rotationY: "+=720",
-      duration: 0.5,
-      onComplete: () => {
-        const side = coinSides[Math.floor(Math.random() * coinSides.length)];
-        if (coinResult) coinResult.textContent = side;
-        playUiSound('toast');
-      }
-    });
-  });
+  function flipCoin() {
+    if (coinBtn) {
+      gsap.to(coinBtn, {
+        rotationY: "+=720",
+        duration: 0.5,
+        onComplete: () => {
+          const side = coinSides[Math.floor(Math.random() * coinSides.length)];
+          if (coinResult) coinResult.textContent = side;
+          showToast(`Coin Result: ${side}`);
+          playUiSound('toast');
+        }
+      });
+    }
+  }
+  coinBtn?.addEventListener('click', flipCoin);
 
   // GAME 8: Oracle Dice
   const diceBtn = document.getElementById('roll-dice-btn');
@@ -1237,14 +1268,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const diceResult = document.getElementById('dice-result');
   const diceFaces = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
 
-  diceBtn?.addEventListener('click', () => {
+  function rollOracleDice() {
     const v1 = Math.floor(Math.random() * 6);
     const v2 = Math.floor(Math.random() * 6);
     if (d1) d1.textContent = diceFaces[v1];
     if (d2) d2.textContent = diceFaces[v2];
     if (diceResult) diceResult.textContent = `Rolled: ${v1 + v2 + 2} • Cozy Fortune Unlocked! ✨`;
+    showToast(`Dice Rolled: ${v1 + v2 + 2} ✨`);
     playUiSound('pop');
-  });
+  }
+  diceBtn?.addEventListener('click', rollOracleDice);
 
   // GAME 9: Petal Catcher
   const petalBox = document.getElementById('petal-catcher-box');
@@ -1345,6 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       badgeInspectorModal.classList.remove('active');
       if (dropboardDrawer.classList.contains('open')) toggleDrawer();
+      if (customContextMenu) customContextMenu.classList.add('hidden');
       return;
     }
     if (['1', '2', '3', '4', '5'].includes(e.key)) {
@@ -1353,7 +1387,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Custom Context Menu
+  // 15-Action Context Menu Routing
   const customContextMenu = document.getElementById('custom-context-menu');
 
   window.addEventListener('contextmenu', (e) => {
@@ -1363,8 +1397,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let posX = e.clientX;
     let posY = e.clientY;
 
-    const menuWidth = 200;
-    const menuHeight = 170;
+    const menuWidth = 220;
+    const menuHeight = 380;
 
     if (posX + menuWidth > window.innerWidth) posX = window.innerWidth - menuWidth - 10;
     if (posY + menuHeight > window.innerHeight) posY = window.innerHeight - menuHeight - 10;
@@ -1381,24 +1415,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href);
-    showToast('Profile URL copied ✨');
-    customContextMenu.classList.add('hidden');
-  });
-
-  document.getElementById('ctx-defog')?.addEventListener('click', () => {
-    defogWindow();
-    customContextMenu.classList.add('hidden');
-  });
-
+  document.getElementById('ctx-brew-tea')?.addEventListener('click', () => { brewNextTea(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-crack-fortune')?.addEventListener('click', () => { crackFortune(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-pet-mascot')?.addEventListener('click', () => { petMascot(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-sip-water')?.addEventListener('click', () => { takeWaterSip(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-toggle-lamp')?.addEventListener('click', () => { toggleDeskLamp(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-next-song')?.addEventListener('click', () => { playPlaylistTrack(currentPlaylistIndex + 1); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-play-pause')?.addEventListener('click', () => { togglePlayPause(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-toggle-weather')?.addEventListener('click', () => { toggleSnowMode(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-defog')?.addEventListener('click', () => { defogWindow(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-roll-dice')?.addEventListener('click', () => { rollOracleDice(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-flip-coin')?.addEventListener('click', () => { flipCoin(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-cycle-theme')?.addEventListener('click', () => { cycleNextTheme(); customContextMenu.classList.add('hidden'); });
   document.getElementById('ctx-cinema')?.addEventListener('click', () => {
     isCinemaMode = !isCinemaMode;
     activeCards.concat([document.getElementById('music-ticker-pill'), lineCanvas, trackProgressContainer, document.querySelector('.controls'), document.querySelector('.top-controls')]).forEach(el => el && el.classList.toggle('cinema-hidden', isCinemaMode));
     cinemaExitHint.classList.toggle('hidden', !isCinemaMode);
     customContextMenu.classList.add('hidden');
   });
-
+  document.getElementById('ctx-copy-discord')?.addEventListener('click', () => { copyDiscordHandle(); customContextMenu.classList.add('hidden'); });
+  document.getElementById('ctx-copy-link')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('Profile URL copied ✨');
+    customContextMenu.classList.add('hidden');
+  });
   document.getElementById('ctx-source')?.addEventListener('click', () => {
     window.open('https://github.com/superrabbitkev-dotcom', '_blank');
     customContextMenu.classList.add('hidden');
@@ -1504,7 +1544,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
-  // Central Clock
   function updateChicagoTime() {
     const now = new Date();
     if (digitalClock) digitalClock.textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
