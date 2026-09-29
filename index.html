@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" type="image/x-icon" href="assets/favicon-v2.ico">  
+    <link rel="icon" type="image/x-icon" href="/Sirramenboi-s-profile/assets/favicon.ico">    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Ramen's Cozy Corner ☁️</title>
@@ -145,6 +145,7 @@
             font-size: 20px;
         }
 
+        /* Top Music Ticker Pill */
         #music-ticker-pill {
             position: fixed;
             top: calc(50% - 195px - 76px);
@@ -219,6 +220,7 @@
             pointer-events: none;
         }
 
+        /* Sound Lounge Drawer */
         #dropboard-drawer {
             position: fixed;
             top: 0; left: 50%;
@@ -359,6 +361,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.25);
         }
 
+        /* Main Dashboard Cards */
         #profile-block, #skills-block, #discord-block, #time-block, #games-block {
             position: fixed;
             top: 50%; left: 50%;
@@ -823,7 +826,7 @@
         }
         .big-click-item:active { transform: scale(0.88); }
 
-        /* Badge Modal */
+        /* Badge Inspector Modal */
         #badge-inspector-modal {
             position: fixed;
             top: 50%; left: 50%;
@@ -972,7 +975,7 @@
             z-index: 150; pointer-events: none;
         }
 
-        /* 15-Action Cozy Right Click Hub */
+        /* Responsive Context Menu Clamping */
         #custom-context-menu {
             position: fixed;
             z-index: 100002;
@@ -980,12 +983,12 @@
             border: 1px solid var(--cozy-cloud-border);
             border-radius: 20px;
             padding: 10px;
-            min-width: 220px;
+            width: 230px;
             box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(24px);
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 2px;
             pointer-events: auto;
             max-height: 85vh;
             overflow-y: auto;
@@ -1471,7 +1474,7 @@
         </div>
     </div>
 
-    <!-- 15-Action Cozy Right-Click Hub -->
+    <!-- Smart Edge-Clamped 15-Action Context Menu -->
     <div id="custom-context-menu" class="hidden">
         <div class="ctx-item" id="ctx-brew-tea"><span>🍵</span> Brew Random Drink</div>
         <div class="ctx-item" id="ctx-crack-fortune"><span>🥠</span> Crack Quick Fortune</div>
