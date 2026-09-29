@@ -145,7 +145,6 @@
             font-size: 20px;
         }
 
-        /* Top Music Pill & Track Navigation */
         #music-ticker-pill {
             position: fixed;
             top: calc(50% - 195px - 76px);
@@ -220,7 +219,6 @@
             pointer-events: none;
         }
 
-        /* Sound Lounge Drawer */
         #dropboard-drawer {
             position: fixed;
             top: 0; left: 50%;
@@ -361,7 +359,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.25);
         }
 
-        /* Main Cards */
         #profile-block, #skills-block, #discord-block, #time-block, #games-block {
             position: fixed;
             top: 50%; left: 50%;
@@ -476,7 +473,6 @@
         .discord-status-dot-inline.dnd { background-color: #f87171; box-shadow: 0 0 8px #f87171; }
         .discord-status-dot-inline.offline { background-color: #80848e; }
 
-        /* Widget Strip */
         .cozy-widget-strip {
             display: flex;
             align-items: center;
@@ -976,27 +972,30 @@
             z-index: 150; pointer-events: none;
         }
 
+        /* 15-Action Cozy Right Click Hub */
         #custom-context-menu {
             position: fixed;
             z-index: 100002;
-            background: rgba(26, 24, 38, 0.96);
+            background: rgba(26, 24, 38, 0.97);
             border: 1px solid var(--cozy-cloud-border);
-            border-radius: 18px;
-            padding: 8px;
-            min-width: 190px;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 10px;
+            min-width: 220px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(24px);
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
             pointer-events: auto;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .ctx-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 12px;
+            padding: 7px 12px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 700;
@@ -1472,21 +1471,27 @@
         </div>
     </div>
 
-    <!-- Custom Right-Click Context Menu -->
+    <!-- 15-Action Cozy Right-Click Hub -->
     <div id="custom-context-menu" class="hidden">
-        <div class="ctx-item" id="ctx-copy-link">
-            <span>🔗</span> Copy Profile Link
-        </div>
-        <div class="ctx-item" id="ctx-defog">
-            <span>✨</span> Defog Screen
-        </div>
-        <div class="ctx-item" id="ctx-cinema">
-            <span>🎬</span> Toggle Cozy View
-        </div>
+        <div class="ctx-item" id="ctx-brew-tea"><span>🍵</span> Brew Random Drink</div>
+        <div class="ctx-item" id="ctx-crack-fortune"><span>🥠</span> Crack Quick Fortune</div>
+        <div class="ctx-item" id="ctx-pet-mascot"><span>🐾</span> Pet Mascot Softly</div>
+        <div class="ctx-item" id="ctx-sip-water"><span>💧</span> Take a Cozy Sip</div>
         <div class="ctx-separator"></div>
-        <div class="ctx-item" id="ctx-source">
-            <span>☕</span> View GitHub Repo
-        </div>
+        <div class="ctx-item" id="ctx-toggle-lamp"><span>💡</span> Toggle Desk Lamp</div>
+        <div class="ctx-item" id="ctx-next-song"><span>⏭️</span> Next Background Track</div>
+        <div class="ctx-item" id="ctx-play-pause"><span>⏯️</span> Play / Pause Audio</div>
+        <div class="ctx-item" id="ctx-toggle-weather"><span>❄️</span> Toggle Snow / Rain</div>
+        <div class="ctx-item" id="ctx-defog"><span>✨</span> Defog Screen Glass</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" id="ctx-roll-dice"><span>🎲</span> Quick Oracle Roll</div>
+        <div class="ctx-item" id="ctx-flip-coin"><span>🪙</span> Flip Cozy Decision Coin</div>
+        <div class="ctx-item" id="ctx-cycle-theme"><span>🎨</span> Cycle Pastel Palette</div>
+        <div class="ctx-item" id="ctx-cinema"><span>🎬</span> Toggle Cozy Cinema</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item" id="ctx-copy-discord"><span>💬</span> Copy Discord Tag</div>
+        <div class="ctx-item" id="ctx-copy-link"><span>🔗</span> Copy Profile Link</div>
+        <div class="ctx-item" id="ctx-source"><span>☕</span> View GitHub Repo</div>
     </div>
 
     <div id="action-toast" class="hidden">Notification</div>
