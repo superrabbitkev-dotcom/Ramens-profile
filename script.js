@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isMuted = false;
   let previousVolume = volumeSlider ? parseFloat(volumeSlider.value) : 0.3;
 
-  // Lamp Toggle
+  // Desk Lamp Toggle
   const deskLamp = document.getElementById('cozy-desk-lamp');
   const lampText = document.getElementById('lamp-text');
   let lampOn = true;
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   deskLamp?.addEventListener('click', toggleDeskLamp);
 
-  // Pet Mascot
+  // Companion Mascot Interaction
   const cozyMascot = document.getElementById('cozy-pet-mascot');
   const mascotEmoji = document.getElementById('mascot-emoji');
   const mascotText = document.getElementById('mascot-text');
@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   cozyMascot?.addEventListener('click', petMascot);
 
-  // Tea Brewer
+  // Tea Brewer Engine
   const teaCupBtn = document.getElementById('tea-cup-btn');
   const drinks = [
     "🍵 Matcha Latte",
@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   teaCupBtn?.addEventListener('click', brewNextTea);
 
-  // Daily Affirmations
+  // Affirmations
   const affirmationBtn = document.getElementById('affirmation-btn');
   const affirmations = [
     '✨ "You are doing great"',
@@ -339,7 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     "A cozy cup of warmth awaits you today.",
     "A soft surprise will find you soon.",
     "Your creative work will bloom softly.",
-    "Peace begins with a deep, calm breath."
+    "Peace begins with a deep, calm breath.",
+    "Someone is grateful for your presence today.",
+    "A quiet moment will bring great clarity."
   ];
   function crackFortune() {
     const f = fortunes[Math.floor(Math.random() * fortunes.length)];
@@ -348,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   fortuneBtn?.addEventListener('click', crackFortune);
 
-  // Focus Timer
+  // Pomodoro Focus Timer
   const pomodoroBtn = document.getElementById('pomodoro-btn');
   let pomoSeconds = 25 * 60;
   let pomoRunning = false;
@@ -391,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   waterSipBtn?.addEventListener('click', takeWaterSip);
 
-  // Drawer Bubble Wrap
+  // Drawer Bubble Wrap Sheet
   document.querySelectorAll('#bubble-wrap-grid .cozy-bubble').forEach(bubble => {
     bubble.addEventListener('click', () => {
       if (!bubble.classList.contains('popped')) {
@@ -407,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast("Bubble wrap reset!");
   });
 
-  // Scratchpad
+  // Scratchpad Persistence
   if (scratchpadArea) {
     scratchpadArea.value = localStorage.getItem('ramen_scratchpad') || "";
     scratchpadArea.addEventListener('input', () => {
@@ -459,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (defogBtn) defogBtn.addEventListener('click', defogWindow);
 
-  // Custom Cursor & Parallax
+  // Custom Cursor Tracking
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
   if (!isTouchDevice && cursor) {
     document.addEventListener('mousemove', (e) => {
@@ -474,6 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1) translate(-50%, -50%)');
   }
 
+  // Parallax Background
   const bgIframe = document.getElementById('background');
   if (!isTouchDevice && bgIframe) {
     gsap.set(bgIframe, { xPercent: -50, yPercent: -50 });
@@ -526,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Embers Canvas
+  // Embers Canvas Animation
   const fireCanvas = document.getElementById('fireplace-canvas');
   const fireCtx = fireCanvas?.getContext('2d');
   function resizeFireCanvas() {
@@ -572,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   renderEmbers();
 
-  // Weather Canvas
+  // Weather Canvas Animation
   const weatherCanvas = document.getElementById('weather-canvas');
   const weatherCtx = weatherCanvas?.getContext('2d');
   let isSnowMode = false;
@@ -640,7 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (snowToggleBtn) snowToggleBtn.addEventListener('click', toggleSnowMode);
 
-  // Droplet Canvas
+  // Droplet Beads Animation
   const glassCanvas = document.getElementById('raindrop-canvas');
   const glassCtx = glassCanvas?.getContext('2d');
   function resizeGlassCanvas() {
@@ -742,7 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
     showToast("Cozy Ramen Boost! 🍜");
   });
 
-  // Wave Visualizer
+  // Wave Visualizer Canvas
   const lineCanvas = document.getElementById('line-visualizer');
   const lineCtx = lineCanvas?.getContext('2d');
   function resizeLineCanvas() {
@@ -993,7 +996,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   badgeModalClose?.addEventListener('click', () => badgeInspectorModal.classList.remove('active'));
 
-  // 5 Tabs Navigation
+  // 5 Tabs Navigation Switcher
   const allTabs = [
     { name: 'profile', el: profileBlock, btn: homeThemeBtn },
     { name: 'skills', el: skillsBlock, btn: hackerThemeBtn },
@@ -1011,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const incoming = allTabs.find(t => t.name === targetName);
 
     allTabs.forEach(t => t.btn && t.btn.classList.remove('active'));
-    if (incoming && incoming.btn) incoming.btn.classList.add('active');
+    if (incoming.btn) incoming.btn.classList.add('active');
 
     if (outgoing && outgoing.el) {
       gsap.to(outgoing.el, { opacity: 0, y: 30, duration: 0.3, onComplete: () => outgoing.el.classList.add('hidden') });
@@ -1036,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (gamesThemeBtn) gamesThemeBtn.addEventListener('click', () => switchTab('games'));
 
   // ==========================================
-  // TAB 5: 10 COZY ARCADE GAMES ENGINE
+  // TAB 5: 10-IN-1 COZY ARCADE SUITE
   // ==========================================
   const arcadeTabs = document.querySelectorAll('.arcade-tab-btn');
   const panels = [
@@ -1148,19 +1151,21 @@ document.addEventListener('DOMContentLoaded', () => {
     { icon: '🧋', name: 'Lost Boba' },
     { icon: '🐸', name: 'Sleepy Frog' },
     { icon: '🐚', name: 'Seashell' },
-    { icon: '⭐', name: 'Sky Star' }
+    { icon: '⭐', name: 'Sky Star' },
+    { icon: '🌟🐟', name: 'Legendary Carp' }
   ];
 
   function fishInPond() {
     playUiSound('pop');
-    const item = catchLoot[Math.floor(Math.random() * catchLoot.length)];
+    const isRare = Math.random() < 0.05;
+    const item = isRare ? catchLoot[5] : catchLoot[Math.floor(Math.random() * 5)];
     catchCount++;
     if (fishLog) fishLog.innerHTML = `Caught: <strong>${item.icon} ${item.name}</strong>! (Total: ${catchCount})`;
     showToast(`Reeled in: ${item.icon} ${item.name}!`);
   }
   pondBtn?.addEventListener('click', fishInPond);
 
-  // GAME 3: Bubble Sheet
+  // GAME 3: Bubble Wrap Sheet
   const arcadeBubbleGrid = document.getElementById('arcade-bubble-grid');
   if (arcadeBubbleGrid) {
     arcadeBubbleGrid.innerHTML = '';
@@ -1179,6 +1184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('arcade-reset-bubbles')?.addEventListener('click', () => {
     document.querySelectorAll('#arcade-bubble-grid .cozy-bubble').forEach(b => b.classList.remove('popped'));
     playUiSound('click');
+    showToast("Bubble sheet refreshed!");
   });
 
   // GAME 4: Cookie Baker
@@ -1222,7 +1228,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   moveBunny();
 
-  // GAME 6: Kalimba
+  // GAME 6: Lo-Fi Kalimba
   function playKalimbaNote(freq) {
     initAudioContext();
     const osc = audioCtx.createOscillator();
@@ -1356,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2200);
   }
 
-  // Keyboard Shortcuts
+  // Keyboard Shortcuts Engine
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') { e.preventDefault(); toggleDrawer(); return; }
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1387,26 +1393,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 15-Action Context Menu Routing
+  // Dynamic Viewport-Clamped Context Menu
   const customContextMenu = document.getElementById('custom-context-menu');
 
   window.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     if (!customContextMenu) return;
 
+    // Show menu to calculate rendered dimensions
+    customContextMenu.style.visibility = 'hidden';
+    customContextMenu.classList.remove('hidden');
+
+    const menuRect = customContextMenu.getBoundingClientRect();
+    const menuWidth = menuRect.width || 230;
+    const menuHeight = menuRect.height || 380;
+
     let posX = e.clientX;
     let posY = e.clientY;
 
-    const menuWidth = 220;
-    const menuHeight = 380;
-
-    if (posX + menuWidth > window.innerWidth) posX = window.innerWidth - menuWidth - 10;
-    if (posY + menuHeight > window.innerHeight) posY = window.innerHeight - menuHeight - 10;
+    // Viewport Boundary Clamping
+    if (posX + menuWidth > window.innerWidth - 12) {
+      posX = window.innerWidth - menuWidth - 14;
+    }
+    if (posY + menuHeight > window.innerHeight - 12) {
+      posY = window.innerHeight - menuHeight - 14;
+    }
+    if (posX < 12) posX = 12;
+    if (posY < 12) posY = 12;
 
     customContextMenu.style.left = `${posX}px`;
     customContextMenu.style.top = `${posY}px`;
-    customContextMenu.classList.remove('hidden');
-    gsap.fromTo(customContextMenu, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.15 });
+    customContextMenu.style.visibility = 'visible';
+
+    gsap.fromTo(customContextMenu, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.15 });
   });
 
   window.addEventListener('click', (e) => {
@@ -1415,6 +1434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Context Menu Actions
   document.getElementById('ctx-brew-tea')?.addEventListener('click', () => { brewNextTea(); customContextMenu.classList.add('hidden'); });
   document.getElementById('ctx-crack-fortune')?.addEventListener('click', () => { crackFortune(); customContextMenu.classList.add('hidden'); });
   document.getElementById('ctx-pet-mascot')?.addEventListener('click', () => { petMascot(); customContextMenu.classList.add('hidden'); });
@@ -1455,10 +1475,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return `https://cdn.discordapp.com/app-assets/${appId}/${assetId}.png`;
   }
 
-  // Lanyard Discord Presence
+  // Lanyard Discord Presence Engine
   async function fetchDiscordPresence() {
     try {
-      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`);
+      const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}?t=${Date.now()}`, {
+        cache: 'no-store'
+      });
       const data = await res.json();
       if (!data.success) return;
       const user = data.data;
@@ -1515,7 +1537,11 @@ document.addEventListener('DOMContentLoaded', () => {
           : '';
 
         let trackInfo = '';
-        if (activity.state && activity.details) {
+        const isIdleState = activity.state === "Waiting for music..." || activity.details === "Waiting for music...";
+
+        if (isIdleState) {
+          trackInfo = `<span>Music player connected (idle)</span>`;
+        } else if (activity.state && activity.details) {
           trackInfo = `<span>${activity.details}</span><span><strong>${activity.state}</strong></span>`;
         } else if (activity.state) {
           trackInfo = `<span><strong>${activity.state}</strong></span>`;
@@ -1544,6 +1570,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
+  // Central Clock & Celestial Tracker
   function updateChicagoTime() {
     const now = new Date();
     if (digitalClock) digitalClock.textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
