@@ -1,4 +1,4 @@
-Let player;
+let player;
 let isPlayerReady = false;
 
 // Permanent Cozy Playlists (Verified Non-Expiring Embeds)
@@ -914,10 +914,8 @@ document.addEventListener('DOMContentLoaded', () => {
   startScreen.addEventListener('touchstart', (e) => { e.preventDefault(); startExperience(); });
 
   const bioMessages = [
-    "Playing CRK (CookieRun: Kingdom)", 
-    "We do not lick the dog",
-    "I am a person :)", 
-    "Developing in Python, CSS, and JavaScript"
+   "Playing CRK (CookieRun: Kingdom)", "We do not lick the dog",
+    "I am a person :)", "Developing in Python, CSS, and JavaScript"
   ];
   let bioText = '';
   let bioIndex = 0;
@@ -1590,7 +1588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (celestialIcon) {
       celestialIcon.innerHTML = isDay ? 
-        `<svg viewBox="0 0 24 24" fill="none" stroke="#fef08a" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="12" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
+        `<svg viewBox="0 0 24 24" fill="none" stroke="#fef08a" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>` :
         `<svg viewBox="0 0 24 24" fill="none" stroke="#bae6fd" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
     }
   }
